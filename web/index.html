@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ru-RU">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <link href="/assets/2f52b3fa/css/bootstrap.css" rel="stylesheet">
+    <link href="/assets/d8109918/css/font-awesome.min.css" rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Modal login/registration Begin -->
+    <div class="modal fade" id="modal_auth" tabindex="-1" role="dialog" aria-labelledby="ModalAuthLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+                    <h4 class="modal-title" id="ModalAuthLabel">Вход в личный кабинет</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="modal_tabs">
+                        <a href="#" class="active_modal_tab">Вход</a>
+                        <a href="#">Регистрация</a>
+                    </div>
+                    <div class="modal_tabpanels">
+
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal login/registration End -->
+
+    <!-- Header thin blue line Begin -->
+    <div class="container-fluid">
+        <div class="row" id="header_top_line">
+            <div class="container">
+                <div class="row">
+                    <div class="top_map_city col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                        <span class="top_map_marker"></span>
+                        <span class="top_map_city">г. Казань</span>
+                    </div>
+                    <div class="top_short_menu col-lg-6 col-md-6 hidden-sm hidden-xs text-center">
+                        <a href="#">Оплата</a>
+                        <a href="#">Доставка</a>
+                        <a href="#">Возврат</a>
+                        <a href="#">Оптовикам</a>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                        <div class="top_personal pull-right">
+                            <a href="#" data-toggle="modal" data-target="#modal_auth">
+                                <span class="top_personal_marker"></span>
+                                <span class="top_personal_link">Личный&nbsp;кабинет</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Header thin blue line End -->
+
+    <!-- Header main line begin -->
+    <div class="container-fluid">
+        <div class="row" id="header_main_line">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                        <!-- Logo Begin -->
+                        <a href="#" class="pull-left">
+                            <img src="/images/dominanta_logo.png" alt="Доминанта" />
+                        </a>
+                        <!-- Logo End -->
+
+                        <!-- Serchform Begin -->
+                        <form class="top_searchform">
+                            <div class="form-group">
+                                <input type="text" class="form-control top_searchfield" placeholder="Поиск по сайту...">
+                                <button type="submit" class="top_searchbutton"></button>
+                            </div>
+                        </form>
+                        <!-- Searchform End -->
+
+                        <!-- Shopping cart Begin -->
+                        <a href="#" class="top_shopping_cart pull-right">
+                            <div class="shopping_cart_text_amount">
+                                <span class="shopping_cart_text">Корзина</span><br />
+                                <span class="shopping_cart_amount">25 000 <i class="fa fa-rub"></i></span>
+                            </div>
+                            <div class="text-right">
+                                <span class="shopping_cart_badge">30</span>
+                            </div>
+                        </a>
+                        <!-- Shopping cart end -->
+
+                        <!-- Phones Begin -->
+                        <div class="pull-right top_col_phones">
+                            <span class="pull-left phoneicon"></span>
+                            <div class="top_phones">
+                                <span class="top_phone">8 (843) 212-27-26</span>&nbsp;&nbsp;
+                                <a href="#">Заказать&nbsp;звонок</a><br />
+                                <span class="top_workhours">Прием звонков: 9:00-19:00</span>
+                            </div>
+                        </div>
+                        <!-- Phones End -->
+
+                    </div>
+                </div>
+                <div class="row top_mobile_phones">
+                    <div class="text-left col-sm-6 col-xs-6">
+                        <span class="pull-left mobile_phoneicon"></span>
+                        <span class="top_mobile_phone">8 (843) 212-27-26</span><br />
+                        <a href="#">Заказать&nbsp;звонок</a>
+                    </div>
+                    <div class="text-right col-sm-6 col-xs-6">
+                        <span class="top_mobile_workhours">Прием звонков:<br />9:00-19:00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Header main line end -->
+
+    <!-- Menu line Begin -->
+    <div class="container-fluid">
+        <div class="row" id="menu_top_line">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-10 col-md-10 col-sm-9 col-xs-7">
+                        <a href="#" class="menu_icon pull-left"><span class="hidden-sm hidden-xs">Каталог товаров</span></a>
+                        <a href="#" class="menu_item hidden-sm hidden-xs">О компании</a>
+                        <a href="#" class="menu_item hidden-sm hidden-xs">Акции</a>
+                        <a href="#" class="menu_item hidden-sm hidden-xs">Услуги</a>
+                        <a href="#" class="menu_item hidden-sm hidden-xs">Советы</a>
+                        <a href="#" class="menu_item hidden-sm hidden-xs">Контакты</a>
+
+                        <!-- Serchform Begin -->
+                        <form class="mobile_searchform hidden-lg hidden-md">
+                            <input type="text" class="form-control mobile_searchfield" placeholder="Поиск по сайту...">
+                            <button type="submit" class="mobile_searchbutton"></button>
+                        </form>
+                        <!-- Searchform End -->
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-3 col-xs-5 top_socials">
+                        <a href="#"><i class="fa fa-odnoklassniki"></i></a>
+                        <a href="#"><i class="fa fa-vk"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Menu line End -->
+
+    <!-- Dropdown menu Begin -->
+    <div class="container dropdown_menu">
+        <div class="row">
+
+            <div class="col-lg-4 col-md-4 col-sm-6 hidden-xs">
+                <div class="dropdown_left_col">
+                    <a href="#">Инженерные системы</a>
+                    <a href="#">Крепёж</a>
+                    <a href="#">ЛКМ, грунты, пены, герметики</a>
+                    <a href="#">Отделка</a>
+                    <a href="#">Сантехника</a>
+                    <a href="#">Строительные материалы</a>
+                    <a href="#">Электротехнические товары</a>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-6 hidden-xs">
+                <div class="dropdown_right_col">
+                    <a href="#">Инженерные системы</a>
+                    <a href="#">Крепёж</a>
+                    <a href="#">ЛКМ, грунты, пены, герметики</a>
+                    <a href="#">Отделка</a>
+                    <a href="#">Сантехника</a>
+                    <a href="#">Строительные материалы</a>
+                    <a href="#">Электротехнические товары</a>
+                </div>
+            </div>
+
+            <div class="hidden-lg hidden-md col-sm-6 hidden-xs">
+
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-6 hidden-xs">
+                <div class="dropdown_right_col">
+                    <a href="#">Инженерные системы</a>
+                    <a href="#">Крепёж</a>
+                    <a href="#">ЛКМ, грунты, пены, герметики</a>
+                    <a href="#">Отделка</a>
+                    <a href="#">Сантехника</a>
+                    <a href="#">Строительные материалы</a>
+                    <a href="#">Электротехнические товары</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Dropdown menu End -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Footer line Begin -->
+    <div class="container-fluid">
+        <div class="row" id="footer_line">
+            <div class="container">
+
+                <!-- Logo, subscribe form row Begin -->
+                <div class="row">
+
+                    <!-- Footer logo Begin -->
+                    <div class="col-lg-3 col-md-3 col-sm-3 hidden-xs text-left">
+                        <img src="/images/footer_logo.png" alt="" />
+                    </div>
+                    <!-- Footer logo End -->
+
+                    <!-- Subscripe form Begin -->
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                        <div class="footer_subsribe_text pull-left">
+                            Подпишитесь на нашу рассылку<br />
+                            <span>Чтобы получать информацию об акциях и скидках</span>
+                        </div>
+
+                        <form class="footer_subsribe_form">
+                            <button type="submit" class="footer_subsribe_button pull-right hidden-xs">Подписаться на рассылку</button>
+
+                            <div class="form-group">
+                                <input type="text" class="form-control footer_subsribe_field" placeholder="Ваша электронная почта">
+                            </div>
+
+                            <button type="submit" class="footer_subsribe_button hidden-lg hidden-md hidden-sm">Подписаться на рассылку</button>
+                        </form>
+                    </div>
+                    <!-- Subscribe form End -->
+
+                </div>
+                <!-- Logo, subscribe form End -->
+
+                <!-- Contacts, footer menu row Begin -->
+                <div class="row contacts_bottom_menu_row">
+
+                    <!-- Contacts Begin -->
+                    <div class="col-lg-3 col-md-4 col-sm-5 col-xs-12">
+                        <div class="bottom_col_phones hidden-xs">
+                            <span class="pull-left phoneicon"></span>
+                            <div class="top_phones">
+                                <span class="top_phone">8 (843) 212-27-26</span>&nbsp;&nbsp;
+                                <a href="#">Заказать&nbsp;звонок</a><br />
+                                <span class="top_workhours">Прием звонков: 9:00-19:00</span>
+                            </div>
+                        </div>
+
+                        <div class="bottom_col_email">
+                            <span class="pull-left mailicon"></span>
+                            <div class="contact_email">
+                                info@dominanta.ru
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Contacts End -->
+
+                    <!-- Bottom menu Begin -->
+                    <div class="col-lg-9 col-md-8 col-sm-7 col-xs-12">
+                        <div class="bottom_menu">
+                            <div class="bottom_menu_block pull-left">
+                                <div class="bottom_menu_header">О компании</div>
+                                <a href="#">Вакансии</a><br />
+                                <a href="#">Акции</a><br />
+                                <a href="#">Услуги</a>
+                            </div>
+
+                            <div class="bottom_menu_block pull-left">
+                                <div class="bottom_menu_header">&nbsp;</div>
+                                <a href="#">Советы</a><br />
+                                <a href="#">Контакты</a>
+                            </div>
+
+                            <div class="bottom_menu_block pull-left">
+                                <div class="bottom_menu_header">Сервис</div>
+                                <a href="#">Доставка</a><br />
+                                <a href="#">Оплата</a><br />
+                                <a href="#">Оптовикам</a>
+                            </div>
+
+                            <div class="bottom_menu_block pull-left">
+                                <div class="bottom_menu_header">&nbsp;</div>
+                                <a href="#">Карта сайта</a><br />
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Bottom menu End -->
+
+                </div>
+                <!-- Contacts, footer menu row End -->
+            </div>
+
+            <!-- Copyright Begin -->
+            <div class="footer_copyright text-center">
+                &copy; ООО «Доминанта», 2019
+            </div>
+            <!-- Copyright End -->
+        </div>
+    </div>
+
+
+
+
+
+
+    <script src="/assets/7e1f183b/jquery.js"></script>
+    <script src="/assets/cdee78cd/yii.js"></script>
+    <script src="/assets/2f52b3fa/js/bootstrap.min.js"></script>
+</body>
+</html>
