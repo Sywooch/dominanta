@@ -11,7 +11,7 @@ class MenuWidget extends Widget
 {
     public static $name = 'Меню';
 
-    public $call_model;
+    public $call_model, $controller;
 
     public $menu_view = 'menu';
 

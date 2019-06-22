@@ -10,7 +10,7 @@ $config = [
     'timeZone' => 'Europe/Moscow',
     'sourceLanguage' => 'en-US',
     'language' => 'ru-RU',
-    'bootstrap' => ['log', 'user_settings'],
+    'bootstrap' => ['log', 'user_settings', 'site_options'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
@@ -68,6 +68,9 @@ $config = [
         'db' => $db,
         'user_settings' => [
             'class' => 'app\components\bootstrap\ActionUserSettings',
+        ],
+        'site_options' => [
+            'class' => 'app\components\bootstrap\SiteOptions',
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,

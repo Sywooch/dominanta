@@ -63,6 +63,30 @@ span.top_map_city {
     margin-left: 5px;
 }
 
+#account_menu {
+    display: none;
+    background: #fff;
+    border: 1px solid #d7d7d7;
+    border-top: 1px solid white;
+    position: absolute;
+    z-index: 20;
+    margin-top: 10px;
+    width: 190px;
+    margin-left: -26px;
+    text-align: left;
+}
+
+#account_menu a, #account_menu a:visited, #account_menu a:active {
+    font-size: 16px;
+    text-decoration: none;
+    padding: 10px 5px;
+}
+
+#account_menu a:hover {
+    text-decoration: none;
+    color: #a7a7a7;
+}
+
 #header_main_line {
     margin-top: 9px;
 }
@@ -425,9 +449,46 @@ span.top_map_city {
 .modal_tabpanels {
     margin-top: -1px;
     border-top: 1px solid #D7D7D7;
+    padding: 20px 40px;
 }
 
+.modal_tab_panel {
+    display: none;
+}
 
+.active_modal_tab_panel {
+    display: block;
+}
+
+.modal_tabpanels .control-label {
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 19px;
+    color: #5B5B5B;
+}
+
+.modal_tabpanels input.form-control {
+    background: #FFFFFF;
+    border: 1px solid #D7D7D7;
+    border-radius: 5px;
+    font-size: 15px;
+    padding: 24px 15px;
+}
+
+.modal_tabpanels button {
+    background: #0E73BA;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #FFFFFF;
+    width: 190px;
+    padding: 16px 0px;
+}
+
+.restore_link {
+    padding-top: 17px;
+    text-align: right;
+}
 
 
 

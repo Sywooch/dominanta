@@ -75,6 +75,7 @@ return [
     'Access'        => 'Доступ',
     'Welcome'       => 'Добро пожаловать',
     'Your name'     => 'Ваше имя',
+    'Full name'     => 'ФИО',
     'User'          => 'Пользователь',
     'Users'         => 'Пользователи',
     'Email'         => 'Email',
@@ -114,6 +115,7 @@ return [
     'Administrator rules' => 'Права администратора',
     'You can not delete the current user' => 'Нельзя удалить текущего пользователя',
     'A user with such an email is already registered' => 'Пользователь с таким e-mail уже зарегистрирован',
+    'A user with such an phone is already registered' => 'Пользователь с таким телефоном уже зарегистрирован',
     'Notify' => 'Уведомления',
     'Rule' => 'Правило',
     'Rules' => 'Правила',
@@ -196,11 +198,13 @@ return [
     'Sending'  => 'Отправка',
     'Waiting'  => 'Ожидание',
     'Resend' => 'Отправить заново',
+    'Send' => 'Отправить',
 
     // Options
     'Option' => 'Опция',
     'Options' => 'Опции',
     'Option value' => 'Значение',
+    'User role for registration' => 'Группа пользователя для регистрации',
 
     // CSS
     'CSS' => 'CSS',

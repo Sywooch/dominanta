@@ -16,6 +16,7 @@ class SettingsController extends AbstractManageController
         'main_page' => 'Main page',
         'page_extension' => 'Page extension',
         'scheme' => 'Scheme',
+        'user_reg_role' => 'User role for registration',
     ];
 
     public function actionIndex()

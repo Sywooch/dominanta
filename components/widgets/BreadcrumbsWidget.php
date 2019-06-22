@@ -11,7 +11,7 @@ class BreadcrumbsWidget extends Widget
 {
     public static $name = 'Хлебные крошки';
 
-    public $call_model, $main_page;
+    public $call_model, $main_page, $controller;
 
     public $items = [];
 

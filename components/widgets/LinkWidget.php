@@ -10,7 +10,7 @@ class LinkWidget extends Widget
 {
     public static $name = 'link';
 
-    public $call_model, $url;
+    public $call_model, $url, $controller;
 
     public static function getName()
     {

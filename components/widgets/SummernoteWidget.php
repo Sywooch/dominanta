@@ -17,7 +17,7 @@ class SummernoteWidget extends Widget
 
     public $form_name = 'summernote';
 
-    public $call_model;
+    public $call_model, $controller;
 
     public static function getName()
     {

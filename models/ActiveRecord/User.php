@@ -3,8 +3,10 @@
 namespace app\models\ActiveRecord;
 
 use Yii;
-use app\models\ActiveRecord\AbstractModel;
 use yii\web\IdentityInterface;
+use yii\helpers\Html;
+use yii\helpers\Url;
+use app\models\ActiveRecord\AbstractModel;
 
 /**
  * This is the model class for table "user".
@@ -21,6 +23,7 @@ use yii\web\IdentityInterface;
  * @property string $timeZone
  * @property string $realname
  * @property string $notify
+ * @property string $notify
  *
  * @property Role $role
  */
@@ -30,7 +33,7 @@ class User extends AbstractModel implements IdentityInterface
 
     public static $entitiesName = 'Users';
 
-    public $remember_me, $_user, $repassword;
+    public $remember_me, $_user, $repassword, $agree, $email_or_phone;
 
     const SCENARIO_LOGIN = 'login';
     const SCENARIO_ADD = 'add';
@@ -38,6 +41,8 @@ class User extends AbstractModel implements IdentityInterface
     const SCENARIO_PASSWORD = 'password';
     const SCENARIO_SETTINGS = 'settings';
     const SCENARIO_SEARCH = 'search';
+    const SCENARIO_REG = 'reg';
+    const SCENARIO_RESTORE = 'restore';
 
     /**
      * @inheritdoc
@@ -51,6 +56,8 @@ class User extends AbstractModel implements IdentityInterface
         $scenarios[self::SCENARIO_EDIT] = ['email', 'realname', 'phone', 'role_id'];
         $scenarios[self::SCENARIO_SETTINGS] = ['timeZone', 'language', 'notify'];
         $scenarios[self::SCENARIO_SEARCH] = ['email', 'realname', 'role_id', 'create_time', 'last_activity', 'language', 'timeZone', 'phone'];
+        $scenarios[self::SCENARIO_REG] = ['email', 'realname', 'phone', 'password', 'repassword', 'agree'];
+        $scenarios[self::SCENARIO_RESTORE] = ['email_or_phone'];
 
         return $scenarios;
     }
@@ -65,14 +72,28 @@ class User extends AbstractModel implements IdentityInterface
             [['status', 'role_id'], 'integer'],
             [['email', 'password'], 'required', 'except' => self::SCENARIO_SEARCH],
             ['remember_me', 'boolean', 'on' => self::SCENARIO_LOGIN],
-            ['password', 'formValidatePassword', 'on' => self::SCENARIO_LOGIN],
+            ['password', 'formValidatePassword', 'on' => [self::SCENARIO_LOGIN]],
+            ['password', 'string', 'min'=> 6, 'on' => [self::SCENARIO_ADD, self::SCENARIO_PASSWORD, self::SCENARIO_REG]],
             ['email', 'email', 'on' => self::SCENARIO_SEARCH],
-            ['email', 'formValidateEmail', 'on' => [self::SCENARIO_ADD, self::SCENARIO_EDIT]],
+            ['email', 'formValidateEmail', 'on' => [self::SCENARIO_ADD, self::SCENARIO_EDIT, self::SCENARIO_REG]],
             ['role_id', 'required', 'on' => [self::SCENARIO_ADD, self::SCENARIO_EDIT]],
-            ['repassword', 'compare', 'compareAttribute' => 'password', 'on' => [self::SCENARIO_ADD, self::SCENARIO_EDIT]],
+            ['repassword', 'compare', 'compareAttribute' => 'password', 'on' => [self::SCENARIO_ADD, self::SCENARIO_PASSWORD, self::SCENARIO_REG]],
+            ['repassword', 'required', 'on' => [self::SCENARIO_ADD, self::SCENARIO_PASSWORD, self::SCENARIO_REG]],
+            [['realname', 'phone'], 'required', 'on' => self::SCENARIO_REG],
             [['create_time', 'last_activity'], 'safe'],
             [['email', 'password', 'access_token', 'language', 'timeZone', 'realname', 'phone'], 'string', 'max' => 255],
             [['role_id'], 'exist', 'skipOnError' => true, 'targetClass' => Role::className(), 'targetAttribute' => ['role_id' => 'id']],
+            ['agree', 'boolean', 'on' => self::SCENARIO_REG],
+            ['agree', 'compare', 'compareValue' => 1, 'message' => 'Необходимо принять соглашение'],
+            ['phone', 'filter', 'filter' => function ($value) {
+                return '+'.str_replace(['+', '(', ')', '-', ' '], '', $value);
+            }, 'on' => [self::SCENARIO_ADD, self::SCENARIO_EDIT, self::SCENARIO_REG]],
+            ['phone', 'match', 'pattern' => '/^\+7\d{10,10}$/i', 'on' => [self::SCENARIO_ADD, self::SCENARIO_EDIT, self::SCENARIO_REG]],
+            ['phone', 'formValidatePhone', 'on' => [self::SCENARIO_ADD, self::SCENARIO_EDIT, self::SCENARIO_REG]],
+            ['email_or_phone', 'string', 'on' => self::SCENARIO_RESTORE],
+            ['email_or_phone', 'filter', 'filter' => function ($value) {
+                return str_replace(['+', '(', ')', ' '], '', $value);
+            }, 'on' => self::SCENARIO_RESTORE],
         ];
     }
 
@@ -92,7 +113,7 @@ class User extends AbstractModel implements IdentityInterface
             'last_activity' => Yii::t('app', 'Last activity'),
             'language' => Yii::t('app', 'Language'),
             'timeZone' => Yii::t('app', 'Time zone'),
-            'realname' => Yii::t('app', 'User name'),
+            'realname' => Yii::t('app', 'Full name'),
             'phone' => Yii::t('app', 'Phone'),
             'remember_me' => Yii::t('app', 'Remember me'),
             'repassword'  => Yii::t('app', 'Retype password'),
@@ -111,13 +132,38 @@ class User extends AbstractModel implements IdentityInterface
     public function eventBeforeInsert()
     {
         $this->access_token = Yii::$app->security->generateRandomString();
+        $this->setPassword($this->password);
         $this->create_time = $this->dbTime;
+        $this->role_id = Yii::$app->site_options->user_reg_role;
+    }
+
+    public function eventAfterInsert()
+    {
+        if ($this->status == self::STATUS_INACTIVE) {
+            $link = Url::to(['activate', 'token' => $this->access_token], true);
+
+
+            Mail::createAndSave([
+                'to_email'  => $this->email,
+                'subject'   => 'Регистрация на сайте '.ucfirst($_SERVER['SERVER_NAME']),
+                'body_text' => 'Вы успешно зарегистрировались на сайте '.$_SERVER['SERVER_NAME'].'.'.PHP_EOL.PHP_EOL.
+                               'Для активации аккаунта перейдите, пожалуйста, по ссылке - '.$link,
+                'body_html' => 'Вы успешно зарегистрировались на сайте '.$_SERVER['SERVER_NAME'].'.'.PHP_EOL.PHP_EOL.
+                               'Для активации аккаунта перейдите, пожалуйста, по ссылке - '.
+                               Html::a($link, $link)
+            ]);
+        }
     }
 
     public function setActivity()
     {
         $this->last_activity = $this->dbTime;
         $this->save();
+    }
+
+    public function refreshAuthkey()
+    {
+        $this->access_token = Yii::$app->security->generateRandomString();
     }
 
     /**
@@ -133,7 +179,7 @@ class User extends AbstractModel implements IdentityInterface
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
-        return static::findOne(['access_token' => $token, 'status' => self::STATUS_ACTIVE]);
+        return static::findOne(['access_token' => $token, 'status' => is_null($type) ? self::STATUS_ACTIVE : $type]);
     }
 
     /**
@@ -245,6 +291,34 @@ class User extends AbstractModel implements IdentityInterface
     }
 
     /**
+     * Validate unique phone in DB
+     *
+     * @param string $attribute the attribute currently being validated
+     * @param array $params the additional name-value pairs given in the rule
+     */
+    public function formValidatePhone($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            $query = self::find()->where(['phone' => $this->phone]);
+
+            if ($this->id) {
+                $query = $query->andWhere(['!=', 'id', $this->id]);
+            }
+
+            if ($query->count()) {
+                $this->addError($attribute, Yii::t('app', 'A user with such an phone is already registered'));
+            }
+        }
+    }
+
+    public function activateUser()
+    {
+        $this->refreshAuthkey();
+        $this->status = self::STATUS_ACTIVE;
+        $this->save();
+    }
+
+    /**
      * Logs in a user using the provided username and password.
      * @return bool whether the user is logged in successfully
      */
@@ -255,5 +329,10 @@ class User extends AbstractModel implements IdentityInterface
         }
 
         return false;
+    }
+
+    public function loginUser($long_login = false)
+    {
+        Yii::$app->user->login($this, $long_login ? 3600 * 24 * 30 : 0);
     }
 }

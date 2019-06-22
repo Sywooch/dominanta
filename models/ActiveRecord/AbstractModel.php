@@ -403,7 +403,8 @@ class AbstractModel extends ActiveRecord implements InterfaceModel
 
             foreach ($find AS $one_res) {
                 $params = [
-                    'call_model' => $this
+                    'call_model' => $this,
+                    'controller' => $controller,
                 ];
 
                 for ($i = 1; $i < count($one_res); $i++) {

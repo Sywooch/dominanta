@@ -215,7 +215,7 @@ class Page extends AbstractModel
         $this->sitemap();
     }
 
-    public static function findByAddress($page)
+    public static function findByAddress($page, $only_active = false)
     {
         $page_parts = explode('/', trim($page, '/'));
         $params = [];
@@ -233,8 +233,13 @@ class Page extends AbstractModel
             }
 
 
-            $found = self::find()->where(['slug' => $find_slug])->andWhere(['status' => self::STATUS_ACTIVE])->all();
+            $query = self::find()->where(['slug' => $find_slug]);
 
+            if ($only_active) {
+                $query->andWhere(['status' => self::STATUS_ACTIVE]);
+            }
+
+            $found = $query->all();
             if (!$found) {
                 $params[] = $page_parts[$i];
                 continue;

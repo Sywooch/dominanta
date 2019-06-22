@@ -70,7 +70,7 @@ class UsersController extends AbstractManageController
             }
 
             if ($save_model->load(Yii::$app->request->post()) && $save_model->validate()) {
-                if ($save_model->scenario == $save_model::SCENARIO_ADD || $save_model->scenario == $save_model::SCENARIO_PASSWORD) {
+                if ($save_model->scenario == $save_model::SCENARIO_PASSWORD) {
                     $save_model->setPassword($save_model->password);
                 }
 

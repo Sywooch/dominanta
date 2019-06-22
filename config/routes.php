@@ -1,10 +1,11 @@
 <?php
 
 return [
-    'login'        => 'site/login',
-    'registration' => 'site/registration',
-    'restore'      => 'site/restore',
-    'logout'       => 'site/logout',
+    'login'               => 'site/login',
+    'registration'        => 'site/registration',
+    'logout'              => 'site/logout',
+    'activate/<token:.*>' => 'site/activate',
+    'restore/<token:.*>'  => 'site/restore',
     [
         'pattern'  => 'manage/<controller>/<action:\w*>/<id:\d*>',
         'route'    => 'manage/<controller>/<action>',

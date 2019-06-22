@@ -5,6 +5,7 @@ use yii\widgets\ActiveForm;
 use rmrevin\yii\fontawesome\component\Icon;
 use yiister\gentelella\widgets\Panel;
 use app\models\ActiveRecord\Page;
+use app\models\ActiveRecord\Role;
 
 $this->title = Yii::t('app', $page_model->entitiesName);
 
@@ -21,6 +22,7 @@ $dropdowns = [
         'https' => 'https://',
     ],
     'main_page' => Page::find()->select(['page_name', 'slug'])->where(['status' => Page::STATUS_ACTIVE, 'pid' => NULL])->indexBy('slug')->column(),
+    'user_reg_role' => Role::find()->select(['role_name', 'id'])->where(['status' => Role::STATUS_ACTIVE])->indexBy('id')->column(),
 ];
 
 ?>

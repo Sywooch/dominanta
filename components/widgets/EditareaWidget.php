@@ -17,7 +17,7 @@ class EditareaWidget extends Widget
 
     public $form_name = 'editarea';
 
-    public $call_model;
+    public $call_model, $controller;
 
     public static function getName()
     {

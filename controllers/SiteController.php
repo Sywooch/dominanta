@@ -8,6 +8,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\ActiveRecord\Option;
+use app\models\ActiveRecord\Mail;
 use app\models\ActiveRecord\Page;
 use app\models\ActiveRecord\User;
 use app\modules\manage\controllers\site\SettingsController;
@@ -36,12 +37,12 @@ class SiteController extends AbstractController
                     ],
                 ],
             ],
-            'verbs' => [
+            /*'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'logout' => ['post'],
                 ],
-            ],
+            ],*/
         ];
     }
 
@@ -79,6 +80,64 @@ class SiteController extends AbstractController
     }
 
     /**
+     * Activate action.
+     *
+     * @return Response|string
+     */
+    public function actionActivate($token)
+    {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
+        $user = User::findIdentityByAccessToken($token, User::STATUS_INACTIVE);
+
+        if (!$user) {
+            $page = $this->actionPage('/info_pages/activate_fail', false);
+        } else {
+            $user->activateUser();
+            $user->loginUser();
+            $page = $this->actionPage('/info_pages/activate_success', false);
+        }
+
+        return $page;
+    }
+
+    /**
+     * Restore action.
+     *
+     * @return Response|string
+     */
+    public function actionRestore($token)
+    {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
+        $user = User::findIdentityByAccessToken($token);
+
+        if (!$user) {
+            $page = $this->actionPage('/info_pages/restore_fail', false);
+        } else {
+            $newPass = Yii::$app->security->generateRandomString(8);
+            $user->setPassword($newPass);
+            $user->refreshAuthkey();
+            $user->save();
+
+            Mail::createAndSave([
+                'to_email'  => $user->email,
+                'subject'   => 'Восстановление пароля на сайте '.ucfirst($_SERVER['SERVER_NAME']),
+                'body_text' => 'Новый пароль вашего аккаунта на сайте '.$_SERVER['SERVER_NAME'].':'.PHP_EOL.PHP_EOL.$newPass,
+                'body_html' => 'Новый пароль вашего на сайте '.$_SERVER['SERVER_NAME'].':<br /><br />'.$newPass,
+            ]);
+
+            $page = $this->actionPage('/info_pages/restore_success', false);
+        }
+
+        return $page;
+    }
+
+    /**
      * Logout action.
      *
      * @return Response
@@ -95,7 +154,7 @@ class SiteController extends AbstractController
      * @param $page string
      * @return Response
      */
-    public function actionPage($page)
+    public function actionPage($page, $only_active = true)
     {
         $page_content = false;
 
@@ -111,11 +170,11 @@ class SiteController extends AbstractController
             $page = 'index'.$page_extension;
         }
 
-        $this->page = Page::findByAddress($page);
+        $this->page = Page::findByAddress($page, $only_active);
 
         if (!$this->page) {
             Yii::$app->response->statusCode = 404;
-            $this->page = Page::findByAddress('404'.$page_extension);
+            $this->page = Page::findByAddress('404'.$page_extension, $only_active);
         }
 
         if (!$this->page) {
