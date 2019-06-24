@@ -28,7 +28,8 @@
         "kartik-v/yii2-widgets": "*",
         "kartik-v/yii2-date-range": "*",
         "yiisoft/yii2-imagine": "*",
-        "2amigos/yii2-file-upload-widget": "^1.0"
+        "2amigos/yii2-file-upload-widget": "^1.0",
+        "cocur/slugify": "^3.2"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",
