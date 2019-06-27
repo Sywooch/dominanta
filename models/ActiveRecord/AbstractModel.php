@@ -172,7 +172,7 @@ class AbstractModel extends ActiveRecord implements InterfaceModel
     public static function createAndSave($fields = [])
     {
         $model = self::createModel($fields);
-        $model->save();
+        $model->save(false);
         return $model;
     }
 
@@ -230,6 +230,11 @@ class AbstractModel extends ActiveRecord implements InterfaceModel
         return StringHelper::basename(self::className());
     }
 
+    public static function staticModelName()
+    {
+        return StringHelper::basename(self::className());
+    }
+
     public static function getDbTime($time = false)
     {
         if (!is_object($time) || !($time instanceof \DateTime)) {
@@ -282,7 +287,14 @@ class AbstractModel extends ActiveRecord implements InterfaceModel
 
     public function getUploadFolder()
     {
-        $folder = Yii::getAlias('@webroot').'/uploads/'.strtolower($this->modelName);
+        return self::staticUploadFolder();
+    }
+
+    public static function staticUploadFolder()
+    {
+        $alias_path = isset(Yii::$aliases['@webroot']) ? Yii::getAlias('@webroot') : Yii::getAlias('@app').'/web';
+
+        $folder = $alias_path.'/uploads/'.strtolower(self::staticModelName());
 
         if (!is_dir($folder)) {
             if (@!mkdir($folder, 0777, true)) {

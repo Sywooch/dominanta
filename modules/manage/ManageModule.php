@@ -9,6 +9,8 @@ use app\models\ActiveRecord\Mail;
 use app\models\ActiveRecord\MailSetting;
 use app\models\ActiveRecord\Option;
 use app\models\ActiveRecord\Page;
+use app\models\ActiveRecord\ProductCategory;
+use app\models\ActiveRecord\Product;
 use app\models\ActiveRecord\Role;
 use app\models\ActiveRecord\Template;
 use app\models\ActiveRecord\User;
@@ -16,6 +18,14 @@ use app\models\ActiveRecord\User;
 class ManageModule extends Module
 {
     protected $menu = [
+        'Market' => [
+            'icon' => 'shopping-cart',
+            'ProductCategory' => [
+                'icon' => 'industry',
+                'url'   => '/manage/market/categories',
+                'badge' => [['status' => ProductCategory::STATUS_ACTIVE], ['status' => Product::STATUS_ACTIVE]]
+            ]
+        ],
         'Site' => [
             'icon' => 'globe',
             'Page' => [

@@ -246,6 +246,31 @@ return [
     'Record ID' => 'Идентификатор записи',
     'Variant' => 'Вариант',
 
+    'Market' => 'Магазин',
+    'Product category' => 'Категория товаров',
+    'Product categories' => 'Категории товаров',
+    'Subcategory' => 'Подкатегория',
+    'Subcategories' => 'Подкатегории',
+    'Category name' => 'Название категории',
+    'Add category' => 'Добавить категорию',
+    'Add product' => 'Добавить товар',
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     'Country' => 'Страна',
     'City' => 'Город',
     'Phones' => 'Телефоны',

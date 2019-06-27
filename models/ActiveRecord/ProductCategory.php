@@ -20,11 +20,16 @@ use app\models\ActiveRecord\AbstractModel;
  * @property string $last_update
  * @property string $link
  *
+ * @property Product[] $products
  * @property ProductCategory $p
  * @property ProductCategory[] $productCategories
  */
 class ProductCategory extends AbstractModel
 {
+    public static $entityName = 'Product category';
+
+    public static $entitiesName = 'Product categories';
+
     /**
      * {@inheritdoc}
      */
@@ -49,15 +54,23 @@ class ProductCategory extends AbstractModel
             'id' => Yii::t('app', 'ID'),
             'status' => Yii::t('app', 'Status'),
             'pid' => Yii::t('app', 'Pid'),
-            'category_name' => Yii::t('app', 'Category Name'),
+            'category_name' => Yii::t('app', 'Category name'),
             'slug' => Yii::t('app', 'Slug'),
-            'category_description' => Yii::t('app', 'Category Description'),
+            'category_description' => Yii::t('app', 'Category description'),
             'title' => Yii::t('app', 'Title'),
-            'meta_keywords' => Yii::t('app', 'Meta Keywords'),
-            'meta_description' => Yii::t('app', 'Meta Description'),
-            'last_update' => Yii::t('app', 'Last Update'),
-            'link' => Yii::t('app', 'Link'),
+            'meta_keywords' => Yii::t('app', 'Meta keywords'),
+            'meta_description' => Yii::t('app', 'Meta description'),
+            'last_update' => Yii::t('app', 'Last update'),
+            'link' => Yii::t('app', 'Ext link'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProducts()
+    {
+        return $this->hasMany(Product::className(), ['cat_id' => 'id']);
     }
 
     /**
@@ -74,5 +87,15 @@ class ProductCategory extends AbstractModel
     public function getProductCategories()
     {
         return $this->hasMany(ProductCategory::className(), ['pid' => 'id']);
+    }
+
+    public function getCountSubcats()
+    {
+        return self::find()->where(['>=', 'status', self::STATUS_INACTIVE])->andWhere(['pid' => $this->id])->count();
+    }
+
+    public function getCountProducts()
+    {
+        return Product::find()->where(['>=', 'status', self::STATUS_INACTIVE])->andWhere(['cat_id' => $this->id])->count();
     }
 }
