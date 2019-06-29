@@ -39,6 +39,10 @@ use app\models\ActiveRecord\AbstractModel;
  */
 class Product extends AbstractModel
 {
+    public static $entityName = 'Product';
+
+    public static $entitiesName = 'Products';
+
     /**
      * {@inheritdoc}
      */

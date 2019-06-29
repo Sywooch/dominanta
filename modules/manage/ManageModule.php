@@ -23,7 +23,12 @@ class ManageModule extends Module
             'ProductCategory' => [
                 'icon' => 'industry',
                 'url'   => '/manage/market/categories',
-                'badge' => [['status' => ProductCategory::STATUS_ACTIVE], ['status' => Product::STATUS_ACTIVE]]
+                'badge' => [['>=', 'status', ProductCategory::STATUS_INACTIVE], ['status' => ProductCategory::STATUS_ACTIVE]]
+            ],
+            'Product' => [
+                'icon' => 'shopping-bag',
+                'url'   => '/manage/market/products',
+                'badge' => [['>=', 'status', Product::STATUS_INACTIVE], ['status' => Product::STATUS_ACTIVE]]
             ]
         ],
         'Site' => [
@@ -31,7 +36,7 @@ class ManageModule extends Module
             'Page' => [
                 'icon'  => 'files-o',
                 'url'   => '/manage/site/pages',
-                'badge' => [['status' => Page::STATUS_ACTIVE], ['>=', 'status', Page::STATUS_INACTIVE]]
+                'badge' => [['>=', 'status', Page::STATUS_INACTIVE], ['status' => Page::STATUS_ACTIVE]]
             ],
             'Template' => [
                 'icon'  => 'file-o',
@@ -87,7 +92,7 @@ class ManageModule extends Module
             'Mail' => [
                 'url' => '/manage/mail/queue',
                 'icon' => 'send-o',
-                'badge' => [['status' => Mail::STATUS_INACTIVE], ['>=', 'status', Mail::STATUS_INACTIVE]],
+                'badge' => [['>=', 'status', Mail::STATUS_INACTIVE], ['status' => Mail::STATUS_INACTIVE]],
             ],
         ],
     ];

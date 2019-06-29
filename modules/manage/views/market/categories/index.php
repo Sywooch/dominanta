@@ -5,7 +5,14 @@ use yii\helpers\Url;
 use rmrevin\yii\fontawesome\component\Icon;
 use yiister\gentelella\widgets\grid\GridView;
 
+//alt_title
+
 $this->title = isset($model->id) ? Yii::t('app', $page_model->entityName).': '.Html::encode($model->category_name) : Yii::t('app', $page_model->entitiesName);
+
+if (isset($model->id)) {
+    $this->params['alt_title'] = Html::a(Yii::t('app', $page_model->entityName), ['/manage/market/categories']);
+    $this->params['alt_title_small'] = Html::a($model->category_name, ['/manage/market/categories', 'cat_id' => $model->pid ? $model->pid : NULL]);
+}
 
 if ($rules[$page_model->modelName]['is_add']) {
     if (!isset($model->id) || !$model->countProducts) {
@@ -49,10 +56,12 @@ $this->params['select_menu'] = Url::to(['/manage/market/categories']);
         'columns' => [
             [
                 'class' => 'yii\grid\ActionColumn',
-                'headerOptions' => ['width' => '80', 'class' => 'text-center'],
+                'headerOptions' => ['width' => '120', 'class' => 'text-center'],
                 'contentOptions' => ['class' => 'text-center', 'style' => 'vertical-align: middle'],
                 'template' => ($rules[$page_model->modelName]['is_edit'] ? '{fast} ' : ' ').
                               ($rules[$page_model->modelName]['is_edit'] ? '{edit} ' : ' ').
+                              ($rules[$page_model->modelName]['is_edit'] ? '{show} ' : ' ').
+                              ($rules[$page_model->modelName]['is_edit'] ? '{hide} ' : ' ').
                               ($rules[$page_model->modelName]['is_delete'] ? '{delete}' : ''),
                 'buttons' => [
                     'fast' => function ($url, $model) {
@@ -76,11 +85,52 @@ $this->params['select_menu'] = Url::to(['/manage/market/categories']);
                                       ]]
                               );
                     },
+                    'show' => function ($url, $model) {
+                        if ($model->status == $model::STATUS_ACTIVE) {
+                            return '';
+                        }
+
+                        $title = ($model->status == $model::STATUS_INACTIVE ? Yii::t('app', 'Hidden') : Yii::t('app', 'Deleted')).
+                                 '. '.Yii::t('app', 'Show');
+
+                        return Html::a(new Icon('eye', ['class' => 'fa-lg']),
+                                      ['show', 'id' => $model->id],
+                                      ['title' => $title,
+                                       'aria-label' => $title,
+                                       'data' => [
+                                          'toggle' => 'tooltip',
+                                      ]]
+                              );
+                    },
+                    'hide' => function ($url, $model) {
+                        if ($model->status == $model::STATUS_INACTIVE) {
+                            return '';
+                        }
+
+                        $title = ($model->status == $model::STATUS_ACTIVE ? Yii::t('app', 'Published') : Yii::t('app', 'Deleted')).
+                                 '. '.Yii::t('app', 'Hide');
+
+                        return Html::a(new Icon('eye-slash', ['class' => 'fa-lg']),
+                                      ['hide', 'id' => $model->id],
+                                      ['title' => $title,
+                                       'aria-label' => $title,
+                                       'data' => [
+                                          'toggle' => 'tooltip',
+                                      ]]
+                              );
+                    },
                     'delete' => function ($url, $model) {
+                        if ($model->status == $model::STATUS_DELETED) {
+                            return '';
+                        }
+
+                        $title = ($model->status == $model::STATUS_ACTIVE ? Yii::t('app', 'Published') : Yii::t('app', 'Hidden')).
+                                 '. '.Yii::t('app', 'Delete');
+
                         return Html::a(new Icon('remove', ['class' => 'fa-lg']),
                                       ['delete', 'id' => $model->id],
-                                      ['title' => Yii::t('app', 'Delete'),
-                                       'aria-label' => Yii::t('app', 'Delete'),
+                                      ['title' => $title,
+                                       'aria-label' => $title,
                                        'data' => [
                                           'toggle' => 'tooltip',
                                           'pjax' => 0,
@@ -98,28 +148,34 @@ $this->params['select_menu'] = Url::to(['/manage/market/categories']);
             ],
             [
                 'attribute' => 'category_name',
+                'content' => function($data) {
+                    return Html::a(Html::encode($data->category_name), ['', 'cat_id' => $data->id]);
+                }
             ],
             [
                 'attribute' => 'slug',
+                'content' => function($data) {
+                    return Html::a(Html::encode($data->slug), ['', 'cat_id' => $data->id]);
+                }
+
 /*                'content' => function($data) {
                     return $data->path ? Html::a($data->path, $data->path, ['target' => '_blank']) : '';
                 },*/
             ],
             [
-                'label' => Yii::t('app', 'Content'),
+                'encodeLabel' => false,
+                'label' => Yii::t('app', 'Subcategories').'<br /><span style="font-size: 9px">'.Yii::t('app', 'Total').' / '.Yii::t('app', 'Published').'</span>',
                 'content' => function($data) {
-                    $count_subcats = $data->countSubcats;
-                    $count_products = $data->countProducts;
-
-                    return $count_subcats ?
-                        Html::a(Yii::t('app', 'Subcategories').' ('.$count_subcats.')', ['index', 'cat_id' => $data->id])
-                        : (
-                          $count_products ?
-                            Html::a(Yii::t('app', 'Products').' ('.$count_products.')', ['index', 'cat_id' => $data->id])
-                            :
-                          Html::a(Yii::t('app', 'Empty category'), ['index', 'cat_id' => $data->id])
-                        );
-
+                    $count_subcats = $data->countAllSubcats;
+                    return Html::a($count_subcats['all'].' / '.$count_subcats['published'], ['', 'cat_id' => $data->id]);
+                },
+            ],
+            [
+                'encodeLabel' => false,
+                'label' => Yii::t('app', 'Products').'<br /><span style="font-size: 9px">'.Yii::t('app', 'Total').' / '.Yii::t('app', 'Published').'</span>',
+                'content' => function($data) {
+                    $count_subcats = $data->countAllSubcats;
+                    return Html::a($count_subcats['products_all'].' / '.$count_subcats['products_published'], ['', 'cat_id' => $data->id]);
                 },
             ],
         ],
@@ -135,4 +191,6 @@ $this->params['select_menu'] = Url::to(['/manage/market/categories']);
 <?php } ?>
 
 <div class="btn-group" role="group">
+    <?= Html::a(new Icon('check').' '.Yii::t('app', 'Active records'), ['/manage/market/categories', 'cat_id' => isset($model->id) ? $model->id : NULL], ['class' => 'btn btn-round btn-'.($status != $page_model::STATUS_DELETED ? 'success' : 'default')]) ?>
+    <?= Html::a(new Icon('trash').' '.Yii::t('app', 'Deleted records'), ['/manage/market/categories', 'status' => $page_model::STATUS_DELETED, 'cat_id' => isset($model->id) ? $model->id : NULL], ['class' => 'btn btn-round btn-'.($status == $page_model::STATUS_DELETED ? 'success' : 'default')]) ?>
 </div>

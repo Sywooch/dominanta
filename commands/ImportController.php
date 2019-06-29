@@ -148,7 +148,7 @@ echo " - EXISTS".PHP_EOL;
         if (!$pagination) {
             $pages = $html->find('ul.pagination li a');
             unset($html);
-
+echo "Pages: ".count($pages).PHP_EOL;
             if (count($pages)) {
                 for ($i = 2; $i <= count($pages); $i++) {
                     echo "PAGE ".$i.PHP_EOL;
@@ -193,14 +193,23 @@ echo " - EXISTS".PHP_EOL;
         }
 
         $price_block = count($html->find('div.price-base')) ? 'price-base' : 'block-price-special';
+        $price_value = $html->find('div.'.$price_block.' span.block-price-value');
+
+        if (count($price_value)) {
+            $price = trim($price_value[0]->attr['data-price']);
+            $unit  = trim(str_replace('Спеццена', '', $html->find('div.'.$price_block.' span.price-title')[0]->innertext));
+        } else {
+            $unit = 'шт.';
+            $price = 0;
+        }
 
         $new_product = [
             'cat_id' => $cat_id,
             'product_name' => $title,
             'slug' => $slug,
             'product_desc' => trim($html->find('div._goods-description-text')[0]->innertext),
-            'price' => trim($html->find('div.'.$price_block.' span.block-price-value')[0]->attr['data-price']),
-            'unit' => trim(str_replace('Спеццена', '', $html->find('div.'.$price_block.' span.price-title')[0]->innertext)),
+            'price' => $price,
+            'unit' => $unit,
             'ext_code' => $ext_code,
             'link' => $this->site.$href,
             'vendor_id' => $vendor_id,

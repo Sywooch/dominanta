@@ -30,6 +30,8 @@ class ProductCategory extends AbstractModel
 
     public static $entitiesName = 'Product categories';
 
+    public $count_cache = [];
+
     /**
      * {@inheritdoc}
      */
@@ -37,7 +39,9 @@ class ProductCategory extends AbstractModel
     {
         return [
             [['status', 'pid'], 'integer'],
-            [['category_name', 'slug'], 'required'],
+            [['category_name', 'slug'], 'required', 'on' => self::SCENARIO_FORM],
+            ['slug', 'match', 'pattern' => '/^[A-z0-9_-]*$/i', 'on' => self::SCENARIO_FORM],
+            ['slug', 'uniqueSlugValidator', 'on' => self::SCENARIO_FORM],
             [['category_description', 'title', 'meta_keywords', 'meta_description'], 'string'],
             [['last_update'], 'safe'],
             [['category_name', 'slug', 'link'], 'string', 'max' => 255],
@@ -53,7 +57,7 @@ class ProductCategory extends AbstractModel
         return [
             'id' => Yii::t('app', 'ID'),
             'status' => Yii::t('app', 'Status'),
-            'pid' => Yii::t('app', 'Pid'),
+            'pid' => Yii::t('app', 'Parent category'),
             'category_name' => Yii::t('app', 'Category name'),
             'slug' => Yii::t('app', 'Slug'),
             'category_description' => Yii::t('app', 'Category description'),
@@ -63,6 +67,21 @@ class ProductCategory extends AbstractModel
             'last_update' => Yii::t('app', 'Last update'),
             'link' => Yii::t('app', 'Ext link'),
         ];
+    }
+
+    public function uniqueSlugValidator($attribute, $params)
+    {
+        $checkQuery = self::find()->where(['slug' => $this->slug])->andWhere(['pid' => $this->pid == '' ? NULL : $this->pid]);
+
+        if ($this->id) {
+            $checkQuery->andWhere(['!=', 'id', $this->id]);
+        }
+
+        $find = $checkQuery->one();
+
+        if ($find) {
+            $this->addError($attribute, Yii::t('app', 'This value must be unique within a subsection.'));
+        }
     }
 
     /**
@@ -92,6 +111,39 @@ class ProductCategory extends AbstractModel
     public function getCountSubcats()
     {
         return self::find()->where(['>=', 'status', self::STATUS_INACTIVE])->andWhere(['pid' => $this->id])->count();
+    }
+
+    public function getCountAllSubcats()
+    {
+        if ($this->count_cache) {
+            return $this->count_cache;
+        }
+
+        $this->count_cache = [
+            'all' => 0,
+            'published' => 0,
+            'products_all' => Product::find()->where(['>=', 'status', Product::STATUS_INACTIVE])->andWhere(['cat_id' => $this->id])->count(),
+            'products_published' => Product::find()->where(['>=', 'status', Product::STATUS_ACTIVE])->andWhere(['cat_id' => $this->id])->count(),
+        ];
+
+        $subcats = self::find()->select(['id', 'status'])->where(['>=', 'status', self::STATUS_INACTIVE])->andWhere(['pid' => $this->id])->all();
+
+        foreach ($subcats AS $subcat) {
+            $this->count_cache['all']++;
+
+            if ($subcat->status == self::STATUS_ACTIVE) {
+                $this->count_cache['published']++;
+            }
+
+            $subcat_count = $subcat->getCountAllSubcats();
+
+            $this->count_cache['all'] += $subcat_count['all'];
+            $this->count_cache['published'] += $subcat_count['published'];
+            $this->count_cache['products_all'] += $subcat_count['products_all'];
+            $this->count_cache['products_published'] += $subcat_count['products_published'];
+        }
+
+        return $this->count_cache;
     }
 
     public function getCountProducts()

@@ -55,6 +55,7 @@ class Page extends AbstractModel
         return [
             [['status', 'pid', 'template_id', 'sitemap_inc', 'page_order'], 'integer'],
             [['slug', 'page_name'], 'required', 'on' => self::SCENARIO_FORM],
+            ['slug', 'match', 'pattern' => '/^[A-z0-9_-]*$/i', 'on' => self::SCENARIO_FORM],
             ['slug', 'uniqueSlugValidator', 'on' => self::SCENARIO_FORM],
             [['meta_keywords', 'meta_description', 'page_content', 'settings'], 'string'],
             [['title', 'slug', 'page_name'], 'string', 'max' => 255],

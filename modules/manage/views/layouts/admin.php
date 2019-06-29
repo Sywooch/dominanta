@@ -262,8 +262,9 @@ GentellaAsset::register($this);
                 <div class="page-title">
                     <div class="title_left">
                         <h1>
-                            <?= $this->title ?>
-                            <?= isset($this->params['top_panel'])?$this->params['top_panel']:'' ?>
+                            <?= isset($this->params['alt_title']) ? $this->params['alt_title'] : $this->title ?>
+                            <?= isset($this->params['alt_title_small']) ? '<br /><small>'.$this->params['alt_title_small'].'</small><br />' : '' ?>
+                            <?= isset($this->params['top_panel']) ? $this->params['top_panel'] : '' ?>
                         </h1>
                     </div>
                     <div class="title_right">

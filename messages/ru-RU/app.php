@@ -53,6 +53,8 @@ return [
     'No items' => 'Нет элементов',
     'Record has been deleted' => 'Запись удалена',
     'Record has been restored' => 'Запись восстановлена',
+    'Record has been published' => 'Запись опубликована',
+    'Record has been hidden' => 'Запись скрыта',
     'Hidden' => 'Скрыто',
     'Published' => 'Опубликовано',
     'Deleted' => 'Удалено',
@@ -254,6 +256,16 @@ return [
     'Category name' => 'Название категории',
     'Add category' => 'Добавить категорию',
     'Add product' => 'Добавить товар',
+    'Parent category' => 'Родительская категория',
+    'Product' => 'Товар',
+    'Products' => 'Товары',
+    'Total' => 'Всего',
+    'Category description' => 'Описание категории',
+    'Category filter' => 'Фильтр категории',
+    'In the filter' => 'В фильтре',
+    'Not in filter' => 'Не в фильтре',
+    'In the item card' => 'В карточке товара',
+    'Not in the item card' => 'Не в карточке товара',
 
 
 

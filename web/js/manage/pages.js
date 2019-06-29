@@ -1,6 +1,4 @@
 $(document).ready(function(){
-console.log('pages');
-
     $('#page-pid').on('change', function(){
         var elem = this;
 
