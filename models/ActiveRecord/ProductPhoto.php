@@ -16,6 +16,8 @@ use app\models\ActiveRecord\AbstractModel;
  */
 class ProductPhoto extends AbstractModel
 {
+    public $upload;
+
     /**
      * {@inheritdoc}
      */
@@ -45,5 +47,17 @@ class ProductPhoto extends AbstractModel
     public function getProduct()
     {
         return $this->hasOne(Product::className(), ['id' => 'product_id']);
+    }
+
+    public function getPhotoPath()
+    {
+        return $this->uploadFolder.DIRECTORY_SEPARATOR.$this->product_id.DIRECTORY_SEPARATOR.$this->id.'.jpg';
+    }
+
+    public function eventBeforeDelete()
+    {
+        if (file_exists($this->photoPath)) {
+            @unlink($this->photoPath);
+        }
     }
 }

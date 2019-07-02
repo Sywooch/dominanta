@@ -57,7 +57,7 @@ if (!$model) {
                 <div role="tabpanel" class="tab-pane fade active in" id="tab_content_basic" aria-labelledby="form-tab-basic">
                     <?= $form->field($model, 'category_name') ?>
 
-                    <?= $form->field($model, 'pid')->dropdownList($dropdown, ['prompt' => '']); ?>
+                    <?= $form->field($model, 'pid')->dropdownList($model->getListCat(0, NULL, isset($model->id) ? $model->id : NULL), ['prompt' => '']); ?>
 
                     <?= $form->field($model, 'slug') ?>
 

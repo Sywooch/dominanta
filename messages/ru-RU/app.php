@@ -266,7 +266,24 @@ return [
     'Not in filter' => 'Не в фильтре',
     'In the item card' => 'В карточке товара',
     'Not in the item card' => 'Не в карточке товара',
-
+    'Product name' => 'Название товара',
+    'Product description' => 'Описание товара',
+    'Ext code' => 'Внешний код',
+    'Int code' => 'Внутренний код',
+    'Price' => 'Цена',
+    'Old price' => 'Старая цена',
+    'Specifications' => 'Характеристики',
+    'Warehouse' => 'Склад',
+    'Photos' => 'Фотографии',
+    'Quantity available' => 'Количество в наличии',
+    'Unit' => 'Единица измерения',
+    'Packing quantity' => 'Количество в упаковке',
+    'Not specified' => 'Не указан',
+    'Vendor' => 'Производитель',
+    'Promo' => 'Акции',
+    'Discount' => 'Скидка',
+    'New value' => 'Новое значение',
+    'New property' => 'Новое свойство',
 
 
 

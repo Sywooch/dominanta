@@ -47,6 +47,27 @@ class ImportController extends Controller
 
     }
 
+    /**
+     * This command normalize products
+     */
+    public function actionNormalize()
+    {
+        foreach (Product::find()->batch(100) as $products) {
+            foreach ($products AS $product) {
+                $product->product_name = trim($product->product_name);
+                $product->title = $product->product_name;
+                $product->product_desc = $this->my_mb_ucfirst($product->product_desc);
+                echo $product->id.PHP_EOL;
+                $product->save();
+            }
+        }
+    }
+
+    private function my_mb_ucfirst($str) {
+        $fc = mb_strtoupper(mb_substr($str, 0, 1));
+        return $fc.mb_substr($str, 1);
+    }
+
     private function get($url, $options = [])
     {
         $default_options = [
@@ -205,15 +226,16 @@ echo "Pages: ".count($pages).PHP_EOL;
 
         $new_product = [
             'cat_id' => $cat_id,
-            'product_name' => $title,
-            'slug' => $slug,
-            'product_desc' => trim($html->find('div._goods-description-text')[0]->innertext),
+            'product_name' => trim($title),
+            'slug' => $slug,-
+            'product_desc' => $this->my_mb_ucfirst(trim($html->find('div._goods-description-text')[0]->innertext)),
             'price' => $price,
             'unit' => $unit,
             'ext_code' => $ext_code,
             'link' => $this->site.$href,
             'vendor_id' => $vendor_id,
             'last_update' => date('Y-m-d H:i:s'),
+            'title' => trim($title),
         ];
 
         $product_model = Product::createAndSave($new_product);

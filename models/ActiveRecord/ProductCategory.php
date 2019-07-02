@@ -3,6 +3,7 @@
 namespace app\models\ActiveRecord;
 
 use Yii;
+use yii\helpers\Html;
 use app\models\ActiveRecord\AbstractModel;
 
 /**
@@ -149,5 +150,31 @@ class ProductCategory extends AbstractModel
     public function getCountProducts()
     {
         return Product::find()->where(['>=', 'status', self::STATUS_INACTIVE])->andWhere(['cat_id' => $this->id])->count();
+    }
+
+    public function getListCat($level = 0, $pid = NULL, $filter = NULL)
+    {
+        $cat_list = [];
+        $cats = self::find()->select(['id', 'category_name'])
+                                          ->where(['pid' => $pid])
+                                          ->andWhere(['>=', 'status', self::STATUS_INACTIVE])
+                                          ->orderBy(['category_name' => SORT_ASC])
+                                          ->all();
+
+        foreach ($cats AS $one_cat) {
+            if ($one_cat->id == $filter) {
+                continue;
+            }
+
+            $cat_list[$one_cat->id] = str_repeat('- ', $level).Html::encode($one_cat->category_name);
+
+            $subcats_list = $this->getListCat($level + 1, $one_cat->id, $filter);
+
+            foreach ($subcats_list AS $subcat_id => $subcat_name) {
+                $cat_list[$subcat_id] = $subcat_name;
+            }
+        }
+
+        return $cat_list;
     }
 }

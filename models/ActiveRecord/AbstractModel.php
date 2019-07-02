@@ -198,7 +198,7 @@ class AbstractModel extends ActiveRecord implements InterfaceModel
         $this->load(Yii::$app->request->queryParams);
 
         //$this->scenario = self::SCENARIO_SEARCH;
-
+//print_r($dataProvider);
         if (!$this->validate()) {
             return $dataProvider;
         }
@@ -513,9 +513,14 @@ class AbstractModel extends ActiveRecord implements InterfaceModel
             }
         }
 
-        $preview_path = $this->uploadFolder.'/'.$width.'_'.$height.'_'.StringHelper::Basename($path);
+        $preview_dir  = $this->uploadFolder.'/'.$this->id;
+        $preview_path = $preview_dir.'/'.$width.'_'.$height.'_'.StringHelper::Basename($path);
 
         if (!file_exists($preview_path)) {
+            if (!is_dir($preview_dir)) {
+                @mkdir($preview_dir, 0777, true);
+            }
+
             Image::thumbnail($path, $width, $height)->save($preview_path, ['quality' => 75]);
         }
 

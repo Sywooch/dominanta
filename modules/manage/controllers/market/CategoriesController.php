@@ -96,42 +96,15 @@ class CategoriesController extends AbstractManageController
         return $this->render('edit', [
             'model' => $model,
             'is_modal' => true,
-            'dropdown' => $this->getListCat(0, NULL, isset($model->id) ? $model->id : NULL),
             'category_filter' => $category_filter,
         ]);
-    }
-
-    private function getListCat($level = 0, $pid = NULL, $filter = NULL)
-    {
-        $cat_list = [];
-        $cats = $this->__model::find()->select(['id', 'category_name'])
-                                          ->where(['pid' => $pid])
-                                          ->andWhere(['>=', 'status', $this->__model::STATUS_INACTIVE])
-                                          ->orderBy(['category_name' => SORT_ASC])
-                                          ->all();
-
-        foreach ($cats AS $one_cat) {
-            if ($one_cat->id == $filter) {
-                continue;
-            }
-
-            $cat_list[$one_cat->id] = str_repeat('- ', $level).Html::encode($one_cat->category_name);
-
-            $subcats_list = $this->getListCat($level + 1, $one_cat->id, $filter);
-
-            foreach ($subcats_list AS $subcat_id => $subcat_name) {
-                $cat_list[$subcat_id] = $subcat_name;
-            }
-        }
-
-        return $cat_list;
     }
 
     public function actionDelete($id)
     {
         $model = parent::actionDelete($id);
         Yii::$app->session->setFlash('success', Yii::t('app', 'Record has been deleted'));
-        return $this->redirect(['/manage/market/pages', 'cat_id' => $model->pid], 301);
+        return $this->redirect(['/manage/market/categories', 'cat_id' => $model->pid], 301);
     }
 
     public function actionShow($id)

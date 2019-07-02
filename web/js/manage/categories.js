@@ -2,11 +2,11 @@ $(document).ready(function(){
     $(".page_prop_list").sortable({
         item: "> li.prop-item",
         handle: ".fa-reorder",
-        update: resortJs,
+        update: resortCats,
         connectWith: ".page_prop_list"
     }).disableSelection();
 
-    function resortJs() {
+    function resortCats() {
         $(".page_prop_list").each(function() {
             var pos = $(this).data('pos');
 
