@@ -173,19 +173,14 @@ if (!$model) {
                     </div>
                     <div class="form-group" id="product-new-prop">
                         <label class="control-label" for="product-new-propname"><?= Yii::t('app', 'New property') ?></label>
-                            <div class="input-group">
-                                <?= Html::textInput('propname', '', ['class' => 'form-control', 'id' => 'product-new-propname']) ?>
-                                <span class="input-group-addon"></span>
-                            </div>
+                        <?= Html::textInput('propname', '', ['class' => 'form-control', 'id' => 'product-new-propname']) ?>
                     </div>
                     <div class="form-group" id="product-new-propval">
                         <label class="control-label" for="product-new-propvalue"><?= Yii::t('app', 'New value') ?></label>
-                            <div class="input-group">
-                                <?= Html::textInput('propvalue', '', ['class' => 'form-control', 'id' => 'product-new-propvalue']) ?>
-                                <span class="input-group-addon"><?= new Icon('check') ?></span>
-                            </div>
+                        <?= Html::textInput('propvalue', '', ['class' => 'form-control', 'id' => 'product-new-propvalue']) ?>
                     </div>
 
+                    <?= Html::button((new Icon('plus')).' '.Yii::t('app', 'Add'), ['class' => 'add_prop_btn btn btn-round btn-default']) ?>
 
                 </div>
                 <div role="tabpanel" class="tab-pane fade" id="tab_content_warehouse" aria-labelledby="form-tab-warehouse">

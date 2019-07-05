@@ -28,8 +28,14 @@ class ManageModule extends Module
             'Product' => [
                 'icon' => 'shopping-bag',
                 'url'   => '/manage/market/products',
-                'badge' => [['>=', 'status', Product::STATUS_INACTIVE], ['status' => Product::STATUS_ACTIVE]]
-            ]
+                'badge' => [['>=', 'status', Product::STATUS_INACTIVE], ['status' => Product::STATUS_ACTIVE]],
+                'items' => [
+                    'Import' => [
+                        'icon' => 'cart-arrow-down',
+                        'url'   => '/manage/market/stock-import',
+                    ],
+                ],
+            ],
         ],
         'Site' => [
             'icon' => 'globe',
@@ -181,6 +187,16 @@ class ManageModule extends Module
                     }
 
                     $prepare_first_level['items'][] = $prepare_second_level;
+
+                    if (isset($menu_item['items'])) {
+                        foreach ($menu_item['items'] AS $third_label => $third_level) {
+                            $prepare_first_level['items'][] = [
+                                'label' => Yii::t('app', $third_label),
+                                'url'   => $third_level['url'],
+                                'icon'  => $third_level['icon'],
+                            ];
+                        }
+                    }
                 }
 
                 if ($prepare_first_level['items']) {

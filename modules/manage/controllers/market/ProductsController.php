@@ -8,6 +8,7 @@ use yii\helpers\FileHelper;
 use yii\helpers\Html;
 use yii\web\Response;
 use yii\web\UploadedFile;
+use Cocur\Slugify\Slugify;
 use app\modules\manage\controllers\AbstractManageController;
 use app\models\ActiveRecord\ProductCategory;
 use app\models\ActiveRecord\ProductCategoryFilter;
@@ -97,6 +98,56 @@ class ProductsController extends AbstractManageController
                 }
 
                 unset($properties[$prop_id]);
+            }
+
+            $new_properties = Yii::$app->request->post('new_property', []);
+
+            foreach ($new_properties AS $prop_name => $prop_value) {
+                if (strpos($prop_name, 'propId::') === 0) {
+                    $new_prop_id = str_replace('propId::', '', $prop_name);
+
+                    if (isset($properties_list[$new_prop_id])) {
+                        $new_cat_filter = ProductCategoryFilter::findOne(['category_id' => $model->cat_id, 'property_id' => $new_prop_id]);
+
+                        if (!$new_cat_filter) {
+                            $new_cat_filter = ProductCategoryFilter::createAndSave([
+                                'category_id'  => $model->cat_id,
+                                'property_id'  => $new_prop_id,
+                                'filter_order' => 0,
+                                'filter_view'  => $properties_list[$new_prop_id]->title,
+                            ]);
+                        }
+
+                        ProductProperty::createAndSave([
+                            'product_id' => $model->id,
+                            'property_id' => $new_prop_id,
+                            'property_value' => $prop_value,
+                        ]);
+
+                        if (isset($properties[$new_prop_id])) {
+                            unset($properties[$new_prop_id]);
+                        }
+                    }
+                } else {
+                    $new_prop = Property::createAndSave([
+                        'title' => $prop_name,
+                        'slug'  => (new Slugify())->slugify($prop_name),
+                    ]);
+
+                    $new_cat_filter = ProductCategoryFilter::createAndSave([
+                        'category_id'  => $model->cat_id,
+                        'property_id'  => $new_prop->id,
+                        'filter_order' => 0,
+                        'filter_view'  => $prop_name,
+                    ]);
+
+                    ProductProperty::createAndSave([
+                        'product_id' => $model->id,
+                        'property_id' => $new_prop->id,
+                        'property_value' => $prop_value,
+                    ]);
+                }
+
             }
 
             foreach ($properties AS $prop_id => $prop) {

@@ -5,7 +5,7 @@ var products = {
     loadTrigger: function(obj) {
         $('.save_properties .input-group-addon').on('click', this.delPropEvent);
         $('#product-new-prop-select').on('change', this.selPropEvent);
-        $('#product-new-propval .input-group-addon').on('click', this.savePropEvent);
+        $('.add_prop_btn').on('click', this.savePropEvent);
     },
     delPropEvent: function() {
         products.delPropTrigger(this);
@@ -29,6 +29,7 @@ var products = {
     },
     savePropEvent: function() {
         products.savePropTrigger(this);
+        return false;
     },
     savePropTrigger: function(obj) {
         var propId = $('#product-new-prop-select').val();
