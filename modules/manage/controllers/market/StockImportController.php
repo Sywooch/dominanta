@@ -10,6 +10,7 @@ use yii\web\UploadedFile;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Reader\Exception as ReaderException;
 use app\modules\manage\controllers\AbstractManageController;
+use app\models\ActiveRecord\ProductCategory;
 
 class StockImportController extends AbstractManageController
 {
@@ -122,9 +123,15 @@ class StockImportController extends AbstractManageController
                             }
 
                             $product->save();
+
+                            $this->publishCat($product->cat_id);
                         }
                     }
                 }
+            }
+
+            if (!$next_page) {
+                @unlink($filePath);
             }
 
             return [
@@ -134,6 +141,26 @@ class StockImportController extends AbstractManageController
 
         } catch (ReaderException $e) {
             die('Error loading file: '.$e->getMessage());
+        }
+    }
+
+    protected function publishCat($category_id)
+    {
+        if (isset($this->cat_cache[$category_id])) {
+            return;
+        }
+
+        $category = ProductCategory::findOne($category_id);
+
+        if ($category->status != $category::STATUS_ACTIVE) {
+            $category->status = $category::STATUS_ACTIVE;
+            $category->save();
+
+            $this->cat_cache[$category_id] = 1;
+
+            if ($category->pid) {
+                $this->publishCat($category->pid);
+            }
         }
     }
 }

@@ -15,8 +15,27 @@ $form = ActiveForm::begin($form_config);
 
 ?>
 <script>
+    var progressQueue = [];
+    var progressing   = false;
+
     function getProgress(filename, page, context) {
         var table_row   = $(context[0]);
+
+        if (progressing && progressing != filename) {
+            progressQueue[progressQueue.length] = {
+                filename: filename,
+                page: page,
+                context: context
+            };
+
+            table_row.find('p.size').html('Ожидание...');
+            table_row.find('button').hide();
+            return;
+        } else {
+            progressing = filename;
+        }
+
+
         var progress    = table_row.find('div.progress');
         var progressbar = progress.find('div.progress-bar');
 
@@ -43,16 +62,23 @@ $form = ActiveForm::begin($form_config);
                 } else {
                     table_row.find('p.size').html('Обработано');
                     progress.hide();
+                    progressing = false;
+
+                    if (progressQueue.length) {
+                        for (i = 0; i < progressQueue.length; i++) {
+                            var q = progressQueue[i];
+
+                            if (q) {
+                                getProgress(q.filename, q.page, q.context);
+                                progressQueue[i] = false;
+                                break;
+                            }
+                        }
+                    }
                 }
 
             }
-        })
-
-        console.log(filename);
-        console.log(page);
-        console.log(context);
-        console.log(context[0]);
-        //$(context[0]).find('p.size').html('sdfsdfsdfsf')
+        });
     }
 </script>
 
@@ -66,17 +92,8 @@ $form = ActiveForm::begin($form_config);
     'clientEvents' => [
         'fileuploaddone' => 'function(e, data) {
                                 if (data.result.status == "ok") {
-
-
-
                                     getProgress(data.result.message, 1, data.context)
                                 }
-
-
-                                //productPhoto.uploadedPhoto(data.result);
-                                console.log(e);
-                                console.log(data);
-
                                 return false;
                             }',
         'fileuploadfail' => 'function(e, data) {
