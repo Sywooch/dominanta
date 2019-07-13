@@ -85,6 +85,24 @@ class ProductCategory extends AbstractModel
         }
     }
 
+    public function eventBeforeInsert()
+    {
+        $checkQuery = self::find()->where(['slug' => $this->slug])->andWhere(['pid' => $this->pid == '' ? NULL : $this->pid]);
+
+        $find = $checkQuery->max();
+
+        if ($find) {
+            $this->slug .= '-'.$find;
+        }
+
+        $this->eventBeforeUpdate();
+    }
+
+    public function eventBeforeUpdate()
+    {
+        $this->last_update = self::getDbTime();
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */

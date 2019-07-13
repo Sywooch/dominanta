@@ -110,6 +110,24 @@ class Product extends AbstractModel
         }
     }
 
+    public function eventBeforeInsert()
+    {
+        $checkQuery = self::find()->where(['slug' => $this->slug])->andWhere(['cat_id' => $this->cat_id == '' ? NULL : $this->cat_id]);
+
+        $find = $checkQuery->max();
+
+        if ($find) {
+            $this->slug .= '-'.$find;
+        }
+
+        $this->eventBeforeUpdate();
+    }
+
+    public function eventBeforeUpdate()
+    {
+        $this->last_update = self::getDbTime();
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */

@@ -6,11 +6,11 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
 
-if ($site_options['site_title']->option_value) {
-    if ($site_options['site_title_position']->option_value == 'before') {
-        $this->title = $site_options['site_title']->option_value.$site_options['site_title_separator']->option_value.$page->title;
+if ($site_options->site_title) {
+    if ($site_options->site_title_position == 'before') {
+        $this->title = $site_options->site_title.$site_options->site_title_separator.$page->title;
     } else {
-        $this->title = $page->title.$site_options['site_title_separator']->option_value.$site_options['site_title']->option_value;
+        $this->title = $page->title.$site_options->site_title_separator.$site_options->site_title;
     }
 } else {
     $this->title = $page->title;

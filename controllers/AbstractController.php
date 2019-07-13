@@ -8,6 +8,7 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use yii\helpers\Url;
 use app\components\filters\ActionAdminFilter;
+use app\models\ActiveRecord\Page;
 
 class AbstractController extends Controller
 {
@@ -49,5 +50,58 @@ class AbstractController extends Controller
         }
 
         return parent::beforeAction($action);
+    }
+
+    /**
+     * Page action.
+     *
+     * @param $page string
+     * @return Response
+     */
+    public function actionPage($page, $only_active = true)
+    {
+        $page_content = false;
+
+        $site_options = Yii::$app->site_options;
+
+        $page_extension = isset($site_options->page_extension) ? trim($site_options->page_extension) : '';
+
+        if (!$page) {
+            $page = $site_options->main_page.$page_extension;
+        }
+
+        if (!$page) {
+            $page = 'index'.$page_extension;
+        }
+
+        $this->page = Page::findByAddress($page, $only_active);
+
+        if (!$this->page) {
+            Yii::$app->response->statusCode = 404;
+            $this->page = Page::findByAddress('404'.$page_extension, $only_active);
+        }
+
+        if (!$this->page) {
+            throw new NotFoundHttpException();
+        }
+
+        if ($this->page->template) {
+            $this->layout = $this->page->template->layout;
+        }
+
+        $request = Yii::$app->getRequest();
+        $page_content = $this->render('page', [
+            'page' => $this->page,
+            'controller' => $this,
+            'site_options' => $site_options,
+            'csrfParam' => $request->csrfParam,
+            'csrfToken' => $request->getCsrfToken(),
+        ]);
+
+        if ($page_content) {
+            return $page_content;
+        } else {
+            throw new NotFoundHttpException();
+        }
     }
 }

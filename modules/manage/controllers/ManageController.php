@@ -5,6 +5,7 @@ namespace app\modules\manage\controllers;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
+use Cocur\Slugify\Slugify;
 
 class ManageController extends AbstractManageController
 {
@@ -18,5 +19,9 @@ class ManageController extends AbstractManageController
     public function actionIndex()
     {
         return $this->render('index');
+    }
+
+    public function actionSlugGenerator($string) {
+        return (new Slugify)->slugify($string);
     }
 }

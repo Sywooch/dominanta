@@ -15,7 +15,7 @@ RewriteRule .* /$0 [R=301,L]
 # RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
 
 # Without last slash
-RewriteRule ^(.+[^/])/$ https://%{HTTP_HOST}/$1 [R=301,L]
+#RewriteRule ^(.+[^/])/$ https://%{HTTP_HOST}/$1 [R=301,L]
 
 
 # Rules for framework

@@ -27,5 +27,7 @@ return [
 
 
    // ''          => 'site/index',
+    'shop' => 'shop/index',
+    'shop/<url:.*>' => 'shop/index',
     '<page:.*>' => 'site/page',
 ];
