@@ -12,6 +12,7 @@ use app\models\ActiveRecord\Page;
 use app\models\ActiveRecord\Product;
 use app\models\ActiveRecord\ProductCategory;
 use app\models\ActiveRecord\ProductCategoryFilter;
+use app\models\ActiveRecord\ProductPhoto;
 use app\models\ActiveRecord\ProductProperty;
 use app\models\ActiveRecord\Property;
 use app\models\ActiveRecord\User;
@@ -171,6 +172,48 @@ class ShopController extends AbstractController
                                    ->orderBy(['product_name' => SORT_ASC])
                                    ->all();
 
+        $cats_list = $this->getCatsList($model);
+
+        $query = new Query;
+        $all_properties = $query->select([
+            'prop_id' => 'property.id',
+            'property_value',
+            Property::tableName().'.title',
+            Property::tableName().'.slug',
+            'filter_order'
+         ])->distinct()
+           ->from(ProductProperty::tableName())
+           ->innerJoin(Property::tableName(), Property::tableName().'.id='.ProductProperty::tableName().'.property_id')
+           ->innerJoin(ProductCategoryFilter::tableName(), Property::tableName().'.id='.ProductCategoryFilter::tableName().'.property_id')
+           ->innerJoin(Product::tableName(), Product::tableName().'.id='.ProductProperty::tableName().'.product_id')
+           ->where([ProductCategoryFilter::tableName().'.category_id' => $model->id])
+           ->andWhere([Product::tableName().'.cat_id' => $model->id])
+           ->andWhere([Product::tableName().'.status' => Product::STATUS_ACTIVE])
+           ->andWhere(['>', 'filter_order', 0])
+           ->orderBy(['filter_order' => SORT_ASC])
+           ->all();
+
+        $all_filter = [];
+
+        foreach ($all_properties AS $prop) {
+            if (!isset($all_filter[$prop['slug']])) {
+                $all_filter[$prop['slug']] = [
+                    'title' => $prop['title'],
+                    'items' => [],
+                ];
+            }
+
+            $all_filter[$prop['slug']]['items'][] = $prop['property_value'];
+        }
+
+
+print_r($all_filter);
+
+
+
+
+
+
         $links = [];
         $parent_link = $this->getParentLink($models);
 
@@ -229,6 +272,8 @@ class ShopController extends AbstractController
 
         $vendor = $model->vendor_id ? $model->vendor : false;
 
+        $photos = $this->productPhotos($model);
+
         $replace = [
             '{{{breadcrumbs}}}' => $this->shopBreadcrumbs($models),
             '{{{page_title}}}' => $model->product_name,
@@ -239,9 +284,19 @@ class ShopController extends AbstractController
             '{{{vendor_photo}}}' => $vendor && file_exists($vendor->uploadFolder.'/'.$model->vendor_id.'.jpg') ? Html::img(str_replace(Yii::getAlias('@webroot'), '',  $vendor->uploadFolder.'/'.$model->vendor_id.'.jpg'), ['alt' => $vendor->title]) : '',
             '{{{product_description}}}' => $model->product_desc,
             '{{{product_properties}}}' => $this->productProperties($model),
+            '{{{product_photo_preview}}}' => $photos['previews'],
+            '{{{product_photo_slides}}}' => $photos['slides'],
         ];
 
         return str_replace(array_keys($replace), $replace, $rendered_page);
+    }
+
+    protected function getCatsList($model)
+    {
+        $cats = ProductCategory::find()->where(['id' => $model->pid])
+                                       ->andWhere(['status' => ProductCategory::STATUS_ACTIVE])
+                                       ->orderBy(['category_name' => SORT_ASC])
+                                       ->all();
     }
 
     protected function shopBreadcrumbs($models)
@@ -289,6 +344,32 @@ class ShopController extends AbstractController
         }
 
         return implode('<br />', $property_strings);
+    }
+
+    protected function productPhotos($model)
+    {
+        $photos = ProductPhoto::find()->where(['product_id' => $model->id])->orderBy(['photo_order' => SORT_ASC])->all();
+
+        $preview = [];
+        $slides = [];
+
+        foreach ($photos AS $idx => $photo) {
+            $data_slide = $idx + 1;
+            $preview[] = Html::img(str_replace(Yii::getAlias('@webroot'), '', $model->getPreview($photo->photoPath, 150, 150)), [
+                'class' => $preview ? '' : 'product_photo_active_slide',
+                'data'  => [
+                    'slide' => $data_slide,
+                ]
+            ]);
+
+
+            $slides[] = "<div class=\"product_photo_big_slide\" data-slide=\"".$data_slide."\" style=\"background-image: url('".str_replace(Yii::getAlias('@webroot'), '', $model->getPreview($photo->photoPath, 450, 450))."')\"></div>";
+        }
+
+        return [
+            'previews' => implode('', $preview),
+            'slides'  => implode('', $slides),
+        ];
     }
 
     protected function getParentLink($models)

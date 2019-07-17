@@ -9,6 +9,10 @@ var productPage = {
         $('.photo_left_arrow').on('click', this.prevSlideEvent);
         $('.photo_right_arrow').on('click', this.nextSlideEvent);
         $('.product_photo_slides img').on('click', this.selectSlideEvent);
+        this.setSlideshowWidth();
+    },
+    setSlideshowWidth: function() {
+        $('.product_photo_big_slideshow').width($('.product_photo_big_slide').length * this.slideWidth);
     },
     checkProductTabEvent: function() {
         productPage.checkProductTabTrigger(this);
