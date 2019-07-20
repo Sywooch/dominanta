@@ -172,8 +172,6 @@ class ShopController extends AbstractController
                                    ->orderBy(['product_name' => SORT_ASC])
                                    ->all();
 
-        $cats_list = $this->getCatsList($model);
-
         $query = new Query;
         $all_properties = $query->select([
             'prop_id' => 'property.id',
@@ -207,7 +205,7 @@ class ShopController extends AbstractController
         }
 
 
-print_r($all_filter);
+//print_r($all_filter);
 
 
 
@@ -243,6 +241,7 @@ print_r($all_filter);
             '{{{breadcrumbs}}}' => $this->shopBreadcrumbs($models),
             '{{{page_title}}}' => $model->category_name,
             '{{{products_list}}}' => implode('<br />', $links),
+            '{{{filter_categories}}}' => $this->getCatsList($model, $models),
         ];
 
         return str_replace(array_keys($replace), $replace, $rendered_page);
@@ -291,12 +290,22 @@ print_r($all_filter);
         return str_replace(array_keys($replace), $replace, $rendered_page);
     }
 
-    protected function getCatsList($model)
+    protected function getCatsList($model, $models)
     {
-        $cats = ProductCategory::find()->where(['id' => $model->pid])
+        $cats = ProductCategory::find()->where(['pid' => $model->pid])
                                        ->andWhere(['status' => ProductCategory::STATUS_ACTIVE])
                                        ->orderBy(['category_name' => SORT_ASC])
                                        ->all();
+
+        $links = [];
+
+        unset($models[count($models) - 1]);
+
+        foreach ($cats AS $category) {
+            $links[] = Html::a($category->category_name, $this->getParentLink($models).'/'.$category->slug, ['class' => $category->id == $model->id ? 'product_filter_subcats_active' : '']);
+        }
+
+        return implode("\n", $links);
     }
 
     protected function shopBreadcrumbs($models)

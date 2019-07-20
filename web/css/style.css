@@ -540,6 +540,9 @@ span.top_map_city {
     }
 }
 
+
+/* Product Begin */
+
 .product_photo_price {
     border: 1px solid #D7D7D7;
 }
@@ -844,25 +847,207 @@ span.top_map_city {
     margin-right: 400px;
 }
 
+/* Product end */
+/* Product list begin */
+.product_filter_column {
+    float: left;
+    border: 1px solid #D7D7D7;
+    border-bottom: none;
+}
+
+.product_list_column {
+    border: 1px solid #D7D7D7;
+    margin-left: -1px;
+}
+
+.product_filter_block a, .product_filter_block a:active, .product_filter_block a:visited {
+    color: #444444;
+    text-decoration: none;
+    font-size: 16px;
+    display: block;
+    padding: 0px 0px 10px 0px;
+}
+
+.product_filter_block a:hover {
+    text-decoration: none;
+    color: #0E73BA;
+}
+
+.product_filter_subcats_active {
+    font-weight: bold;
+    color: #0E73BA !important;
+}
+
+.product_filter_header, .product_filter_header_collapsed {
+    font-size: 20px !important;
+    font-weight: bold;
+    margin-right: 20px;
+    padding: 20px 0px 20px 20px;
+}
+
+.product_filter_header {
+    background: transparent url('/images/subcat_collapsed.png') no-repeat right;
+}
+
+.product_filter_header_collapsed {
+    background: transparent url('/images/subcat_collapsed_active.png') no-repeat 50% right;
+}
+
+.product_filter_block {
+    border-bottom: 1px solid #D7D7D7;
+}
+
+.product_filter_values {
+    padding: 0px 20px 20px;
+}
+
+.product_filter_values .ui-slider-horizontal {
+    height: 2px;
+    background: #C4C4C4;
+}
+
+.product_filter_values .slider-range {
+    border: none;
+}
+
+.product_filter_values .ui-slider-range {
+    height: 2px;
+    background: #0E73BA;
+}
+
+.product_filter_values .ui-slider-handle, .product_filter_values .ui-slider-handle:focus {
+    border: 2px solid #0E73BA;
+    background: #ffffff;
+    border-radius: 8px;
+    height: 14px;
+    width: 14px;
+    top: 0px;
+    margin-top: -6px;
+    outline: none;
+}
 
 
+.product_list_actions {
+    border-bottom: 1px solid #d7d7d7;
+    padding: 20px;
+}
 
+.product_list_action {
+    margin-left: 1px;
+    display: inline-block;
+    padding: 0px 10px;
+    font-size: 16px;
+}
 
+.product_list_action span {
+    padding-right: 5px;
+    color: #888888;
+}
 
+.product_list_action a, .product_list_action a:active, .product_list_action a:visited {
+    color: #444444;
+    text-decoration: none;
+    padding: 0px 3px 5px;
+    border-bottom: 2px solid transparent;
+}
 
+.product_list_action a:hover, .product_list_action_active {
+    color: #0E73BA !important;
+    border-bottom: 2px solid #0E73BA !important;
+}
 
+@media all and (max-width:1200px) {
+    .product_list_action {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
 
+    .product_list_action a, .product_list_action a:active, .product_list_action a:visited {
+        padding: 0px 2px 2px;
+    }
 
+    .product_list_actions {
+        border-bottom: 1px solid #d7d7d7;
+        padding: 10px;
+    }
+}
 
+.product_items {
+    padding: 0px;
+    padding-right: 1px;
+}
 
+.product_item {
+    display: inline-block;
+    outline: 1px solid #d7d7d7;
+    border: none;
+    width: 25%;
+    margin: 0px;
+    margin-right: -3px;
+    margin-bottom: 1px;
+}
 
+@media all and (max-width:1200px) {
+    .product_item {
+        width: 33.333333333%;
+    }
+}
 
+@media all and (max-width:992px) {
+    .product_item {
+        width: 50%;
+    }
+}
 
+@media all and (max-width:400px) {
+    .product_item {
+        width: 100%;
+    }
+}
 
+.product_item_image {
+    padding-top: 50px;
+    text-align: center;
+}
 
+.product_item_title {
+    font-size: 16px;
+    padding: 20px;
+    text-align: center;
+}
 
+.product_item_unit {
+    font-size: 14px;
+    color: #888888;
+    padding: 0px 20px;
+    text-align: left;
+}
 
+.product_item_price {
+    font-weight: bold;
+    font-size: 18px;
+    color: #444444;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 20px;
+}
 
+.product_item_button {
+    text-align: right;
+    padding: 20px;
+    position: relative;
+    margin-top: -75px;
+}
+
+.product_item_button button {
+    background: #0E73BA;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+    color: #FFFFFF;
+    padding: 10px;
+    font-weight: normal;
+}
 
 /* Footer */
 
