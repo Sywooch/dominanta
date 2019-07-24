@@ -63,6 +63,21 @@ class ImportController extends Controller
         }
     }
 
+    /**
+     * This command normalize products property
+     */
+    public function actionSlug()
+    {
+        $slugify = new Slugify();
+
+        foreach (ProductProperty::find()->batch(100) as $properties) {
+            foreach ($properties AS $property) {
+                $property->slug = $slugify->slugify($property->property_value);
+                $property->save();
+            }
+        }
+    }
+
     private function my_mb_ucfirst($str) {
         $fc = mb_strtoupper(mb_substr($str, 0, 1));
         return $fc.mb_substr($str, 1);
@@ -275,6 +290,7 @@ echo "Pages: ".count($pages).PHP_EOL;
                     'product_id'  => $product_model->id,
                     'property_id' => $this->properties[$property_slug]->id,
                     'property_value' => $property_value,
+                    'slug' => $this->slugify->slugify($property_value),
                 ]);
             }
         }

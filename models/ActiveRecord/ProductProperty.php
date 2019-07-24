@@ -4,6 +4,7 @@ namespace app\models\ActiveRecord;
 
 use Yii;
 use app\models\ActiveRecord\AbstractModel;
+use Cocur\Slugify\Slugify;
 
 /**
  * This is the model class for table "product_property".
@@ -13,6 +14,7 @@ use app\models\ActiveRecord\AbstractModel;
  * @property int $property_id
  * @property string $property_value
  * @property int $property_order
+ * @property string $slug
  *
  * @property Product $product
  * @property Property $property
@@ -61,5 +63,15 @@ class ProductProperty extends \app\models\ActiveRecord\AbstractModel
     public function getProperty()
     {
         return $this->hasOne(Property::className(), ['id' => 'property_id']);
+    }
+
+    public function eventBeforeInsert()
+    {
+        $this->eventBeforeUpdate();
+    }
+
+    public function eventBeforeUpdate()
+    {
+        $this->slug = (new Slugify)->slugify($this->property_value);
     }
 }

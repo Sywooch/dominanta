@@ -906,8 +906,10 @@ span.top_map_city {
     background: #C4C4C4;
 }
 
-.product_filter_values .slider-range {
+.product_filter_values #slider-range {
     border: none;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 .product_filter_values .ui-slider-range {
@@ -926,6 +928,47 @@ span.top_map_city {
     outline: none;
 }
 
+.price_filter {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.price_filter input {
+    border: 1px solid #D7D7D7;
+    border-radius: 5px;
+    font-size: 16px;
+    padding: 8px;
+    width: 100px;
+    color: #444444;
+}
+
+.product_filter_checkbox {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #D7D7D7;
+    border-radius: 5px;
+    vertical-align: -4px;
+    margin-right: 15px;
+}
+
+.product_filter_checkbox_active {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #E78325;
+    border-radius: 5px;
+    background: #E78325 url('/images/filter_checkbox.png') no-repeat center 1px;
+    vertical-align: -4px;
+    margin-right: 15px;
+}
+
+.product_filter_value {
+    font-size: 16px;
+    line-height: 100%;
+    color: #444444;
+    margin: 10px 0px;
+}
 
 .product_list_actions {
     border-bottom: 1px solid #d7d7d7;
