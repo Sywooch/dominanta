@@ -29,5 +29,9 @@ return [
    // ''          => 'site/index',
     'shop' => 'shop/index',
     'shop/<url:.*>' => 'shop/index',
+    'shopcart' => 'shopcart/index',
+    'shopcart/<url:.*>' => 'shopcart/index',
+    'account' => 'account/index',
+    'account/<url:.*>' => 'account/index',
     '<page:.*>' => 'site/page',
 ];

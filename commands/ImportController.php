@@ -109,7 +109,7 @@ class ImportController extends Controller
         if (count($categories)) {
             foreach ($categories AS $category) {
                 if (isset($category->href)) {
-                    $category_name = trim($category->title);
+                    $category_name = trim(Html::decode($category->title));
                     $category_slug = $this->slugify->slugify($category_name);
                     $category_link = $this->site.$category->href;
 
@@ -241,7 +241,7 @@ echo "Pages: ".count($pages).PHP_EOL;
 
         $new_product = [
             'cat_id' => $cat_id,
-            'product_name' => trim($title),
+            'product_name' => trim(Html::decode($title)),
             'slug' => $slug,-
             'product_desc' => $this->my_mb_ucfirst(trim($html->find('div._goods-description-text')[0]->innertext)),
             'price' => $price,
@@ -262,7 +262,7 @@ echo "Pages: ".count($pages).PHP_EOL;
             unset($property);
 
             if ($find_property) {
-                $property_name = trim($find_property[1]);
+                $property_name = trim(Html::decode($find_property[1]), ':');
                 $property_slug = $this->slugify->slugify($property_name);
                 $property_value = trim($find_property[2]);
 
@@ -289,7 +289,7 @@ echo "Pages: ".count($pages).PHP_EOL;
                 ProductProperty::createAndSave([
                     'product_id'  => $product_model->id,
                     'property_id' => $this->properties[$property_slug]->id,
-                    'property_value' => $property_value,
+                    'property_value' => Html::decode($property_value),
                     'slug' => $this->slugify->slugify($property_value),
                 ]);
             }

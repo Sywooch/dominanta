@@ -167,10 +167,10 @@ class ShopController extends AbstractController
 
     protected function getProducts($model, $models)
     {
-        $products = Product::find()->where(['status' => Product::STATUS_ACTIVE])
-                                   ->andWhere(['cat_id' => $model->id])
-                                   ->orderBy(['product_name' => SORT_ASC])
-                                   ->all();
+        $request = Yii::$app->request;
+        $session = Yii::$app->session;
+
+        $get_count = $request->get('get_count', false);
 
         $query = new Query;
         $all_properties = $query->select([
@@ -193,7 +193,7 @@ class ShopController extends AbstractController
            ->all();
 
         $all_filter = [];
-        $active_filter = Yii::$app->request->get('filter', []);
+        $active_filter = $request->get('filter', []);
 
         $cat_max_price = $this->getCatMaxPrice($model);
         $cat_min_price = $this->getCatMinPrice($model);
@@ -201,23 +201,35 @@ class ShopController extends AbstractController
         $filter_price_max = Yii::$app->request->get('filter_price_max', $cat_max_price);
         $filter_price_min = Yii::$app->request->get('filter_price_min', $cat_min_price);
 
-        $product_query = new Query;
+        $count_query = new Query;
 
-        $product_query->select([
-            'prod_id' => Product::tableName().'.id',
-            'product_name',
-            'product_slug' => Product::tableName().'.slug',
-            'real_price' => '(price - (price * (discount / 100)))',
-            'old_price',
-            'discount',
-        ])->distinct()
-          ->from(Product::tableName())
-          ->where([Product::tableName().'.status' => Product::STATUS_ACTIVE])
-          ->andWhere([Product::tableName().'.cat_id' => $model->id])
-          ->andWhere('(price - (price * (discount / 100))) >='.intval($filter_price_min))
-          ->andWhere('(price - (price * (discount / 100))) <='.intval($filter_price_max));
+        if (!$get_count) {
+            $product_query = new Query;
+
+            $product_query->select([
+                'prod_id' => Product::tableName().'.id',
+                'product_name',
+                'product_slug' => Product::tableName().'.slug',
+                'real_price' => '(price - (price * (discount / 100)))',
+                'old_price',
+                'discount',
+            ])->distinct()
+              ->from(Product::tableName())
+              ->where([Product::tableName().'.status' => Product::STATUS_ACTIVE])
+              ->andWhere([Product::tableName().'.cat_id' => $model->id])
+              ->andWhere('(price - (price * (discount / 100))) >='.intval($filter_price_min))
+              ->andWhere('(price - (price * (discount / 100))) <='.intval($filter_price_max));
+        }
+
+        $count_query->select('COUNT(*) AS cnt')
+                    ->from(Product::tableName())
+                    ->where([Product::tableName().'.status' => Product::STATUS_ACTIVE])
+                    ->andWhere([Product::tableName().'.cat_id' => $model->id])
+                    ->andWhere('(price - (price * (discount / 100))) >='.intval($filter_price_min))
+                    ->andWhere('(price - (price * (discount / 100))) <='.intval($filter_price_max));
 
         $property_filter = false;
+        $additional_filter = [];
 
         foreach ($all_properties AS $prop) {
             if (!isset($all_filter[$prop['slug']])) {
@@ -235,20 +247,84 @@ class ShopController extends AbstractController
                 'active' => $active_filter_value,
             ];
 
-            if ($active_filter_value && !$property_filter) {
-                $property_filter = true;
-                $product_query->innerJoin(ProductProperty::tableName(), ProductProperty::tableName().'.product_id='.Product::tableName().'.id');
+            if ($active_filter_value) {
+                if (!$property_filter) {
+                    $property_filter = true;
+
+                    if (!$get_count) {
+                        $product_query->innerJoin(ProductProperty::tableName(), ProductProperty::tableName().'.product_id='.Product::tableName().'.id');
+                    }
+
+                    $count_query->innerJoin(ProductProperty::tableName(), ProductProperty::tableName().'.product_id='.Product::tableName().'.id');
+                }
+
+                $additional_filter[] = ProductProperty::tableName().'.property_id='.intval($prop['prop_id'])
+                                       .' AND '.ProductProperty::tableName().'.slug="'.$prop['value_slug'].'"';
+            }
+        }
+
+        if ($additional_filter) {
+            if (!$get_count) {
+                $product_query->andWhere('(('.implode(') OR (', $additional_filter).'))');
             }
 
-            $product_query->andWhere();
+            $count_query->andWhere('(('.implode(') OR (', $additional_filter).'))');
         }
 
-        $links = [];
-        $parent_link = $this->getParentLink($models);
+        $product_count = $count_query->one()['cnt'];
 
-        foreach ($products AS $product) {
-            $links[] = Html::a(Html::encode($product->product_name), $parent_link.'/'.$product->slug);
+        if ($get_count) {
+            return $product_count;
         }
+
+        $product_sort = $request->get('sort', false);
+
+        if ($product_sort) {
+            $session->set('sort', $product_sort);
+        } else {
+            $product_sort = $session->get('sort', false);
+        }
+
+        switch ($product_sort) {
+            case 'cheap':
+                $prod_sort = ['real_price' => SORT_ASC];
+                break;
+            case 'expensive':
+                $prod_sort = ['real_price' => SORT_DESC];
+                break;
+            case 'name':
+            default:
+                $prod_sort = ['product_name' => SORT_ASC];
+                $product_sort = 'name';
+        }
+
+        $show_count = $request->get('show', false);
+
+        if ($show_count) {
+            $session->set('show_count', $show_count);
+        } else {
+            $show_count = $session->get('show_count', false);
+        }
+
+        switch ($show_count) {
+            case '60':
+                $limit = 60;
+                break;
+            case '40':
+                $limit = 40;
+                break;
+            case '20':
+            default:
+                $limit = 20;
+                $show_count = 20;
+        }
+
+        $product_page = $request->get('page', 1);
+        $offset = ($product_page - 1) * $limit;
+
+        $products = $product_query->limit($limit)->offset($offset)->orderBy($prod_sort)->all();
+
+        $product_list = $this->getProductList($products, $models);
 
         $this->page = Page::findByAddress('/shop/products', false);
 
@@ -271,9 +347,12 @@ class ShopController extends AbstractController
         $replace = [
             '{{{breadcrumbs}}}' => $this->shopBreadcrumbs($models),
             '{{{page_title}}}' => $model->category_name,
-            '{{{products_list}}}' => implode('<br />', $links),
+            '{{{products_list}}}' => $product_list,
+            '{{{products_sort}}}' => $this->getProductSort($models, $product_sort),
             '{{{filter_categories}}}' => $this->getCatsList($model, $models),
+            '{{{show_count}}}' => $this->getProductShowCount($models, $show_count),
             '{{{all_filters}}}' => $this->getFilters($all_filter),
+            '{{{pager}}}' => $this->getPager($models, $product_page, $limit, $product_count),
             '{{{cat_min_price}}}' => $cat_min_price,
             '{{{cat_max_price}}}' => $cat_max_price,
             '{{{filter_min_price}}}' => $filter_price_min,
@@ -344,6 +423,118 @@ class ShopController extends AbstractController
         return implode("\n", $links);
     }
 
+    protected function getProductList($products, $models)
+    {
+        $html = '';
+
+        foreach ($products AS $product) {
+            $img = ProductPhoto::find()->where(['product_id' => $product['prod_id']])
+                                       ->limit(1)
+                                       ->orderBy(['photo_order' => SORT_ASC])
+                                       ->one();
+
+            if ($img) {
+                $product_obj = new Product();
+                $product_obj->id = $product['prod_id'];
+                $photo = Html::img(str_replace(Yii::getAlias('@webroot'), '', $product_obj->getPreview($img->photoPath, 142, 142)));
+            } else {
+                $photo = Html::img("/images/product_item.png");
+            }
+
+            $html .= '<div class="product_item"><div class="product_item_image">';
+            $html .=  Html::a($photo, $this->getParentLink($models).'/'.$product['product_slug']);
+            $html .= '</div><div class="product_item_title">';
+            $html .= Html::a(Html::encode($product['product_name']), $this->getParentLink($models).'/'.$product['product_slug']);
+            $html .= '</div><div class="product_item_unit">Цена за шт.</div><div class="product_item_price">';
+            $html .= Yii::$app->formatter->asDecimal($product['real_price'], 2);
+            $html .= ' <i class="fa fa-ruble"></i></div><div class="product_item_button"><button class="add_shopcart" data-id="'.$product['prod_id'].'" data-cnt="1">В корзину</button></div></div>';
+        }
+
+        return $html;
+    }
+
+    protected function getPager($models, $product_page, $limit, $product_count)
+    {
+        $pages = ceil($product_count / $limit);
+        $html = '';
+
+        if ($pages == 1) {
+            return $html;
+        }
+
+        $base_link = $this->getParentLink($models);
+        $filter = $this->getFilterLink();
+        $base_link .= $filter ? $filter.'&page=' : '?page=';
+        $prev_page = $product_page - 1;
+
+        if (!$prev_page) {
+            $prev_page = 1;
+        }
+
+        $next_page = $product_page + 1;
+
+        if ($next_page > $pages) {
+            $next_page = $pages;
+        }
+
+        $html .= $product_page == 1 ? '<span class="pager_prev_page">Предыдущая страница</span>' : Html::a('Предыдущая страница', $base_link.$prev_page, ['class' => 'pager_prev_page']);
+        $html .= $product_page == 1 ? '<span>1</span>' : Html::a('1', $base_link.'1');
+
+        if ($product_page > 3) {
+            $html .= '<span class="pager_dots">...</span>';
+        }
+
+        for ($p = $prev_page == $pages - 1 ? $pages - 2 : $prev_page; $p <= $prev_page + 2; $p++) {
+            if ($p == 1 || $p >= $pages) {
+                continue;
+            }
+
+            $html .= $product_page == $p ? '<span>'.$p.'</span>' : Html::a($p, $base_link.$p);
+        }
+
+        if ($product_page < $pages - 2) {
+            $html .= '<span class="pager_dots">...</span>';
+        }
+
+        $html .= $product_page == $pages ? '<span>'.$pages.'</span>' : Html::a($pages, $base_link.$pages);
+        $html .= $product_page == $pages ? '<span class="pager_next_page">Следующая страница</span>' : Html::a('Следующая страница', $base_link.$next_page, ['class' => 'pager_next_page']);
+
+        return $html;
+    }
+
+    protected function getFilterLink()
+    {
+        $filter = Yii::$app->request->get('filter', []);
+
+        if (!$filter) {
+            return '';
+        }
+
+        return http_build_query(['filter' => $filter]);
+    }
+
+    protected function getProductSort($models, $product_sort)
+    {
+        $filter = $this->getFilterLink();
+
+        $html = ' '.Html::a('Названию', $this->getParentLink($models).($filter ? '?'.$filter.'&sort=name' : '?sort=name'), ['class' => $product_sort == 'name' ? 'product_list_action_active' : '']);
+        $html .= ' '.Html::a('Цене по возрастанию', $this->getParentLink($models).($filter ? '?'.$filter.'&sort=cheap' : '?sort=cheap'), ['class' => $product_sort == 'cheap' ? 'product_list_action_active' : '']);
+        $html .= ' '.Html::a('Цене по убыванию', $this->getParentLink($models).($filter ? '?'.$filter.'&sort=expensive' : '?sort=expensive'), ['class' => $product_sort == 'expensive' ? 'product_list_action_active' : '']);
+
+        return $html;
+    }
+
+    protected function getProductShowCount($models, $show_count)
+    {
+        $filter = $this->getFilterLink();
+
+        $html = ' '.Html::a('20', $this->getParentLink($models).($filter ? '?'.$filter.'&show=20' : '?show=20'), ['class' => $show_count == '20' ? 'product_list_action_active' : '']);
+        $html .= ' '.Html::a('40', $this->getParentLink($models).($filter ? '?'.$filter.'&show=40' : '?show=40'), ['class' => $show_count == '40' ? 'product_list_action_active' : '']);
+        $html .= ' '.Html::a('60', $this->getParentLink($models).($filter ? '?'.$filter.'&show=60' : '?show=60'), ['class' => $show_count == '60' ? 'product_list_action_active' : '']);
+
+        return $html;
+    }
+
     protected function getCatMaxPrice($model)
     {
         $query = new Query;
@@ -381,11 +572,13 @@ class ShopController extends AbstractController
 
             foreach ($one_filter['items'] AS $value_slug => $filter_item) {
                 $html .= '<div class="product_filter_value" data-filter="'.$slug.'" data-value="'.$value_slug.'">';
-                $html .= '<span class="product_filter_checkbox'.($filter_item['active'] ? '_active' : '').'"></span> '.$filter_item['name'].'</div>';
+                $html .= '<span class="product_filter_checkbox'.($filter_item['active'] ? '_active' : '').'"></span> '.$filter_item['name'];
 
                 if ($filter_item['active']) {
                     $html .= '<input type="hidden" name="filter['.$slug.'][]" value="'.$value_slug.'" />';
                 }
+
+                $html .= '</div>';
             }
 
             $html .='</div></div>';
@@ -424,7 +617,7 @@ class ShopController extends AbstractController
         $property_strings = [];
 
         $query = new Query;
-        $properties = $query->select(['prop_id' => 'property.id', 'property_value', 'title', 'slug', 'filter_order'])
+        $properties = $query->select(['prop_id' =>  Property::tableName().'.id', 'property_value', 'title', 'filter_order'])
               ->from(ProductProperty::tableName())
               ->innerJoin(Property::tableName(), Property::tableName().'.id='.ProductProperty::tableName().'.property_id')
               ->innerJoin(ProductCategoryFilter::tableName(), Property::tableName().'.id='.ProductCategoryFilter::tableName().'.property_id')
