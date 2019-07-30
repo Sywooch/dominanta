@@ -8,6 +8,7 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Html;
 use yii\web\Cookie;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use app\models\ActiveRecord\Page;
 use app\models\ActiveRecord\Product;
@@ -19,8 +20,6 @@ class ShopcartController extends AbstractController
 {
     /** @var app\models\ActiveRecord\Page */
     protected $page = false;
-
-    protected $cookiename = 'shopcart';
 
     //public $enableCsrfValidation = false;
 
@@ -50,6 +49,64 @@ class ShopcartController extends AbstractController
         ];
     }
 
+    public static function getShopcartData()
+    {
+        $response = Yii::$app->response;
+        $request = Yii::$app->request;
+
+        $cookies_req  = $request->cookies;
+        $cookies_resp = $response->cookies;
+
+        $user_id = NULL;
+        $hash = false;
+
+        if (!Yii::$app->user->isGuest) {
+            $user_id = Yii::$app->user->identity->id;
+
+            $record_with_hash = Shopcart::find()->where(['user_id' => $user_id])
+                                                ->limit(1)
+                                                ->one();
+
+            if ($record_with_hash) {
+                $hash = $record_with_hash['hash'];
+            }
+        }
+
+        if (!$hash) {
+            if ($cookies_req->has(Shopcart::$cookiename)) {
+                $hash = $cookies_req->get(Shopcart::$cookiename);
+            } else {
+                $hash = Yii::$app->security->generateRandomString();
+            }
+        }
+
+        $cookies_resp->add(new Cookie([
+            'name' => Shopcart::$cookiename,
+            'value' => $hash,
+            'expire' => time() + (60 * 60 * 24 * 30),
+        ]));
+
+        if (!$user_id) {
+            $record_with_user = Shopcart::find()->where(['hash' => $hash])
+                                                ->andWhere(['!=', 'user_id', NULL])
+                                                ->limit(1)
+                                                ->one();
+
+            if ($record_with_user) {
+                $user_id = $record_with_user['user_id'];
+            }
+        }
+
+        if ($user_id) {
+            Shopcart::updateAll(['user_id' => $user_id], ['hash' => $hash]);
+        }
+
+        return [
+            'user_id' => $user_id,
+            'hash'    => $hash,
+        ];
+    }
+
     public function actionIndex($url = '')
     {
         $url = trim($url, '/');
@@ -74,7 +131,69 @@ class ShopcartController extends AbstractController
             if (!$this->page) {
                 throw new NotFoundHttpException();
             }
+
+            $request = Yii::$app->getRequest();
+            $page_content = $this->render('page', [
+                'page' => $this->page,
+                'controller' => $this,
+                'site_options' => $site_options,
+                'csrfParam' => $request->csrfParam,
+                'csrfToken' => $request->getCsrfToken(),
+            ]);
+
+            return $page_content;
         }
+    }
+
+    protected function view()
+    {
+        $shopcart_data = self::getShopcartData();
+        $user_id = $shopcart_data['user_id'];
+        $hash    = $shopcart_data['hash'];
+
+        if ($user_id) {
+            $shopcart = Shopcart::find()->where(['user_id' => $user_id])->all();
+        } else {
+            $shopcart = Shopcart::find()->where(['hash' => $hash])->all();
+        }
+
+        $cnt = 0;
+        $sum = 0;
+
+        foreach ($shopcart AS $item) {
+            if ($item->product->status != Product::STATUS_ACTIVE) {
+                $item->delete();
+            }
+
+            $cnt++;
+            $sum += ($item->product->price - ($item->product->price * ($item->product->discount / 100))) * $item['quantity'];
+        }
+
+        $this->page = Page::findByAddress('/shopcart/view', false);
+
+        if ($this->page->template) {
+            $this->layout = $this->page->template->layout;
+        }
+
+        $this->page->title = 'Корзина';
+
+        $site_options = Yii::$app->site_options;
+        $request = Yii::$app->getRequest();
+        $rendered_page = $this->render('page', [
+            'page' => $this->page,
+            'controller' => $this,
+            'site_options' => $site_options,
+            'csrfParam' => $request->csrfParam,
+            'csrfToken' => $request->getCsrfToken(),
+        ]);
+
+        $replace = [
+            '{{{breadcrumbs}}}' => '',
+            '{{{page_title}}}' => $this->page->title,
+        ];
+
+        return str_replace(array_keys($replace), $replace, $rendered_page);
+
     }
 
     protected function add()
@@ -102,48 +221,9 @@ class ShopcartController extends AbstractController
             ];
         }
 
-        $cookies_req  = $request->cookies;
-        $cookies_resp = $response->cookies;
-
-        $user_id = NULL;
-        $hash = false;
-
-        if (!Yii::$app->user->isGuest) {
-            $user_id = Yii::$app->user->identity->id;
-
-            $record_with_hash = Shopcart::find()->where(['user_id' => $user_id])
-                                                ->limit(1)
-                                                ->one();
-
-            if ($record_with_hash) {
-                $hash = $record_with_hash['hash'];
-            }
-        }
-
-        if (!$hash) {
-            if ($cookies_req->has($this->cookiename)) {
-                $hash = $cookies_req->get($this->cookiename);
-            } else {
-                $hash = Yii::$app->security->generateRandomString();
-            }
-        }
-
-        $cookies_resp->add(new Cookie([
-            'name' => $this->cookiename,
-            'value' => $hash,
-            'expire' => time() + (60 * 60 * 24 * 30),
-        ]));
-
-        if (!$user_id) {
-            $record_with_user = Shopcart::find()->where(['hash' => $hash])
-                                                ->andWhere(['!=', 'user_id', NULL])
-                                                ->limit(1)
-                                                ->one();
-
-            if ($record_with_user) {
-                $user_id = $record_with_user['user_id'];
-            }
-        }
+        $shopcart_data = self::getShopcartData();
+        $user_id = $shopcart_data['user_id'];
+        $hash    = $shopcart_data['hash'];
 
         if ($user_id) {
             $product_exists = Shopcart::find()->where(['product_id' => $product_id])
@@ -167,10 +247,6 @@ class ShopcartController extends AbstractController
                 'product_id' => $product_id,
                 'quantity' => $quantity,
             ]);
-        }
-
-        if ($user_id) {
-            Shopcart::updateAll(['user_id' => $user_id], ['hash' => $hash]);
         }
 
         if ($user_id) {
@@ -199,5 +275,4 @@ class ShopcartController extends AbstractController
             ]
         ];
     }
-
 }

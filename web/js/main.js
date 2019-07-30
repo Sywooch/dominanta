@@ -22,6 +22,7 @@ var mainPage = {
     },
     displayAccountMenuEvent: function() {
         mainPage.displayAccountMenuTrigger(this);
+        return false;
     },
     displayAccountMenuTrigger: function(obj) {
         if ($(obj).data('toggle') == 'modal') {

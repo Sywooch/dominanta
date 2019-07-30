@@ -19,6 +19,8 @@ use app\models\ActiveRecord\AbstractModel;
  */
 class Shopcart extends AbstractModel
 {
+    public static $cookiename = 'shopcart';
+
     /**
      * {@inheritdoc}
      */

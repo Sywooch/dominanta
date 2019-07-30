@@ -8,6 +8,7 @@ use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Html;
 use yii\web\Response;
+use yii\web\NotFoundHttpException;
 use app\models\ActiveRecord\Page;
 use app\models\ActiveRecord\Product;
 use app\models\ActiveRecord\ProductCategory;
