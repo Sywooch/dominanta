@@ -33,7 +33,7 @@ class User extends AbstractModel implements IdentityInterface
 
     public static $entitiesName = 'Users';
 
-    public $remember_me, $_user, $repassword, $agree, $email_or_phone;
+    public $remember_me, $_user, $repassword, $agree, $email_or_phone, $old_password;
 
     const SCENARIO_LOGIN = 'login';
     const SCENARIO_ADD = 'add';
@@ -43,6 +43,8 @@ class User extends AbstractModel implements IdentityInterface
     const SCENARIO_SEARCH = 'search';
     const SCENARIO_REG = 'reg';
     const SCENARIO_RESTORE = 'restore';
+    const SCENARIO_ACCOUNT = 'account';
+    const SCENARIO_ACCOUNT_PASSWORD = 'account_password';
 
     /**
      * @inheritdoc
@@ -58,6 +60,8 @@ class User extends AbstractModel implements IdentityInterface
         $scenarios[self::SCENARIO_SEARCH] = ['email', 'realname', 'role_id', 'create_time', 'last_activity', 'language', 'timeZone', 'phone'];
         $scenarios[self::SCENARIO_REG] = ['email', 'realname', 'phone', 'password', 'repassword', 'agree'];
         $scenarios[self::SCENARIO_RESTORE] = ['email_or_phone'];
+        $scenarios[self::SCENARIO_ACCOUNT] = ['email', 'realname', 'phone'];
+        $scenarios[self::SCENARIO_ACCOUNT_PASSWORD] = ['password', 'old_password'];
 
         return $scenarios;
     }
@@ -73,13 +77,15 @@ class User extends AbstractModel implements IdentityInterface
             [['email', 'password'], 'required', 'except' => self::SCENARIO_SEARCH],
             ['remember_me', 'boolean', 'on' => self::SCENARIO_LOGIN],
             ['password', 'formValidatePassword', 'on' => [self::SCENARIO_LOGIN]],
-            ['password', 'string', 'min'=> 6, 'on' => [self::SCENARIO_ADD, self::SCENARIO_PASSWORD, self::SCENARIO_REG]],
+            ['old_password', 'required', 'on' => [self::SCENARIO_ACCOUNT_PASSWORD]],
+            ['old_password', 'formValidateOnlyPassword', 'on' => [self::SCENARIO_ACCOUNT_PASSWORD]],
+            ['password', 'string', 'min'=> 6, 'on' => [self::SCENARIO_ADD, self::SCENARIO_PASSWORD, self::SCENARIO_REG, self::SCENARIO_ACCOUNT_PASSWORD]],
             ['email', 'email', 'on' => self::SCENARIO_SEARCH],
-            ['email', 'formValidateEmail', 'on' => [self::SCENARIO_ADD, self::SCENARIO_EDIT, self::SCENARIO_REG]],
+            ['email', 'formValidateEmail', 'on' => [self::SCENARIO_ADD, self::SCENARIO_EDIT, self::SCENARIO_REG, self::SCENARIO_ACCOUNT]],
             ['role_id', 'required', 'on' => [self::SCENARIO_ADD, self::SCENARIO_EDIT]],
             ['repassword', 'compare', 'compareAttribute' => 'password', 'on' => [self::SCENARIO_ADD, self::SCENARIO_PASSWORD, self::SCENARIO_REG]],
             ['repassword', 'required', 'on' => [self::SCENARIO_ADD, self::SCENARIO_PASSWORD, self::SCENARIO_REG]],
-            [['realname', 'phone'], 'required', 'on' => self::SCENARIO_REG],
+            [['realname', 'phone'], 'required', 'on' => [self::SCENARIO_REG, self::SCENARIO_ACCOUNT]],
             [['create_time', 'last_activity'], 'safe'],
             [['email', 'password', 'access_token', 'language', 'timeZone', 'realname', 'phone'], 'string', 'max' => 255],
             [['role_id'], 'exist', 'skipOnError' => true, 'targetClass' => Role::className(), 'targetAttribute' => ['role_id' => 'id']],
@@ -87,9 +93,9 @@ class User extends AbstractModel implements IdentityInterface
             ['agree', 'compare', 'compareValue' => 1, 'message' => 'Необходимо принять соглашение'],
             ['phone', 'filter', 'filter' => function ($value) {
                 return '+'.str_replace(['+', '(', ')', '-', ' '], '', $value);
-            }, 'on' => [self::SCENARIO_ADD, self::SCENARIO_EDIT, self::SCENARIO_REG]],
-            ['phone', 'match', 'pattern' => '/^\+7\d{10,10}$/i', 'on' => [self::SCENARIO_ADD, self::SCENARIO_EDIT, self::SCENARIO_REG]],
-            ['phone', 'formValidatePhone', 'on' => [self::SCENARIO_ADD, self::SCENARIO_EDIT, self::SCENARIO_REG]],
+            }, 'on' => [self::SCENARIO_ADD, self::SCENARIO_EDIT, self::SCENARIO_REG, self::SCENARIO_ACCOUNT]],
+            ['phone', 'match', 'pattern' => '/^\+7\d{10,10}$/i', 'on' => [self::SCENARIO_ADD, self::SCENARIO_EDIT, self::SCENARIO_REG, self::SCENARIO_ACCOUNT], 'enableClientValidation' => false],
+            ['phone', 'formValidatePhone', 'on' => [self::SCENARIO_ADD, self::SCENARIO_EDIT, self::SCENARIO_REG, self::SCENARIO_ACCOUNT]],
             ['email_or_phone', 'string', 'on' => self::SCENARIO_RESTORE],
             ['email_or_phone', 'filter', 'filter' => function ($value) {
                 return str_replace(['+', '(', ')', ' '], '', $value);
@@ -118,6 +124,7 @@ class User extends AbstractModel implements IdentityInterface
             'remember_me' => Yii::t('app', 'Remember me'),
             'repassword'  => Yii::t('app', 'Retype password'),
             'notify'  => Yii::t('app', 'Notify'),
+            'old_password' => Yii::t('app', 'Old password')
         ];
     }
 
@@ -265,6 +272,22 @@ class User extends AbstractModel implements IdentityInterface
 
             if (!$this->_user || !$this->_user->validatePassword($this->password)) {
                 $this->addError($attribute, Yii::t('app', 'Incorrect email or password'));
+            }
+        }
+    }
+
+    /**
+     * Validates the password.
+     * This method serves as the inline validation for password.
+     *
+     * @param string $attribute the attribute currently being validated
+     * @param array $params the additional name-value pairs given in the rule
+     */
+    public function formValidateOnlyPassword($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            if (!$this->validatePassword($this->old_password)) {
+                $this->addError($attribute, Yii::t('app', 'Incorrect password'));
             }
         }
     }

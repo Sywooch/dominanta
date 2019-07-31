@@ -90,6 +90,18 @@ class AccountController extends AbstractController
 
     protected function index()
     {
+        $account_form = $this->accountForm();
+
+        if ($account_form == 'redirect') {
+            return $this->redirect(['/account'], 301);
+        }
+
+        $password_form = $this->passwordForm();
+
+        if ($password_form == 'redirect') {
+            return $this->redirect(['/account'], 301);
+        }
+
         $this->page = Page::findByAddress('/account/index', false);
 
         if ($this->page->template) {
@@ -110,6 +122,8 @@ class AccountController extends AbstractController
             '{{{breadcrumbs}}}' => '',
             '{{{page_title}}}' => $this->page->title,
             '{{{account_menu}}}' => $this->accountMenu('index'),
+            '{{{account_form}}}' => $account_form,
+            '{{{password_form}}}' => $password_form,
         ];
 
         return str_replace(array_keys($replace), $replace, $rendered_page);
@@ -169,8 +183,39 @@ class AccountController extends AbstractController
         return str_replace(array_keys($replace), $replace, $rendered_page);
     }
 
+    protected function accountForm()
+    {
+        $model = Yii::$app->user->identity;
+        $model->scenario = $model::SCENARIO_ACCOUNT;
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->save(false);
+            Yii::$app->session->setFlash('success', '<i class="fa fa-check"></i> '.Yii::t('app', 'Data has been saved'));
+            return 'redirect';
+        }
+
+        return $this->renderPartial('account', ['model' => $model]);
+    }
+
+    protected function passwordForm()
+    {
+        $model = Yii::$app->user->identity;
+        $model->scenario = $model::SCENARIO_ACCOUNT_PASSWORD;
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->setPassword($model->password);
+            $model->save(false);
+            Yii::$app->session->setFlash('success', '<i class="fa fa-check"></i> '.Yii::t('app', 'Data has been saved'));
+            return 'redirect';
+        }
+
+        $model->password = '';
+
+        return $this->renderPartial('password', ['model' => $model]);
+    }
+
     protected function accountMenu($active_link)
     {
-        return $this->render('menu', ['active_link' => $active_link]);;
+        return $this->renderPartial('menu', ['active_link' => $active_link]);;
     }
 }
