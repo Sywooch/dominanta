@@ -33,7 +33,7 @@ class User extends AbstractModel implements IdentityInterface
 
     public static $entitiesName = 'Users';
 
-    public $remember_me, $_user, $repassword, $agree, $email_or_phone, $old_password;
+    public $remember_me, $_user, $repassword, $agree, $email_or_phone, $old_password, $new_password;
 
     const SCENARIO_LOGIN = 'login';
     const SCENARIO_ADD = 'add';
@@ -61,7 +61,7 @@ class User extends AbstractModel implements IdentityInterface
         $scenarios[self::SCENARIO_REG] = ['email', 'realname', 'phone', 'password', 'repassword', 'agree'];
         $scenarios[self::SCENARIO_RESTORE] = ['email_or_phone'];
         $scenarios[self::SCENARIO_ACCOUNT] = ['email', 'realname', 'phone'];
-        $scenarios[self::SCENARIO_ACCOUNT_PASSWORD] = ['password', 'old_password'];
+        $scenarios[self::SCENARIO_ACCOUNT_PASSWORD] = ['new_password', 'old_password'];
 
         return $scenarios;
     }
@@ -77,9 +77,10 @@ class User extends AbstractModel implements IdentityInterface
             [['email', 'password'], 'required', 'except' => self::SCENARIO_SEARCH],
             ['remember_me', 'boolean', 'on' => self::SCENARIO_LOGIN],
             ['password', 'formValidatePassword', 'on' => [self::SCENARIO_LOGIN]],
-            ['old_password', 'required', 'on' => [self::SCENARIO_ACCOUNT_PASSWORD]],
+            [['old_password', 'new_password'], 'required', 'on' => [self::SCENARIO_ACCOUNT_PASSWORD]],
             ['old_password', 'formValidateOnlyPassword', 'on' => [self::SCENARIO_ACCOUNT_PASSWORD]],
             ['password', 'string', 'min'=> 6, 'on' => [self::SCENARIO_ADD, self::SCENARIO_PASSWORD, self::SCENARIO_REG, self::SCENARIO_ACCOUNT_PASSWORD]],
+            ['new_password', 'string', 'min'=> 6, 'on' => [self::SCENARIO_ACCOUNT_PASSWORD]],
             ['email', 'email', 'on' => self::SCENARIO_SEARCH],
             ['email', 'formValidateEmail', 'on' => [self::SCENARIO_ADD, self::SCENARIO_EDIT, self::SCENARIO_REG, self::SCENARIO_ACCOUNT]],
             ['role_id', 'required', 'on' => [self::SCENARIO_ADD, self::SCENARIO_EDIT]],
@@ -124,7 +125,8 @@ class User extends AbstractModel implements IdentityInterface
             'remember_me' => Yii::t('app', 'Remember me'),
             'repassword'  => Yii::t('app', 'Retype password'),
             'notify'  => Yii::t('app', 'Notify'),
-            'old_password' => Yii::t('app', 'Old password')
+            'old_password' => Yii::t('app', 'Old password'),
+            'new_password' => Yii::t('app', 'New password'),
         ];
     }
 

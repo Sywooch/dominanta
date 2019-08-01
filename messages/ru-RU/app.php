@@ -84,6 +84,7 @@ return [
     'Password'      => 'Пароль',
     'Retype password' => 'Повторите пароль',
     'Old password'   => 'Старый пароль',
+    'New password'   => 'Новый пароль',
     'Access token'  => 'Ключ доступа',
     'Role'          => 'Роль',
     'Roles'         => 'Роли',
@@ -124,6 +125,8 @@ return [
     'Rule' => 'Правило',
     'Rules' => 'Правила',
     'Access is denied to this section for your group.' => 'Для вашей группы запрещён доступ в данный раздел.',
+    'Address name' => 'Название адреса',
+    'Address' => 'Адрес',
 
     // Manage
     'Panel' => 'Панель',

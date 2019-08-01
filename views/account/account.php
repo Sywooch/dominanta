@@ -27,6 +27,8 @@ $form = ActiveForm::begin(['id' => 'account_form']);
 
         <?= $form->field($model, 'email')->label('Ваша электронная почта') ?>
 
+        <?= Html::hiddenInput('form', 'account') ?>
+
         <?= Html::submitButton('Сохранить изменения') ?>
     </div>
     <div class="col-lg-6 col-md-6 hidden-sm hidden-xs">

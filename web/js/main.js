@@ -21,15 +21,15 @@ var mainPage = {
         //e.stopPropagation();
     },
     displayAccountMenuEvent: function() {
-        mainPage.displayAccountMenuTrigger(this);
-        return false;
+        return mainPage.displayAccountMenuTrigger(this);
     },
     displayAccountMenuTrigger: function(obj) {
         if ($(obj).data('toggle') == 'modal') {
-            return;
+            return true;
         }
 
         this.showAccountMenu();
+        return false;
     },
     showAccountMenu: function() {
         if (this.displayAccountMenu) {

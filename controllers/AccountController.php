@@ -10,6 +10,7 @@ use yii\helpers\Html;
 use yii\web\Response;
 use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
+use app\models\ActiveRecord\DeliveryAddress;
 use app\models\ActiveRecord\Page;
 use app\models\ActiveRecord\User;
 
@@ -158,6 +159,28 @@ class AccountController extends AbstractController
 
     protected function delivery()
     {
+        $forms = '';
+
+        $addresses = DeliveryAddress::find()->where(['user_id' => Yii::$app->user->identity->id])->all();
+
+        foreach ($addresses AS $address) {
+            $delivery_form = $this->deliveryForm($address);
+
+            if ($delivery_form == 'redirect') {
+                return $this->redirect(['/account/delivery'], 301);
+            }
+
+            $forms .= $delivery_form;
+        }
+
+        $delivery_form = $this->deliveryForm(new DeliveryAddress);
+
+        if ($delivery_form == 'redirect') {
+            return $this->redirect(['/account/delivery'], 301);
+        }
+
+        $forms .= $delivery_form;
+
         $this->page = Page::findByAddress('/account/delivery', false);
 
         if ($this->page->template) {
@@ -178,6 +201,7 @@ class AccountController extends AbstractController
             '{{{breadcrumbs}}}' => '',
             '{{{page_title}}}' => $this->page->title,
             '{{{account_menu}}}' => $this->accountMenu('delivery'),
+            '{{{delivery_form}}}' => $forms,
         ];
 
         return str_replace(array_keys($replace), $replace, $rendered_page);
@@ -188,7 +212,9 @@ class AccountController extends AbstractController
         $model = Yii::$app->user->identity;
         $model->scenario = $model::SCENARIO_ACCOUNT;
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+        $form = Yii::$app->request->post('form', '');
+
+        if ($form == 'account' && $model->load(Yii::$app->request->post()) && $model->validate()) {
             $model->save(false);
             Yii::$app->session->setFlash('success', '<i class="fa fa-check"></i> '.Yii::t('app', 'Data has been saved'));
             return 'redirect';
@@ -202,16 +228,30 @@ class AccountController extends AbstractController
         $model = Yii::$app->user->identity;
         $model->scenario = $model::SCENARIO_ACCOUNT_PASSWORD;
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $model->setPassword($model->password);
+        $form = Yii::$app->request->post('form', '');
+
+        if ($form == 'password' && $model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->setPassword($model->new_password);
             $model->save(false);
             Yii::$app->session->setFlash('success', '<i class="fa fa-check"></i> '.Yii::t('app', 'Data has been saved'));
             return 'redirect';
         }
 
-        $model->password = '';
-
         return $this->renderPartial('password', ['model' => $model]);
+    }
+
+    protected function deliveryForm($model)
+    {
+        $id = Yii::$app->request->post('id', false);
+
+        if (((!empty($model->id) && $id == $model->id) || (empty($model->id) && !$id)) && $model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->user_id = Yii::$app->user->identity->id;
+            $model->save();
+            Yii::$app->session->setFlash('success', '<i class="fa fa-check"></i> '.Yii::t('app', 'Data has been saved'));
+            return 'redirect';
+        }
+
+        return $this->renderPartial('delivery', ['model' => $model]);
     }
 
     protected function accountMenu($active_link)
