@@ -4,7 +4,6 @@ namespace app\components\widgets;
 
 use Yii;
 use yii\base\Widget;
-use yii\web\Cookie;
 use app\controllers\ShopcartController;
 use app\models\ActiveRecord\Product;
 use app\models\ActiveRecord\Shopcart;

@@ -196,4 +196,9 @@ class Product extends AbstractModel
     {
         return isset($this->allPhotos[0]) ? $this->allPhotos[0] : false;
     }
+
+    public function getProductLink()
+    {
+        return $this->cat->catLink.'/'.$this->slug;
+    }
 }

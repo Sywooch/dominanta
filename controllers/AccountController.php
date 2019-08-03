@@ -120,7 +120,7 @@ class AccountController extends AbstractController
         ]);
 
         $replace = [
-            '{{{breadcrumbs}}}' => '',
+            '{{{breadcrumbs}}}' => $this->breadcrumbs($this->page->title),
             '{{{page_title}}}' => $this->page->title,
             '{{{account_menu}}}' => $this->accountMenu('index'),
             '{{{account_form}}}' => $account_form,
@@ -149,7 +149,7 @@ class AccountController extends AbstractController
         ]);
 
         $replace = [
-            '{{{breadcrumbs}}}' => '',
+            '{{{breadcrumbs}}}' => $this->breadcrumbs($this->page->title),
             '{{{page_title}}}' => $this->page->title,
             '{{{account_menu}}}' => $this->accountMenu('orders'),
         ];
@@ -159,6 +159,13 @@ class AccountController extends AbstractController
 
     protected function delivery()
     {
+        $delete = Yii::$app->request->get('delete', false);
+
+        if ($delete && Yii::$app->request->isPost) {
+            DeliveryAddress::deleteAll(['id' => $delete, 'user_id' => Yii::$app->user->identity->id]);
+            return $this->redirect(['/account/delivery'], 301);
+        }
+
         $forms = '';
 
         $addresses = DeliveryAddress::find()->where(['user_id' => Yii::$app->user->identity->id])->all();
@@ -198,7 +205,7 @@ class AccountController extends AbstractController
         ]);
 
         $replace = [
-            '{{{breadcrumbs}}}' => '',
+            '{{{breadcrumbs}}}' => $this->breadcrumbs($this->page->title),
             '{{{page_title}}}' => $this->page->title,
             '{{{account_menu}}}' => $this->accountMenu('delivery'),
             '{{{delivery_form}}}' => $forms,
@@ -247,7 +254,7 @@ class AccountController extends AbstractController
         if (((!empty($model->id) && $id == $model->id) || (empty($model->id) && !$id)) && $model->load(Yii::$app->request->post()) && $model->validate()) {
             $model->user_id = Yii::$app->user->identity->id;
             $model->save();
-            Yii::$app->session->setFlash('success', '<i class="fa fa-check"></i> '.Yii::t('app', 'Data has been saved'));
+            Yii::$app->session->setFlash('delivery_'.$model->id, '<i class="fa fa-check"></i> '.Yii::t('app', 'Data has been saved'));
             return 'redirect';
         }
 
@@ -257,5 +264,14 @@ class AccountController extends AbstractController
     protected function accountMenu($active_link)
     {
         return $this->renderPartial('menu', ['active_link' => $active_link]);;
+    }
+
+    protected function breadcrumbs($endpoint)
+    {
+        return Html::a('Главная', '/').
+               ' <i class="fa fa-angle-right"></i> '.
+               Html::a('Личный кабинет', '/account').
+               ' <i class="fa fa-angle-right"></i> '.
+               '<span>'.$endpoint.'</span>';
     }
 }

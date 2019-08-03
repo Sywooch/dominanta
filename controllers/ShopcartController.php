@@ -74,7 +74,7 @@ class ShopcartController extends AbstractController
 
         if (!$hash) {
             if ($cookies_req->has(Shopcart::$cookiename)) {
-                $hash = $cookies_req->get(Shopcart::$cookiename);
+                $hash = $cookies_req->get(Shopcart::$cookiename)->value;
             } else {
                 $hash = Yii::$app->security->generateRandomString();
             }
@@ -160,9 +160,10 @@ class ShopcartController extends AbstractController
         $cnt = 0;
         $sum = 0;
 
-        foreach ($shopcart AS $item) {
+        foreach ($shopcart AS  $idx => $item) {
             if ($item->product->status != Product::STATUS_ACTIVE) {
                 $item->delete();
+                unset($shopcart[$idx]);
             }
 
             $cnt++;
@@ -188,12 +189,35 @@ class ShopcartController extends AbstractController
         ]);
 
         $replace = [
-            '{{{breadcrumbs}}}' => '',
+            '{{{breadcrumbs}}}' => $this->breadcrumbs($this->page->title),
             '{{{page_title}}}' => $this->page->title,
+            '{{{shopcart_alert}}}' => $this->getShopcartAlert($shopcart),
+            '{{{shopcart_items}}}' => $shopcart ? $this->getShopcartItems($shopcart) : '',
+            '{{{shopcart_form}}}' => $shopcart ? $this->getShopcartForm($shopcart) : '',
         ];
 
         return str_replace(array_keys($replace), $replace, $rendered_page);
+    }
 
+    protected function getShopcartAlert($shopcart)
+    {
+        return '<div class="alert alert-info shopcart_alert'.($shopcart ? ' hidden' : '').'" role="alert">Корзина пуста. Перейдите в '.Html::a('каталог товаров', '/shop').', чтобы сформировать заказ.</div>';
+    }
+
+    protected function getShopcartItems($shopcart)
+    {
+        $html = '';
+
+        foreach ($shopcart AS $item) {
+            $html .= $this->renderPartial('item', ['item' => $item]);
+        }
+
+        return $html;
+    }
+
+    protected function getShopcartForm($shopcart)
+    {
+        return '';
     }
 
     protected function add()
@@ -274,5 +298,152 @@ class ShopcartController extends AbstractController
                 'sum' => Yii::$app->formatter->asDecimal($sum, 2),
             ]
         ];
+    }
+
+    protected function delete()
+    {
+        $response = Yii::$app->response;
+        $response->format = Response::FORMAT_JSON;
+
+        $request = Yii::$app->request;
+        $item_id = $request->get('item_id', false);
+
+        if (!$item_id) {
+            return [
+                'status'  => 'error',
+                'message' => 'Invalid product id',
+            ];
+        }
+
+        $shopcart_data = self::getShopcartData();
+        $user_id = $shopcart_data['user_id'];
+        $hash    = $shopcart_data['hash'];
+
+        if ($user_id) {
+            $item_exists = Shopcart::find()->where(['id' => $item_id])
+                                              ->andWhere(['user_id' => $user_id])
+                                              ->limit(1)
+                                              ->one();
+        } else {
+            $item_exists = Shopcart::find()->where(['id' => $item_id])
+                                              ->andWhere(['hash' => $hash])
+                                              ->limit(1)
+                                              ->one();
+        }
+
+        if ($item_exists) {
+            $item_exists->delete();
+        }
+
+        if ($user_id) {
+            $shopcart = Shopcart::find()->where(['user_id' => $user_id])->all();
+        } else {
+            $shopcart = Shopcart::find()->where(['hash' => $hash])->all();
+        }
+
+        $cnt = 0;
+        $sum = 0;
+
+        foreach ($shopcart AS $item) {
+            if ($item->product->status != Product::STATUS_ACTIVE) {
+                $item->delete();
+            }
+
+            $cnt++;
+            $sum += ($item->product->price - ($item->product->price * ($item->product->discount / 100))) * $item['quantity'];
+        }
+
+        return [
+            'status' => 'ok',
+            'message' => [
+                'cnt' => $cnt,
+                'sum' => Yii::$app->formatter->asDecimal($sum, 2),
+                'id'  => $item_id,
+            ]
+        ];
+    }
+
+    protected function update_cnt()
+    {
+        $response = Yii::$app->response;
+        $response->format = Response::FORMAT_JSON;
+
+        $request = Yii::$app->request;
+        $item_id = $request->get('item_id', false);
+        $cnt     = intval($request->get('cnt', 0));
+
+        if (!$item_id) {
+            return [
+                'status'  => 'error',
+                'message' => 'Invalid product id',
+            ];
+        }
+
+        if (!$cnt) {
+            return [
+                'status'  => 'error',
+                'message' => 'Invalid cnt',
+            ];
+        }
+
+        $shopcart_data = self::getShopcartData();
+        $user_id = $shopcart_data['user_id'];
+        $hash    = $shopcart_data['hash'];
+
+        if ($user_id) {
+            $item_exists = Shopcart::find()->where(['id' => $item_id])
+                                              ->andWhere(['user_id' => $user_id])
+                                              ->limit(1)
+                                              ->one();
+        } else {
+            $item_exists = Shopcart::find()->where(['id' => $item_id])
+                                              ->andWhere(['hash' => $hash])
+                                              ->limit(1)
+                                              ->one();
+        }
+
+        if ($item_exists) {
+            $item_exists->quantity = $cnt;
+            $item_exists->save();
+        } else {
+            return [
+                'status'  => 'error',
+                'message' => 'Item not found',
+            ];
+        }
+
+        if ($user_id) {
+            $shopcart = Shopcart::find()->where(['user_id' => $user_id])->all();
+        } else {
+            $shopcart = Shopcart::find()->where(['hash' => $hash])->all();
+        }
+
+        $cnt = 0;
+        $sum = 0;
+
+        foreach ($shopcart AS $item) {
+            if ($item->product->status != Product::STATUS_ACTIVE) {
+                $item->delete();
+            }
+
+            $cnt++;
+            $sum += ($item->product->price - ($item->product->price * ($item->product->discount / 100))) * $item['quantity'];
+        }
+
+        return [
+            'status' => 'ok',
+            'message' => [
+                'cnt' => $cnt,
+                'sum' => Yii::$app->formatter->asDecimal($sum, 2),
+                'id'  => $item_id,
+            ]
+        ];
+    }
+
+    protected function breadcrumbs($endpoint)
+    {
+        return Html::a('Главная', '/').
+               ' <i class="fa fa-angle-right"></i> '.
+               '<span>'.$endpoint.'</span>';
     }
 }

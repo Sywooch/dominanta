@@ -125,7 +125,7 @@ return [
     'Rule' => 'Правило',
     'Rules' => 'Правила',
     'Access is denied to this section for your group.' => 'Для вашей группы запрещён доступ в данный раздел.',
-    'Address name' => 'Название адреса',
+    'Address name' => 'Название',
     'Address' => 'Адрес',
 
     // Manage

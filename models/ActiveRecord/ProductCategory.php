@@ -114,7 +114,7 @@ class ProductCategory extends AbstractModel
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getP()
+    public function getParentCat()
     {
         return $this->hasOne(ProductCategory::className(), ['id' => 'pid']);
     }
@@ -194,5 +194,10 @@ class ProductCategory extends AbstractModel
         }
 
         return $cat_list;
+    }
+
+    public function getCatLink()
+    {
+        return ($this->pid ? $this->parentCat->catLink : '/shop').'/'.$this->slug;
     }
 }
