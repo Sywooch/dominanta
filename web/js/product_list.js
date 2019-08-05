@@ -8,6 +8,25 @@ var productList = {
         $('#filter_max_price').on('change', this.changeMaxPriceEvent);
         $('.product_filter_value').on('click', this.productFilterEvent);
         $('.product_filter_actions a').on('click', this.clearFilterEvent);
+        $('.product_filter_header_text').on('click', this.filterCollapseEvent);
+    },
+    filterCollapseEvent: function() {
+        productList.filterCollapseTrigger(this);
+    },
+    filterCollapseTrigger: function(obj) {
+        var filter = $(obj).data('filter');
+
+        if ($('#product_filter_' + filter).hasClass('collapse')) {
+            $('#product_filter_' + filter).slideDown(300, function() {
+                $(this).removeClass('collapse')
+            });
+        } else {
+            $('#product_filter_' + filter).slideUp(300, function() {
+                $(this).addClass('collapse')
+            });
+        }
+
+        $(obj).toggleClass('product_filter_header product_filter_header_collapsed');
     },
     clearFilterEvent: function() {
         productList.clearFilterTrigger(this);
@@ -76,7 +95,7 @@ var productList = {
         } else {
             $(obj).find('span').removeClass('product_filter_checkbox');
             $(obj).find('span').addClass('product_filter_checkbox_active');
-            $(obj).append('<input type="hidden" name="filter[' + $(obj).data('filter') + '][]" value="' + $(obj).data('value') + '" />');
+            $(obj).append('<input type="hidden" name="filter[' + $(obj).data('filter') + '][]" value="' + $(obj).data('value') + '" data-filter="' + $(obj).data('filter') + '" />');
         }
 
         this.getProductsCount();
@@ -84,11 +103,22 @@ var productList = {
     getProductsCount: function() {
         var url = location.pathname;
         var filter = {
-            get_count: 1
+            get_count: 1,
+            filter: {}
         };
 
         $('#product_list_form input').each(function(){
-            filter[$(this).attr('name')] = $(this).val();
+            if ($(this).attr('name') != 'filter_button') {
+                if ($(this).data('filter')) {
+                    if (!filter['filter'][$(this).data('filter')]) {
+                        filter['filter'][$(this).data('filter')] = [$(this).val()];
+                    } else {
+                        filter['filter'][$(this).data('filter')][filter['filter'][$(this).data('filter')].length] = $(this).val();
+                    }
+                } else {
+                    filter[$(this).attr('name')] = $(this).val()
+                }
+            }
         });
 
         $.ajax({

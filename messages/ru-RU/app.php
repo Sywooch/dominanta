@@ -291,6 +291,19 @@ return [
     'New value' => 'Новое значение',
     'New property' => 'Новое свойство',
 
+    // Orders
+    'Delivery date' => 'Дата доставки',
+    'Issue date' => 'Дата выдачи',
+    'Fio' => 'ФИО',
+    'Your phone' => 'Ваш телефон',
+    'Your email' => 'Ваша электронная почта',
+    'Address' => 'Адрес доставки',
+    'Payment type' => 'Способ оплаты',
+    'Delivery type' => 'Способ доставки',
+    'Delivery price' => 'Стоимость доставки',
+    'Product discount' => 'Скидка на товары',
+    'Delivery discount' => 'Скидка на доставку',
+    'Order comment' => 'Комментарий к заказу',
 
 
 

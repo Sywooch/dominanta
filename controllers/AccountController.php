@@ -12,6 +12,7 @@ use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use app\models\ActiveRecord\DeliveryAddress;
 use app\models\ActiveRecord\Page;
+use app\models\ActiveRecord\ShopOrder;
 use app\models\ActiveRecord\User;
 
 class AccountController extends AbstractController
@@ -132,6 +133,18 @@ class AccountController extends AbstractController
 
     protected function orders()
     {
+        $orders_list = '';
+
+        $orders = ShopOrder::find()->where(['user_id' => Yii::$app->user->identity->id])->orderBy(['id' => SORT_DESC])->all();
+
+        if (!$orders) {
+            $orders_list = '<div class="jumbotron"><h1>Ещё не было заказов.</h1><p>Совершите свой первый заказ прямо сейчас! <a href="/shop">В каталог товаров &raquo;</a></p></div>';
+        }
+
+        foreach ($orders AS $order) {
+            $orders_list .= $this->getOrder($order);
+        }
+
         $this->page = Page::findByAddress('/account/orders', false);
 
         if ($this->page->template) {
@@ -152,6 +165,7 @@ class AccountController extends AbstractController
             '{{{breadcrumbs}}}' => $this->breadcrumbs($this->page->title),
             '{{{page_title}}}' => $this->page->title,
             '{{{account_menu}}}' => $this->accountMenu('orders'),
+            '{{{orders}}}' => $orders_list,
         ];
 
         return str_replace(array_keys($replace), $replace, $rendered_page);
@@ -245,6 +259,11 @@ class AccountController extends AbstractController
         }
 
         return $this->renderPartial('password', ['model' => $model]);
+    }
+
+    protected function getOrder($order)
+    {
+        return $this->renderPartial('order', ['order' => $order]);
     }
 
     protected function deliveryForm($model)

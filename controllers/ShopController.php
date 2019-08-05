@@ -249,27 +249,66 @@ class ShopController extends AbstractController
             ];
 
             if ($active_filter_value) {
-                if (!$property_filter) {
-                    $property_filter = true;
-
+                if (!isset($additional_filter[$prop['prop_id']])) {
                     if (!$get_count) {
-                        $product_query->innerJoin(ProductProperty::tableName(), ProductProperty::tableName().'.product_id='.Product::tableName().'.id');
+                        $product_query->innerJoin(['pr_'.$prop['prop_id'] => ProductProperty::tableName()], 'pr_'.$prop['prop_id'].'.product_id='.Product::tableName().'.id');
                     }
 
-                    $count_query->innerJoin(ProductProperty::tableName(), ProductProperty::tableName().'.product_id='.Product::tableName().'.id');
+                    $count_query->innerJoin(['pr_'.$prop['prop_id'] => ProductProperty::tableName()], 'pr_'.$prop['prop_id'].'.product_id='.Product::tableName().'.id');
+                    $additional_filter[$prop['prop_id']] = [];
                 }
 
-                $additional_filter[] = ProductProperty::tableName().'.property_id='.intval($prop['prop_id'])
-                                       .' AND '.ProductProperty::tableName().'.slug="'.$prop['value_slug'].'"';
+                $additional_filter[$prop['prop_id']][] = $prop['value_slug'];
+
+
+
+                //$additional_filter[] = ProductProperty::tableName().'.property_id='.intval($prop['prop_id'])
+                //                       .' OR '.ProductProperty::tableName().'.slug="'.$prop['value_slug'].'"';
             }
         }
+//print_r($all_filter);
+//print_r($additional_filter);
+//die();
+/*
+
+SELECT COUNT(*) AS cnt
+FROM `product`
+INNER JOIN `product_property` ON `product_property`.product_id=`product`.id
+WHERE (`product`.`status`=1)
+AND (`product`.`cat_id`=488)
+AND ((price - (price * (discount / 100))) >=40)
+AND ((price - (price * (discount / 100))) <=348)
+AND (
+        (
+            (`product_property`.property_id=2 OR `product_property`.slug="0-04")
+            AND
+            (`product_property`.property_id=9 OR `product_property`.slug="dlya-gipsokartona")
+        )
+    )
+
+
+
+
+
+
+
+
+
+*/
+
 
         if ($additional_filter) {
-            if (!$get_count) {
-                $product_query->andWhere('(('.implode(') OR (', $additional_filter).'))');
-            }
+            foreach ($additional_filter AS $filter_property_id => $filter_property_values) {
+                if (!$get_count) {
+                    $product_query->andWhere('pr_'.$filter_property_id.'.property_id='.intval($filter_property_id).' AND (
+                        pr_'.$filter_property_id.'.slug="'.implode('" OR pr_'.$filter_property_id.'.slug="', $filter_property_values).'"
+                    )');
+                }
 
-            $count_query->andWhere('(('.implode(') OR (', $additional_filter).'))');
+                $count_query->andWhere('pr_'.$filter_property_id.'.property_id='.intval($filter_property_id).' AND (
+                    pr_'.$filter_property_id.'.slug="'.implode('" OR pr_'.$filter_property_id.'.slug="', $filter_property_values).'"
+                )');
+            }
         }
 
         $product_count = $count_query->one()['cnt'];
@@ -442,13 +481,11 @@ class ShopController extends AbstractController
                 $photo = Html::img("/images/product_item.png");
             }
 
-            $html .= '<div class="product_item"><div class="product_item_image">';
-            $html .=  Html::a($photo, $this->getParentLink($models).'/'.$product['product_slug']);
-            $html .= '</div><div class="product_item_title">';
-            $html .= Html::a(Html::encode($product['product_name']), $this->getParentLink($models).'/'.$product['product_slug']);
-            $html .= '</div><div class="product_item_unit">Цена за шт.</div><div class="product_item_price">';
-            $html .= Yii::$app->formatter->asDecimal($product['real_price'], 2);
-            $html .= ' <i class="fa fa-ruble"></i></div><div class="product_item_button"><button class="add_shopcart" data-id="'.$product['prod_id'].'" data-cnt="1">В корзину</button></div></div>';
+            $html .= $this->renderPartial('product_item', [
+                'product' => $product,
+                'photo'   => $photo,
+                'link'    => $this->getParentLink($models).'/'.$product['product_slug'],
+            ]);
         }
 
         return $html;
@@ -478,29 +515,13 @@ class ShopController extends AbstractController
             $next_page = $pages;
         }
 
-        $html .= $product_page == 1 ? '<span class="pager_prev_page">Предыдущая страница</span>' : Html::a('Предыдущая страница', $base_link.$prev_page, ['class' => 'pager_prev_page']);
-        $html .= $product_page == 1 ? '<span>1</span>' : Html::a('1', $base_link.'1');
-
-        if ($product_page > 3) {
-            $html .= '<span class="pager_dots">...</span>';
-        }
-
-        for ($p = $prev_page == $pages - 1 ? $pages - 2 : $prev_page; $p <= $prev_page + 2; $p++) {
-            if ($p == 1 || $p >= $pages) {
-                continue;
-            }
-
-            $html .= $product_page == $p ? '<span>'.$p.'</span>' : Html::a($p, $base_link.$p);
-        }
-
-        if ($product_page < $pages - 2) {
-            $html .= '<span class="pager_dots">...</span>';
-        }
-
-        $html .= $product_page == $pages ? '<span>'.$pages.'</span>' : Html::a($pages, $base_link.$pages);
-        $html .= $product_page == $pages ? '<span class="pager_next_page">Следующая страница</span>' : Html::a('Следующая страница', $base_link.$next_page, ['class' => 'pager_next_page']);
-
-        return $html;
+        return $this->renderPartial('pager', [
+            'base_link'    => $base_link,
+            'product_page' => $product_page,
+            'prev_page'    => $prev_page,
+            'next_page'    => $next_page,
+            'pages'        => $pages,
+        ]);
     }
 
     protected function getFilterLink()
@@ -516,24 +537,20 @@ class ShopController extends AbstractController
 
     protected function getProductSort($models, $product_sort)
     {
-        $filter = $this->getFilterLink();
-
-        $html = ' '.Html::a('Названию', $this->getParentLink($models).($filter ? '?'.$filter.'&sort=name' : '?sort=name'), ['class' => $product_sort == 'name' ? 'product_list_action_active' : '']);
-        $html .= ' '.Html::a('Цене по возрастанию', $this->getParentLink($models).($filter ? '?'.$filter.'&sort=cheap' : '?sort=cheap'), ['class' => $product_sort == 'cheap' ? 'product_list_action_active' : '']);
-        $html .= ' '.Html::a('Цене по убыванию', $this->getParentLink($models).($filter ? '?'.$filter.'&sort=expensive' : '?sort=expensive'), ['class' => $product_sort == 'expensive' ? 'product_list_action_active' : '']);
-
-        return $html;
+        return $this->renderPartial('product_sort', [
+            'filter'       => $this->getFilterLink(),
+            'link'         => $this->getParentLink($models),
+            'product_sort' => $product_sort,
+        ]);
     }
 
     protected function getProductShowCount($models, $show_count)
     {
-        $filter = $this->getFilterLink();
-
-        $html = ' '.Html::a('20', $this->getParentLink($models).($filter ? '?'.$filter.'&show=20' : '?show=20'), ['class' => $show_count == '20' ? 'product_list_action_active' : '']);
-        $html .= ' '.Html::a('40', $this->getParentLink($models).($filter ? '?'.$filter.'&show=40' : '?show=40'), ['class' => $show_count == '40' ? 'product_list_action_active' : '']);
-        $html .= ' '.Html::a('60', $this->getParentLink($models).($filter ? '?'.$filter.'&show=60' : '?show=60'), ['class' => $show_count == '60' ? 'product_list_action_active' : '']);
-
-        return $html;
+        return $this->renderPartial('product_show', [
+            'filter'     => $this->getFilterLink(),
+            'link'       => $this->getParentLink($models),
+            'show_count' => $show_count,
+        ]);
     }
 
     protected function getCatMaxPrice($model)
@@ -564,53 +581,13 @@ class ShopController extends AbstractController
 
     protected function getFilters($all_properties)
     {
-        $html = '';
-
-        foreach ($all_properties AS $slug => $one_filter) {
-            $html .= '<div class="product_filter_block row">';
-            $html .= '<div class="product_filter_header">'.$one_filter['title'].'</div>';
-            $html .= '<div class="product_filter_values">';
-
-            foreach ($one_filter['items'] AS $value_slug => $filter_item) {
-                $html .= '<div class="product_filter_value" data-filter="'.$slug.'" data-value="'.$value_slug.'">';
-                $html .= '<span class="product_filter_checkbox'.($filter_item['active'] ? '_active' : '').'"></span> '.$filter_item['name'];
-
-                if ($filter_item['active']) {
-                    $html .= '<input type="hidden" name="filter['.$slug.'][]" value="'.$value_slug.'" />';
-                }
-
-                $html .= '</div>';
-            }
-
-            $html .='</div></div>';
-        }
-
-        return $html;
+        return $this->renderPartial('filters', ['all_properties' => $all_properties]);
     }
 
 
     protected function shopBreadcrumbs($models)
     {
-        $url = '/shop';
-        $breadcrumbs = [];
-
-        if ($models) {
-            $breadcrumbs[] = '<a href="'.$url.'">Каталог товаров</a> <i class="fa fa-angle-right"></i>';
-        } else {
-            $breadcrumbs[] = '<span>Каталог товаров</span>';
-        }
-
-        for ($i = 0; $i < count($models); $i++) {
-            if ($i == count($models) - 1) {
-                $model_name = $models[$i]->modelName == 'Product' ? $models[$i]->product_name : $models[$i]->category_name;
-                $breadcrumbs[] = '<span>'.Html::encode($model_name).'</span>';
-            } else {
-                $url .= '/'.$models[$i]->slug;
-                $breadcrumbs[] = '<a href="'.$url.'">'.Html::encode($models[$i]->category_name).'</a> <i class="fa fa-angle-right"></i>';
-            }
-        }
-
-        return implode("\n", $breadcrumbs);
+        return $this->renderPartial('breadcrumbs', ['url' => '/shop', 'models' => $models]);
     }
 
     protected function productProperties($model)
@@ -629,11 +606,7 @@ class ShopController extends AbstractController
               ->orderBy(['filter_order' => SORT_ASC])
               ->all();
 
-        foreach ($properties AS $property) {
-            $property_strings[] = '<b>'.$property['title'].':</b> '.$property['property_value'];
-        }
-
-        return implode('<br />', $property_strings);
+        return $this->renderPartial('properties', ['properties' => $properties]);
     }
 
     protected function productPhotos($model)

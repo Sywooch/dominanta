@@ -10,10 +10,14 @@ use yii\helpers\Html;
 use yii\web\Cookie;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use app\models\ActiveRecord\DeliveryAddress;
 use app\models\ActiveRecord\Page;
 use app\models\ActiveRecord\Product;
 use app\models\ActiveRecord\ProductPhoto;
 use app\models\ActiveRecord\Shopcart;
+use app\models\ActiveRecord\ShopOrder;
+use app\models\ActiveRecord\ShopOrderPosition;
+use app\models\ActiveRecord\ShopPayment;
 use app\models\ActiveRecord\User;
 
 class ShopcartController extends AbstractController
@@ -170,6 +174,12 @@ class ShopcartController extends AbstractController
             $sum += ($item->product->price - ($item->product->price * ($item->product->discount / 100))) * $item['quantity'];
         }
 
+        $shopcart_form = $shopcart ? $this->getShopcartForm($shopcart) : '';
+
+        if ($shopcart_form == 'redirect') {
+            return $this->redirect(['/shopcart/processed'], 301);
+        }
+
         $this->page = Page::findByAddress('/shopcart/view', false);
 
         if ($this->page->template) {
@@ -193,7 +203,36 @@ class ShopcartController extends AbstractController
             '{{{page_title}}}' => $this->page->title,
             '{{{shopcart_alert}}}' => $this->getShopcartAlert($shopcart),
             '{{{shopcart_items}}}' => $shopcart ? $this->getShopcartItems($shopcart) : '',
-            '{{{shopcart_form}}}' => $shopcart ? $this->getShopcartForm($shopcart) : '',
+            '{{{shopcart_form}}}' => $shopcart_form,
+        ];
+
+        return str_replace(array_keys($replace), $replace, $rendered_page);
+    }
+
+    protected function processed()
+    {
+        $this->page = Page::findByAddress('/shopcart/processed', false);
+
+        if ($this->page->template) {
+            $this->layout = $this->page->template->layout;
+        }
+
+        $this->page->title = 'Заказ оформлен';
+
+        $site_options = Yii::$app->site_options;
+        $request = Yii::$app->getRequest();
+        $rendered_page = $this->render('page', [
+            'page' => $this->page,
+            'controller' => $this,
+            'site_options' => $site_options,
+            'csrfParam' => $request->csrfParam,
+            'csrfToken' => $request->getCsrfToken(),
+        ]);
+
+        $replace = [
+            '{{{breadcrumbs}}}' => $this->breadcrumbs($this->page->title),
+            '{{{page_title}}}' => $this->page->title,
+            '{{{message}}}' => Yii::$app->session->getFlash('success'),
         ];
 
         return str_replace(array_keys($replace), $replace, $rendered_page);
@@ -217,7 +256,81 @@ class ShopcartController extends AbstractController
 
     protected function getShopcartForm($shopcart)
     {
-        return '';
+        $model = new ShopOrder;
+        $model->scenario = $model::SCENARIO_ADD;
+        $model->delivery_type = 0;
+        $model->payment_type  = 0;
+
+        $addresses = [];
+
+        $sel_address = false;
+
+        if (!Yii::$app->user->isGuest) {
+            $model->fio = Yii::$app->user->identity->realname;
+            $model->phone = Yii::$app->user->identity->phone;
+            $model->email = Yii::$app->user->identity->email;
+
+            $addr_list = DeliveryAddress::find()->where(['user_id' => Yii::$app->user->identity->id])->all();
+            $sel_address = Yii::$app->request->post('sel_address', false);
+
+            foreach ($addr_list AS $idx => $one_addr) {
+                $selected = ((!Yii::$app->request->isPost && !$sel_address && !$idx) || $one_addr->id == $sel_address);
+
+                if ($selected && !$sel_address) {
+                    $sel_address = $one_addr->id;
+                }
+
+                $addresses[$one_addr->id] = [
+                    'id'       => $one_addr->id,
+                    'name'     => $one_addr->address_name,
+                    'address'  => $one_addr->address,
+                    'selected' => $selected,
+                ];
+            }
+        }
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            if (!Yii::$app->user->isGuest) {
+                $model->user_id = Yii::$app->user->identity->id;
+
+                if ($sel_address) {
+                    $model->address = isset($addresses[$sel_address]) ? $addresses[$sel_address]['address'] : '';
+                }
+            }
+
+            $model->save();
+
+            foreach ($shopcart AS $item) {
+                ShopOrderPosition::createAndSave([
+                    'order_id'   => $model->id,
+                    'product_id' => $item->product_id,
+                    'quantity'   => $item->quantity,
+                    'price'      => $item->product->price - ($item->product->price * ($item->product->discount / 100)),
+                ]);
+
+                $item->delete();
+            }
+
+            Yii::$app->session->setFlash('success', '<i class="fa fa-check"></i> '.Yii::t('app', 'Заказ №'.$model->id.' оформлен!'));
+            return 'redirect';
+        }
+
+        $total = 0;
+
+        foreach ($shopcart AS $item) {
+            $total += ($item->product->price - ($item->product->price * ($item->product->discount / 100))) * $item->quantity;
+        }
+
+        if ($sel_address) {
+            $model->address = '';
+        }
+
+        return $this->renderPartial('form', [
+            'model' => $model,
+            'addresses' => $addresses,
+            'sel_address' => $sel_address,
+            'total' => $total,
+        ]);
     }
 
     protected function add()

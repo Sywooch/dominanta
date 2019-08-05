@@ -8,6 +8,11 @@ var shopcart = {
         $('.shopcart_item button').on('click', this.delEvent);
         $('.quantity_control_minus').on('click', this.minusEvent);
         $('.quantity_control_plus').on('click', this.plusEvent);
+        $('span.order_address').on('click', this.selAddressEvent);
+        $('.new_address_link').on('click', this.newAddressEvent);
+        $('.custom_form_selector').on('click', this.customSelEvent);
+        $('.custom_checkbox').on('click', this.checkboxEvent);
+        $('#shoporder-phone').mask("+7(999) 999-99-99");
     },
     addEvent: function() {
         shopcart.addTrigger(this);
@@ -43,15 +48,16 @@ var shopcart = {
     delItemTrigger: function(data) {
         $('#shopcart_item_' + data.message.id).slideUp(300, function() {
             $(this).remove();
-console.log($('.shopcart_item'));
+
             if (!$('.shopcart_item').length) {
                 $('.shopcart_alert').slideDown(300, function() {
                     $(this).removeClass('hidden');
+                    $('#shopcart_form').remove();
                 });
             }
         });
 
-// FIXME update form
+        // FIXME update form
     },
     minusEvent: function() {
         shopcart.minusTrigger(this);
@@ -109,6 +115,65 @@ console.log($('.shopcart_item'));
         $('#quantity_control_' + data.message.id).css('opacity', '1.0');
 
         // FIXME update form
+    },
+    selAddressEvent: function() {
+        shopcart.selAddressTrigger(this);
+    },
+    selAddressTrigger: function(obj) {
+        $('span.order_address').removeClass('order_address_selected');
+        $(obj).addClass('order_address_selected');
+        $('#selected_address').val($(obj).data('id'));
+        $('#shoporder-address').val($(obj).data('id'));
+
+        if (!$('.new_address_input').hasClass('hidden')) {
+            $('.new_address_input').slideUp(300, function() {
+                $(this).addClass('hidden');
+            });
+        }
+    },
+    newAddressEvent: function() {
+        shopcart.newAddressTrigger(this);
+        return false;
+    },
+    newAddressTrigger: function(obj) {
+        if ($('.new_address_input').hasClass('hidden')) {
+            $('.new_address_input').slideDown(300, function() {
+                $(this).removeClass('hidden');
+                $('span.order_address').removeClass('order_address_selected');
+                $('#selected_address').val(0);
+                $('#shoporder-address').val('');
+            });
+        } else {
+            $('.new_address_input').slideUp(300, function() {
+                $(this).addClass('hidden');
+            });
+
+            $('span.order_address:first').addClass('order_address_selected');
+            $('#selected_address').val($('span.order_address:first').data('id'));
+        }
+    },
+    customSelEvent: function() {
+        shopcart.customSelTrigger(this);
+    },
+    customSelTrigger: function(obj) {
+        var parent = $(obj).parents('.custom_sel_row');
+        $(parent).find('.custom_form_selector').removeClass('custom_form_selector_active');
+        $(parent).find('input').val($(obj).data('id'));
+        $(obj).addClass('custom_form_selector_active');
+    },
+    checkboxEvent: function() {
+        shopcart.checkboxTrigger(this);
+    },
+    checkboxTrigger: function(obj) {
+        if ($(obj).hasClass('checkbox_active')) {
+            $(obj).removeClass('checkbox_active');
+            $(obj).addClass('checkbox_inactive');
+            $('#shoporder-agreement').val('');
+        } else {
+            $(obj).removeClass('checkbox_inactive');
+            $(obj).addClass('checkbox_active');
+            $('#shoporder-agreement').val('1');
+        }
     },
     updateEvent: function(data) {
         shopcart.updateTrigger(data)
