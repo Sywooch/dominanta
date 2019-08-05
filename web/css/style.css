@@ -847,6 +847,25 @@ span.top_map_city {
     margin-right: 400px;
 }
 
+.product_property_row {
+    border-bottom: 2px dotted #d7d7d7;
+    font-size: 18px;
+    color: #5B5B5B;
+}
+
+span.product_property_name {
+    background: #fff;
+    padding-bottom: 5px;
+    position: relative;
+}
+
+span.product_property_value {
+    float: right;
+    background: #fff;
+    padding-bottom: 7px;
+    position: relative;
+}
+
 /* Product end */
 /* Product list begin */
 .product_filter_column {

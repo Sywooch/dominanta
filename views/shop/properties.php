@@ -7,7 +7,14 @@ use yii\helpers\Html;
 foreach ($properties AS $property) {
 
 ?>
-
-    <b><?= $property['title'] ?>:</b> <?= $property['property_value'] ?><br />
+    <div class="product_property_row">
+        <span class="product_property_value">
+            <?= $property['property_value'] ?>
+        </span>
+        <span class="product_property_name">
+            <?= $property['title'] ?>
+        </span>
+    </div>
+    <div style="clear: both"></div>
 
 <?php } ?>

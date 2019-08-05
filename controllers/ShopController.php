@@ -259,11 +259,6 @@ class ShopController extends AbstractController
                 }
 
                 $additional_filter[$prop['prop_id']][] = $prop['value_slug'];
-
-
-
-                //$additional_filter[] = ProductProperty::tableName().'.property_id='.intval($prop['prop_id'])
-                //                       .' OR '.ProductProperty::tableName().'.slug="'.$prop['value_slug'].'"';
             }
         }
 //print_r($all_filter);
