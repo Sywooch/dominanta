@@ -423,6 +423,9 @@ AND (
 
         $photos = $this->productPhotos($model);
 
+        $properties = $this->productProperties($model);
+        $property_weight_calc = trim(str_replace([',', ' '], ['.', ''], $properties['weight']));
+
         $replace = [
             '{{{breadcrumbs}}}' => $this->shopBreadcrumbs($models),
             '{{{page_title}}}' => $model->product_name,
@@ -432,7 +435,9 @@ AND (
             '{{{product_code}}}' => $model->id,
             '{{{vendor_photo}}}' => $vendor && file_exists($vendor->uploadFolder.'/'.$model->vendor_id.'.jpg') ? Html::img(str_replace(Yii::getAlias('@webroot'), '',  $vendor->uploadFolder.'/'.$model->vendor_id.'.jpg'), ['alt' => $vendor->title]) : '',
             '{{{product_description}}}' => $model->product_desc,
-            '{{{product_properties}}}' => $this->productProperties($model),
+            '{{{product_properties}}}' => $properties['page'],
+            '{{{product_weight_display}}}' => $property_weight_calc ? '<span class="product_weight_label">Общий вес:</span> <span class="product_weight_value">'.$properties['weight'].' кг</span>' : '',
+            '{{{product_weight_calc}}}' => $property_weight_calc,
             '{{{product_photo_preview}}}' => $photos['previews'],
             '{{{product_photo_slides}}}' => $photos['slides'],
         ];
@@ -590,18 +595,21 @@ AND (
         $property_strings = [];
 
         $query = new Query;
-        $properties = $query->select(['prop_id' =>  Property::tableName().'.id', 'property_value', 'title', 'filter_order'])
+        $properties = $query->select(['prop_id' =>  Property::tableName().'.id', Property::tableName().'.slug', 'property_value', 'title', 'filter_order'])
               ->from(ProductProperty::tableName())
               ->innerJoin(Property::tableName(), Property::tableName().'.id='.ProductProperty::tableName().'.property_id')
               ->innerJoin(ProductCategoryFilter::tableName(), Property::tableName().'.id='.ProductCategoryFilter::tableName().'.property_id')
               ->where([ProductCategoryFilter::tableName().'.category_id' => $model->cat_id])
               ->andWhere(['product_id' => $model->id])
               ->andWhere(['>=', 'filter_order', 0])
-              ->indexBy('prop_id')
+              ->indexBy('slug')
               ->orderBy(['filter_order' => SORT_ASC])
               ->all();
 
-        return $this->renderPartial('properties', ['properties' => $properties]);
+        return [
+            'page'   => $this->renderPartial('properties', ['properties' => $properties]),
+            'weight' => isset($properties['ves-brutto-kg']) ? $properties['ves-brutto-kg']['property_value'] : 0,
+        ];
     }
 
     protected function productPhotos($model)

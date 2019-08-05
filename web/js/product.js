@@ -9,6 +9,8 @@ var productPage = {
         $('.photo_left_arrow').on('click', this.prevSlideEvent);
         $('.photo_right_arrow').on('click', this.nextSlideEvent);
         $('.product_photo_slides img').on('click', this.selectSlideEvent);
+        $('.prod_quantity_control_minus').on('click', this.minusEvent);
+        $('.prod_quantity_control_plus').on('click', this.plusEvent);
         this.setSlideshowWidth();
     },
     setSlideshowWidth: function() {
@@ -90,8 +92,51 @@ var productPage = {
         $(obj).addClass('product_photo_active_slide');
 
         $('.product_photo_big').animate({scrollLeft: this.slideWidth * (this.currentSlide - 1) }, 600);
-    }
+    },
+    minusEvent: function() {
+        productPage.minusTrigger(this);
+    },
+    minusTrigger: function(obj) {
+        var currentCount = parseInt($('.prod_quantity_control_count').html());
 
+        if (currentCount == 1) {
+            return;
+        }
+
+        var newCount = currentCount - 1;
+        this.updateButtonCnt(newCount);
+    },
+    plusEvent: function() {
+        productPage.plusTrigger(this);
+    },
+    plusTrigger: function(obj) {
+        var currentCount = parseInt($('.prod_quantity_control_count').html());
+
+        if (currentCount == 100) {
+            return;
+        }
+
+        var newCount = currentCount + 1;
+        this.updateButtonCnt(newCount);
+    },
+    updateButtonCnt: function(cnt) {
+        $('.prod_quantity_control_count').html(cnt);
+        $('button.add_shopcart').each(function() {
+            $(this).data('cnt', cnt);
+        });
+
+        var dataWeight = $('.prod_quantity_control_count').data('weight');
+
+        if (dataWeight) {
+            dataWeight = parseFloat(dataWeight);
+            var totalWeight = (dataWeight * cnt).toFixed(2);
+
+
+            totalWeight += ' кг';
+            totalWeight = totalWeight.replace(/\./, ',');
+            $('.product_weight_value').html(totalWeight);
+        }
+    }
 }
 
 $(document).ready(productPage.loadEvent)

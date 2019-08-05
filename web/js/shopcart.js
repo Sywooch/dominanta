@@ -57,6 +57,7 @@ var shopcart = {
             }
         });
 
+        $('.order_total_amount').html(data.message.sum + ' <i class="fa fa-ruble"></i>');
         // FIXME update form
     },
     minusEvent: function() {
@@ -75,7 +76,6 @@ var shopcart = {
     },
     plusEvent: function() {
         shopcart.plusTrigger(this);
-        console.log('event')
     },
     plusTrigger: function(obj) {
         var item_id = $(obj).data('id');
@@ -113,7 +113,7 @@ var shopcart = {
     },
     updateCntTrigger: function(data) {
         $('#quantity_control_' + data.message.id).css('opacity', '1.0');
-
+        $('.order_total_amount').html(data.message.sum + ' <i class="fa fa-ruble"></i>');
         // FIXME update form
     },
     selAddressEvent: function() {
