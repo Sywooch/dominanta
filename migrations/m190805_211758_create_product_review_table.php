@@ -27,6 +27,7 @@ class m190805_211758_create_product_review_table extends Migration
             'review_text' => $this->text()->defaultValue(NULL),
             'approver' => $this->integer()->defaultValue(NULL),
             'approved' => $this->datetime()->defaultValue(NULL),
+            'rate' => $this->integer(1)->notNull()->defaultValue(0),
         ]);
 
         // creates index for column `product_id`

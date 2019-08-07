@@ -305,7 +305,9 @@ return [
     'Delivery discount' => 'Скидка на доставку',
     'Order comment' => 'Комментарий к заказу',
 
-
+    // Reviews
+    'Reviewer' => 'Имя',
+    'Review text' => 'Текст отзыва',
 
 
 
@@ -322,7 +324,7 @@ return [
     'Country' => 'Страна',
     'City' => 'Город',
     'Phones' => 'Телефоны',
-    'Rate' => 'Рейтинг',
+    'Rate' => 'Оценка',
 
     'Amount' => 'Сумма',
     'Period' => 'Период',

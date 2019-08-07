@@ -11,7 +11,76 @@ var productPage = {
         $('.product_photo_slides img').on('click', this.selectSlideEvent);
         $('.prod_quantity_control_minus').on('click', this.minusEvent);
         $('.prod_quantity_control_plus').on('click', this.plusEvent);
+        $('.review_form_stars span').on('mouseover', this.starMouseOverEvent);
+        $('.review_form_stars span').on('mouseout', this.starMouseOutEvent);
+        $('.review_form_stars span').on('click', this.starSelectEvent);
         this.setSlideshowWidth();
+    },
+    starMouseOverEvent: function() {
+        productPage.starMouseOverTrigger(this);
+    },
+    starMouseOutEvent: function() {
+        productPage.starMouseOutTrigger(this);
+    },
+    starMouseOverTrigger: function(obj) {
+        var findStar = false;
+
+        $('.review_form_stars span').each(function() {
+            if (findStar) {
+                $(this).removeClass('review_form_star_active');
+                $(this).addClass('review_form_star_inactive');
+            } else {
+                $(this).removeClass('review_form_star_inactive');
+                $(this).addClass('review_form_star_active');
+            }
+
+            if (this == obj) {
+                findStar = true;
+            }
+        });
+    },
+    starMouseOutTrigger: function(obj) {
+        var findStar = false;
+        var hasRate = $('span.selected_star').length;
+
+        $('.review_form_stars span').each(function() {
+            if (findStar || !hasRate) {
+                $(this).removeClass('review_form_star_active');
+                $(this).addClass('review_form_star_inactive');
+            } else if (hasRate) {
+                $(this).removeClass('review_form_star_inactive');
+                $(this).addClass('review_form_star_active');
+            }
+
+            if ($(this).hasClass('selected_star')) {
+                findStar = true;
+            }
+        });
+    },
+    starSelectEvent: function() {
+        productPage.starSelectTrigger(this);
+    },
+    starSelectTrigger: function(obj) {
+        var findStar = false;
+
+        $('.review_form_stars span').removeClass('selected_star');
+        $(obj).addClass('selected_star');
+
+        $('.review_form_stars span').each(function(idx, el) {
+            if (findStar) {
+                $(this).removeClass('review_form_star_active');
+                $(this).addClass('review_form_star_inactive');
+            } else {
+                $(this).removeClass('review_form_star_inactive');
+                $(this).addClass('review_form_star_active');
+            }
+
+            if (this == obj) {
+                findStar = true;
+                var rate = idx + 1;
+                $('#productreview-rate').val(rate);
+            }
+        });
     },
     setSlideshowWidth: function() {
         $('.product_photo_big_slideshow').width($('.product_photo_big_slide').length * this.slideWidth);

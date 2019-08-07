@@ -15,6 +15,7 @@ use app\models\ActiveRecord\ProductCategory;
 use app\models\ActiveRecord\ProductCategoryFilter;
 use app\models\ActiveRecord\ProductPhoto;
 use app\models\ActiveRecord\ProductProperty;
+use app\models\ActiveRecord\ProductReview;
 use app\models\ActiveRecord\Property;
 use app\models\ActiveRecord\User;
 
@@ -57,6 +58,10 @@ class ShopController extends AbstractController
 
         if ($url == '') {
             return $this->getProductCategory(NULL);
+        }
+
+        if ($url == 'add_review') {
+            return $this->addReview();
         }
 
         $url_parts = explode('/', $url);
@@ -261,36 +266,6 @@ class ShopController extends AbstractController
                 $additional_filter[$prop['prop_id']][] = $prop['value_slug'];
             }
         }
-//print_r($all_filter);
-//print_r($additional_filter);
-//die();
-/*
-
-SELECT COUNT(*) AS cnt
-FROM `product`
-INNER JOIN `product_property` ON `product_property`.product_id=`product`.id
-WHERE (`product`.`status`=1)
-AND (`product`.`cat_id`=488)
-AND ((price - (price * (discount / 100))) >=40)
-AND ((price - (price * (discount / 100))) <=348)
-AND (
-        (
-            (`product_property`.property_id=2 OR `product_property`.slug="0-04")
-            AND
-            (`product_property`.property_id=9 OR `product_property`.slug="dlya-gipsokartona")
-        )
-    )
-
-
-
-
-
-
-
-
-
-*/
-
 
         if ($additional_filter) {
             foreach ($additional_filter AS $filter_property_id => $filter_property_values) {
@@ -405,6 +380,8 @@ AND (
             $this->layout = $this->page->template->layout;
         }
 
+        $review_form = $this->getReviewForm($model);
+
         $this->page->title = $model->title;
 
         $site_options = Yii::$app->site_options;
@@ -440,6 +417,8 @@ AND (
             '{{{product_weight_calc}}}' => $property_weight_calc,
             '{{{product_photo_preview}}}' => $photos['previews'],
             '{{{product_photo_slides}}}' => $photos['slides'],
+            '{{{product_reviews}}}' => $this->getReviews($model),
+            '{{{review_form}}}' => $review_form,
         ];
 
         return str_replace(array_keys($replace), $replace, $rendered_page);
@@ -636,6 +615,45 @@ AND (
             'previews' => implode('', $preview),
             'slides'  => implode('', $slides),
         ];
+    }
+
+    protected function getReviews($model)
+    {
+        $reviews = ProductReview::find()->where(['product_id' => $model->id])
+                                        ->andWhere(['status' => ProductReview::STATUS_ACTIVE])
+                                        ->orderBy(['add_time' => SORT_DESC])
+                                        ->all();
+
+        return $this->renderPartial('reviews', ['reviews' => $reviews]);
+    }
+
+    protected function getReviewForm($model)
+    {
+        $review_model = new ProductReview;
+        $review_model->scenario = $review_model::SCENARIO_ADD;
+
+        if ($model) {
+            $review_model->product_id = $model->id;
+        }
+
+        if (!Yii::$app->user->isGuest) {
+            $review_model->user_id = Yii::$app->user->identity->id;
+            $review_model->reviewer = Yii::$app->user->identity->realname;
+        }
+
+        $form = Yii::$app->request->post('sended_form', '');
+
+        if ($form == 'review_form' && $review_model->load(Yii::$app->request->post()) && $review_model->validate()) {
+            $review_model->save(false);
+            return $this->renderAjax('review_form', ['model' => false]);
+        }
+
+        return $this->renderPartial('review_form', ['model' => $review_model]);
+    }
+
+    protected function addReview()
+    {
+        return $this->getReviewForm(false);
     }
 
     protected function getParentLink($models)

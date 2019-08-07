@@ -17,20 +17,37 @@ use app\models\ActiveRecord\AbstractModel;
  * @property string $review_text
  * @property int $approver
  * @property string $approved
+ * @property int $rate
  *
- * @property User $approver0
+ * @property User $approver
  * @property Product $product
  * @property User $user
  */
 class ProductReview extends AbstractModel
 {
+    const SCENARIO_ADD = 'add';
+    const SCENARIO_EDIT = 'edit';
+
+    /**
+     * @inheritdoc
+     */
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_ADD] = ['product_id', 'reviewer', 'review_text', 'rate'];
+        $scenarios[self::SCENARIO_EDIT] = ['reviewer', 'review_text', 'rate'];
+
+        return $scenarios;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['status', 'product_id', 'user_id', 'approver'], 'integer'],
+            [['status', 'product_id', 'user_id', 'approver', 'rate'], 'integer'],
+            [['product_id', 'reviewer', 'review_text', 'rate'], 'required', 'on' => self::SCENARIO_ADD],
             [['add_time', 'approved'], 'safe'],
             [['review_text'], 'string'],
             [['reviewer'], 'string', 'max' => 255],
@@ -52,16 +69,17 @@ class ProductReview extends AbstractModel
             'add_time' => Yii::t('app', 'Add Time'),
             'user_id' => Yii::t('app', 'User ID'),
             'reviewer' => Yii::t('app', 'Reviewer'),
-            'review_text' => Yii::t('app', 'Review Text'),
+            'review_text' => Yii::t('app', 'Review text'),
             'approver' => Yii::t('app', 'Approver'),
             'approved' => Yii::t('app', 'Approved'),
+            'rate' => Yii::t('app', 'Rate'),
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getApprover0()
+    public function getApproverUser()
     {
         return $this->hasOne(User::className(), ['id' => 'approver']);
     }
@@ -80,5 +98,10 @@ class ProductReview extends AbstractModel
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    public function eventBeforeInsert()
+    {
+        $this->add_time = $this->dbTime;
     }
 }
