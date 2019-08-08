@@ -137,7 +137,25 @@ class ShopController extends AbstractController
         $parent_link = $this->getParentLink($models);
 
         foreach ($subcats AS $subcat) {
-            $links[] = Html::a(Html::encode($subcat->category_name), $parent_link.'/'.$subcat->slug);
+            $s_subcats = ProductCategory::find()->where(['status' => ProductCategory::STATUS_ACTIVE])
+                                                ->andWhere(['pid' => $subcat->id])
+                                                ->orderBy(['category_name' => SORT_ASC])
+                                                ->all();
+
+            $sublinks = [];
+
+            foreach ($s_subcats AS $s_subcat) {
+                $sublinks[] = [
+                    'name' => $s_subcat->category_name,
+                    'link' => $parent_link.'/'.$subcat->slug.'/'.$s_subcat->slug,
+                ];
+            }
+
+            $links[] = [
+                'name'  => $subcat->category_name,
+                'link'  => $parent_link.'/'.$subcat->slug,
+                'items' => $sublinks,
+            ];
         }
 
         $this->page = Page::findByAddress('/shop/product_category', false);
@@ -165,7 +183,7 @@ class ShopController extends AbstractController
         $replace = [
             '{{{breadcrumbs}}}' => $this->shopBreadcrumbs($models),
             '{{{page_title}}}' => $model ? $model->category_name : 'Каталог товаров',
-            '{{{cats_list}}}' => implode('<br />', $links),
+            '{{{cats_list}}}' => $this->renderPartial('product_cats', ['links' => $links]),
         ];
 
         return str_replace(array_keys($replace), $replace, $rendered_page);
@@ -419,6 +437,7 @@ class ShopController extends AbstractController
             '{{{product_photo_slides}}}' => $photos['slides'],
             '{{{product_reviews}}}' => $this->getReviews($model),
             '{{{review_form}}}' => $review_form,
+            '{{{product_stars}}}' => $this->getProductStars($model),
         ];
 
         return str_replace(array_keys($replace), $replace, $rendered_page);
@@ -654,6 +673,14 @@ class ShopController extends AbstractController
     protected function addReview()
     {
         return $this->getReviewForm(false);
+    }
+
+    protected function getProductStars($model)
+    {
+        return $this->renderPartial('product_stars', [
+            'rate_count' => ProductReview::find()->where(['product_id' => $model->id])->andWhere(['status' => ProductReview::STATUS_ACTIVE])->count(),
+            'avg_rate' => round(ProductReview::find()->where(['product_id' => $model->id])->andWhere(['status' => ProductReview::STATUS_ACTIVE])->average('rate'))
+        ]);
     }
 
     protected function getParentLink($models)

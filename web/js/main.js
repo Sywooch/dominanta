@@ -9,6 +9,7 @@ var mainPage = {
         $(document).on('click', this.documentClickEvent);
 
         $("#user-phone").mask("+7(999) 999-99-99");
+        $("#callback-phone").mask("+7(999) 999-99-99");
     },
     documentClickEvent: function(e) {
         mainPage.documentClickTrigger(this, e);
