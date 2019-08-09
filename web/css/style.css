@@ -371,6 +371,11 @@ span.top_map_city {
 
 .dropdown_menu {
     display: none;
+    position: absolute;
+    z-index: 20;
+    background: #fff;
+    width: 100%;
+    margin: 0px -15px;
 }
 
 .dropdown_menu a, .dropdown_menu a:active, .dropdown_menu a:visited {
@@ -384,7 +389,7 @@ span.top_map_city {
     color: #353535;
 }
 
-.dropdown_left_col a:hover {
+.dropdown_left_col a:hover, .dropdown_left_col a.active_dropdown_left {
     background: #fff;
     text-decoration: none;
 }

@@ -4,6 +4,8 @@
 
 use yii\helpers\Html;
 
+if ($links) {
+
 ?>
 
 <div class="row">
@@ -23,5 +25,21 @@ use yii\helpers\Html;
 
     <?php } ?>
 
-
 </div>
+
+<?php
+
+} else {
+
+?>
+
+<div class="jumbotron">
+    <p>Товаров в данной категории не обнаружено</p>
+</div>
+
+
+<?php
+
+}
+
+?>
