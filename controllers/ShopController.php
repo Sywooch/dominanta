@@ -763,5 +763,12 @@ class ShopController extends AbstractController
     {
         $searchtext = Yii::$app->request->get('text', false);
         $searchtag  = Yii::$app->request->get('tag', false);
+
+        if ($searchtext) {
+            $products = Product::find()->where(['status' => Product::STATUS_ACTIVE])
+                                       ->andWhere(['like', 'product_name', $searchtext]);
+        } else {
+
+        }
     }
 }
