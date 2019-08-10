@@ -419,11 +419,17 @@ class AbstractModel extends ActiveRecord implements InterfaceModel
                     'controller' => $controller,
                 ];
 
-                for ($i = 1; $i < count($one_res); $i++) {
-                    $arr = explode('=', trim($one_res[$i], '|'));
-                    $param_name = $arr[0];
-                    unset($arr[0]);
-                    $params[$param_name] = implode('=', $arr);
+                $with_params = trim(str_replace(['{{{widget|'.strtolower($find_widget), '}}}'], '', $one_res[0]), '|');
+
+                if ($with_params) {
+                    $find_params = explode('|', $with_params);
+
+                    foreach ($find_params AS $find_param) {
+                        $arr = explode('=', trim($find_param, '|'));
+                        $param_name = $arr[0];
+                        unset($arr[0]);
+                        $params[$param_name] = implode('=', $arr);
+                    }
                 }
 
                 $widget_classname = $widget['classname'];

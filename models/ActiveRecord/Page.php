@@ -37,6 +37,8 @@ class Page extends AbstractModel
 
     public $page_extension;
 
+    public $product_id;
+
     /**
      *
      */
@@ -154,6 +156,24 @@ class Page extends AbstractModel
         }
 
         return $url;
+    }
+
+    public function getBreadcrumbs()
+    {
+        $links[] = [
+            'name' => $this->page_name,
+            'link' => $this->absoluteUrl,
+        ];
+
+        if ($this->parent) {
+            $parent_links = $this->parent->breadcrumbs;
+
+            foreach ($parent_links AS $parent_link) {
+                $links[] = $parent_link;
+            }
+        }
+
+        return $links;
     }
 
     public function updatePage($sitemap = true)

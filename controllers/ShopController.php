@@ -9,13 +9,17 @@ use yii\filters\VerbFilter;
 use yii\helpers\Html;
 use yii\web\Response;
 use yii\web\NotFoundHttpException;
+use app\controllers\ShopcartController;
 use app\models\ActiveRecord\Page;
 use app\models\ActiveRecord\Product;
 use app\models\ActiveRecord\ProductCategory;
 use app\models\ActiveRecord\ProductCategoryFilter;
+use app\models\ActiveRecord\ProductCross;
+use app\models\ActiveRecord\ProductLabel;
 use app\models\ActiveRecord\ProductPhoto;
 use app\models\ActiveRecord\ProductProperty;
 use app\models\ActiveRecord\ProductReview;
+use app\models\ActiveRecord\ProductResently;
 use app\models\ActiveRecord\Property;
 use app\models\ActiveRecord\User;
 
@@ -112,8 +116,37 @@ class ShopController extends AbstractController
 
         if ($model->modelName == 'Product') {
             return $this->getProduct($model, $models);
-        } else {
+        } elseif ($model->modelName == 'ProductCategory') {
             return $this->getProductCategory($model, $models);
+        } else {
+            $site_options = Yii::$app->site_options;
+            $page_extension = isset($site_options->page_extension) ? trim($site_options->page_extension) : '';
+
+            if (method_exists(self::className(), $url)) {
+                return $this->$url();
+            } else {
+                $this->page = Page::findByAddress('/shop/'.$url, false);
+
+                if (!$this->page) {
+                    Yii::$app->response->statusCode = 404;
+                    $this->page = Page::findByAddress('404'.$page_extension, false);
+                }
+
+                if (!$this->page) {
+                    throw new NotFoundHttpException();
+                }
+
+                $request = Yii::$app->getRequest();
+                $page_content = $this->render('page', [
+                    'page' => $this->page,
+                    'controller' => $this,
+                    'site_options' => $site_options,
+                    'csrfParam' => $request->csrfParam,
+                    'csrfToken' => $request->getCsrfToken(),
+                ]);
+
+                return $page_content;
+            }
         }
     }
 
@@ -166,6 +199,8 @@ class ShopController extends AbstractController
 
         if ($model) {
             $this->page->title = $model->title;
+            $this->page->meta_keywords    = $model->meta_keywords ? $model->meta_keywords : $this->page->meta_keywords;
+            $this->page->meta_description = $model->meta_description ? $model->meta_description : $this->page->meta_description;
         } else {
             $this->page->title = 'Каталог товаров';
         }
@@ -361,6 +396,8 @@ class ShopController extends AbstractController
         }
 
         $this->page->title = $model->title;
+        $this->page->meta_keywords    = $model->meta_keywords ? $model->meta_keywords : $this->page->meta_keywords;
+        $this->page->meta_description = $model->meta_description ? $model->meta_description : $this->page->meta_description;
 
         $site_options = Yii::$app->site_options;
         $request = Yii::$app->getRequest();
@@ -392,6 +429,31 @@ class ShopController extends AbstractController
 
     function getProduct($model, $models)
     {
+        $shopcart = ShopcartController::getShopcartData();
+
+        $rQuery = ProductResently::find()->where(['product_id' => $model->id]);
+
+        if ($shopcart['user_id']) {
+            $rQuery->andWhere(['user_id' => $shopcart['user_id']]);
+        } else {
+            $rQuery->andWhere(['hash' => $shopcart['hash']]);
+        }
+
+        $resently = $rQuery->limit(1)->one();
+
+        if ($resently) {
+            $resently->add_time = $resently->dbTime;
+            $resently->save();
+        } else {
+            ProductResently::createAndSave([
+                'add_time' => ProductResently::getDbTime(),
+                'product_id' => $model->id,
+                'user_id' => $shopcart['user_id'] ? $shopcart['user_id'] : NULL,
+                'hash' => $shopcart['hash'],
+            ]);
+        }
+
+
         $this->page = Page::findByAddress('/shop/product', false);
 
         if ($this->page->template) {
@@ -400,7 +462,10 @@ class ShopController extends AbstractController
 
         $review_form = $this->getReviewForm($model);
 
+        $this->page->product_id = $model->id;
         $this->page->title = $model->title;
+        $this->page->meta_keywords    = $model->meta_keywords ? $model->meta_keywords : $this->page->meta_keywords;
+        $this->page->meta_description = $model->meta_description ? $model->meta_description : $this->page->meta_description;
 
         $site_options = Yii::$app->site_options;
 
@@ -424,7 +489,7 @@ class ShopController extends AbstractController
         $replace = [
             '{{{breadcrumbs}}}' => $this->shopBreadcrumbs($models),
             '{{{page_title}}}' => $model->product_name,
-            '{{{product_price}}}' => Yii::$app->formatter->asDecimal(floatval($model->price), 2),
+            '{{{product_price}}}' => Yii::$app->formatter->asDecimal(floatval($model->realPrice), 2),
             '{{{product_old_price}}}' => $model->old_price > 0 ? Yii::$app->formatter->asDecimal(floatval($model->old_price), 2).' <i class="fa fa-ruble"></i>' : '',
             '{{{product_discount}}}' => $model->discount > 0 ? '- '.$model->discount : '',
             '{{{product_code}}}' => $model->id,
@@ -692,5 +757,11 @@ class ShopController extends AbstractController
         }
 
         return $url;
+    }
+
+    protected function search()
+    {
+        $searchtext = Yii::$app->request->get('text', false);
+        $searchtag  = Yii::$app->request->get('tag', false);
     }
 }

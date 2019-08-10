@@ -61,16 +61,19 @@ class AbstractController extends Controller
     public function actionPage($page, $only_active = true)
     {
         $page_content = false;
+        $is_main_page = false;
 
         $site_options = Yii::$app->site_options;
 
         $page_extension = isset($site_options->page_extension) ? trim($site_options->page_extension) : '';
 
         if (!$page) {
+            $is_main_page = true;
             $page = $site_options->main_page.$page_extension;
         }
 
         if (!$page) {
+            $is_main_page = true;
             $page = 'index'.$page_extension;
         }
 
@@ -99,9 +102,22 @@ class AbstractController extends Controller
         ]);
 
         if ($page_content) {
+            $replace = [
+                '{{{breadcrumbs}}}' => $is_main_page ? '' : $this->getBreadcrumbs($this->page),
+                '{{{page_title}}}' => $is_main_page ? '' : $this->page->page_name,
+            ];
+
+            $page_content = str_replace(array_keys($replace), $replace, $page_content);
+
+
             return $page_content;
         } else {
             throw new NotFoundHttpException();
         }
+    }
+
+    protected function getBreadcrumbs($page)
+    {
+        return $this->renderPartial('breadcrumbs', ['links' => $page->breadcrumbs]);
     }
 }

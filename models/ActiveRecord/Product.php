@@ -201,4 +201,9 @@ class Product extends AbstractModel
     {
         return $this->cat->catLink.'/'.$this->slug;
     }
+
+    public function getRealPrice()
+    {
+        return $this->price - ($this->price * ($this->discount / 100));
+    }
 }
