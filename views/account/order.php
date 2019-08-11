@@ -33,7 +33,7 @@ foreach ($positions AS $position) {
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                     <span class="order_item_collapse_button" data-id="<?= $order->id ?>"><i class="fa fa-angle-down"></i></span>
                     <div class="order_item_label">Статус заказа:</div>
-                    <div class="order_item_data"><b>Новый</b></div>
+                    <div class="order_item_data"><b><?= $order->statuses[$order->status] ?></b></div>
                 </div>
             </div>
         </div>

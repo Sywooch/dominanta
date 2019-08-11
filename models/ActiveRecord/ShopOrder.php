@@ -52,13 +52,13 @@ class ShopOrder extends AbstractModel
     ];
 
     public $payment_types = [
-        'cashless',
-        'cash',
+        'Безналичная оплата',
+        'Наличные',
     ];
 
     public $delivery_types = [
-        'pickup',
-        'courier',
+        'Самовывоз',
+        'Доставка курьером',
     ];
 
     public static $notify = 'Уведомление о новых заказах';
@@ -72,7 +72,8 @@ class ShopOrder extends AbstractModel
     {
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_ADD] = ['email', 'fio', 'phone', 'address', 'payment_type', 'delivery_type', 'order_comment', 'agreement'];
-        $scenarios[self::SCENARIO_EDIT] = ['email', 'fio', 'phone', 'address', 'payment_type', 'delivery_type', 'order_comment'];
+        $scenarios[self::SCENARIO_EDIT] = ['status', 'email', 'fio', 'phone', 'address', 'payment_type', 'delivery_type', 'order_comment'];
+        $scenarios[self::SCENARIO_SEARCH] = ['email', 'fio', 'phone', 'address'];
 
         return $scenarios;
     }

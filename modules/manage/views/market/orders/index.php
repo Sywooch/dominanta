@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use rmrevin\yii\fontawesome\component\Icon;
 use yiister\gentelella\widgets\grid\GridView;
+use app\models\ActiveRecord\ShopOrder;
+use app\models\ActiveRecord\ShopOrderPosition;
 
 $this->title = Yii::t('app', $page_model->entitiesName);
 
@@ -13,11 +15,11 @@ $this->title = Yii::t('app', $page_model->entitiesName);
         'dataProvider' => $data_provider,
         'filterModel' => $search,
         'hover' => true,
-        'emptyText' => '<div class="well text-center"><h3>'.Yii::t('app', 'No records found').'</h3><div>'.$add_button.'</div></div>',
+        'emptyText' => '<div class="well text-center"><h3>'.Yii::t('app', 'No records found').'</h3></div>',
         'columns' => [
             [
                 'class' => 'yii\grid\ActionColumn',
-                'headerOptions' => ['width' => '100', 'class' => 'text-center'],
+                'headerOptions' => ['width' => '50', 'class' => 'text-center'],
                 'contentOptions' => ['class' => 'text-center', 'style' => 'vertical-align: middle'],
                 'template' => ($rules[$page_model->modelName]['is_edit'] ? '{edit} ' : ' ').
                               ($rules[$page_model->modelName]['is_delete'] ? '{delete} ' : ' '),
@@ -28,7 +30,9 @@ $this->title = Yii::t('app', $page_model->entitiesName);
                                       ['title' => Yii::t('app', 'Edit'),
                                        'aria-label' => Yii::t('app', 'Edit'),
                                        'data' => [
-                                          'toggle' => 'tooltip',
+                                          'tooltip' => 'true',
+                                          'toggle' => 'modal',
+                                          'target' => '.bs-example-modal-lg'
                                       ]]
                               );
                     },
@@ -49,7 +53,7 @@ $this->title = Yii::t('app', $page_model->entitiesName);
             ],
             [
                 'attribute' => 'id',
-                'label' => 'ID',
+                'label' => 'Номер заказа',
                 'headerOptions' => ['width' => '10'],
                 'contentOptions' => ['class' => 'text-center'],
             ],
@@ -126,34 +130,47 @@ $this->title = Yii::t('app', $page_model->entitiesName);
                 },
             ],
             [
-                'attribute' => 'page_name',
+                'attribute' => 'add_time',
                 'content' => function($data) {
-                    if ($data->subpagesCount) {
-                        return Html::a($data->page_name.' '.(new Icon('share')), ['/manage/site/pages', 'pid' => $data->id]);
-                    } else {
-                        return $data->page_name;
-                    }
+                    return $data->getPageTime($data->add_time);
                 },
             ],
             [
-                'attribute' => 'slug',
-                'content' => function($data) {
-                    return Html::a($data->absoluteUrl, $data->absoluteUrl, ['target' => '_blank']);
-                },
+                'attribute' => 'fio',
             ],
+            [
+                'attribute' => 'phone',
+                'label' => Yii::t('app', 'Phone'),
+            ],
+            [
+                'attribute' => 'email',
+                'label' => 'Email',
+            ],
+            [
+                'attribute' => 'address',
+            ],
+            [
+                'encodeLabel' => false,
+                'label' => 'Количество позиций<br />Сумма',
+                'content' => function($data) {
+                     $q = ShopOrderPosition::find()->where(['order_id' => $data->id]);
+                     return $q->count().'<br />'.Yii::$app->formatter->asDecimal($q->sum('price * quantity'), 2).' <i class="fa fa-ruble"></i>';
+                }
+            ],
+            [
+                'encodeLabel' => false,
+                'label' => 'Оплата<br />Доставка',
+                'content' => function($data) {
+                     return $data->payment_types[$data->payment_type].'<br />'.$data->delivery_types[$data->delivery_type];
+                }
+            ]
         ],
     ]
 );
 
 ?>
 
-<?php if ($pid) { ?>
-<div>
-    <?= Html::a(new Icon('arrow-up').' '.Yii::t('app', 'Parent section'), ['/manage/site/pages', 'pid' => Page::findOne($pid)->pid], ['class' => 'btn btn-round btn-success']) ?>
-</div>
-<?php } ?>
-
 <div class="btn-group" role="group">
-    <?= Html::a(new Icon('check').' '.Yii::t('app', 'Active records'), ['/manage/site/pages', 'pid' => $pid], ['class' => 'btn btn-round btn-'.($status != Page::STATUS_DELETED?'success':'default')]) ?>
-    <?= Html::a(new Icon('trash').' '.Yii::t('app', 'Deleted records'), ['/manage/site/pages', 'status' => Page::STATUS_DELETED, 'pid' => $pid], ['class' => 'btn btn-round btn-'.($status == Page::STATUS_DELETED?'success':'default')]) ?>
+    <?= Html::a(new Icon('check').' '.Yii::t('app', 'Active records'), ['/manage/market/orders'], ['class' => 'btn btn-round btn-'.($status != ShopOrder::STATUS_DELETED?'success':'default')]) ?>
+    <?= Html::a(new Icon('trash').' '.Yii::t('app', 'Deleted records'), ['/manage/market/orders', 'status' => ShopOrder::STATUS_DELETED], ['class' => 'btn btn-round btn-'.($status == ShopOrder::STATUS_DELETED?'success':'default')]) ?>
 </div>
