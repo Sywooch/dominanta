@@ -16,6 +16,7 @@ use app\models\ActiveRecord\ProductCategory;
 use app\models\ActiveRecord\ProductCategoryFilter;
 use app\models\ActiveRecord\ProductCross;
 use app\models\ActiveRecord\ProductLabel;
+use app\models\ActiveRecord\ProductLabels;
 use app\models\ActiveRecord\ProductPhoto;
 use app\models\ActiveRecord\ProductProperty;
 use app\models\ActiveRecord\ProductReview;
@@ -510,6 +511,7 @@ class ShopController extends AbstractController
             '{{{product_reviews}}}' => $this->getReviews($model),
             '{{{review_form}}}' => $review_form,
             '{{{product_stars}}}' => $this->getProductStars($model),
+            '{{{labels}}}' => $this->getProductLabels($model),
         ];
 
         return str_replace(array_keys($replace), $replace, $rendered_page);
@@ -538,18 +540,21 @@ class ShopController extends AbstractController
         $html = '';
 
         foreach ($products AS $product) {
+            $product_obj = new Product();
+            $product_obj->id = $product['prod_id'];
+
             $img = ProductPhoto::find()->where(['product_id' => $product['prod_id']])
                                        ->limit(1)
                                        ->orderBy(['photo_order' => SORT_ASC])
                                        ->one();
 
             if ($img) {
-                $product_obj = new Product();
-                $product_obj->id = $product['prod_id'];
                 $photo = Html::img(str_replace(Yii::getAlias('@webroot'), '', $product_obj->getPreview($img->photoPath, 142, 142)));
             } else {
                 $photo = Html::img("/images/product_item.png");
             }
+
+            $product['labels'] = $product_obj->getLabels();
 
             $html .= $this->renderPartial('product_item', [
                 'product' => $product,
@@ -696,6 +701,17 @@ class ShopController extends AbstractController
         ];
     }
 
+    protected function getProductLabels($model)
+    {
+        $html = '';
+
+        foreach ($model->getLabels() AS $label) {
+            $html .= $label->content;
+        }
+
+        return $html;
+    }
+
     protected function productPhotos($model)
     {
         $photos = ProductPhoto::find()->where(['product_id' => $model->id])->orderBy(['photo_order' => SORT_ASC])->all();
@@ -790,13 +806,21 @@ class ShopController extends AbstractController
         $offset = ($product_page - 1) * $limit;
         $product_count = 0;
         $products = [];
+        $label = false;
 
         if ($searchtext) {
             $productsQuery = Product::find()->where(['status' => Product::STATUS_ACTIVE])
                                             ->andWhere(['like', 'product_name', $searchtext]);
             $product_count = $productsQuery->count();
         } elseif ($searchtag) {
+            $label = ProductLabel::findOne(['widget' => $searchtag]);
 
+            if ($label) {
+                $productsQuery = Product::find()->innerJoin(ProductLabels::tableName(), ProductLabels::tableName().'.product_id='.Product::tableName().'.id')
+                                                ->where([Product::tableName().'.status' => Product::STATUS_ACTIVE])
+                                                ->andWhere(['label_id' => $label->id]);
+                $product_count = $productsQuery->count();
+            }
         }
 
         if ($product_count) {
@@ -812,6 +836,11 @@ class ShopController extends AbstractController
         $site_options = Yii::$app->site_options;
 
         $request = Yii::$app->getRequest();
+
+        if ($label) {
+            $this->page->title = $label->label;
+            $this->page->page_name = $label->label;
+        }
 
         $rendered_page = $this->render('page', [
             'page' => $this->page,

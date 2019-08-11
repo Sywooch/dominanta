@@ -3,6 +3,7 @@
 namespace app\models\ActiveRecord;
 
 use Yii;
+use yii\helpers\Html;
 use app\models\ActiveRecord\AbstractModel;
 
 /**
@@ -54,5 +55,30 @@ class ProductLabel extends AbstractModel
     public function getProductLabels()
     {
         return $this->hasMany(ProductLabels::className(), ['label_id' => 'id']);
+    }
+
+    public function getContent()
+    {
+        if (!$this->status) {
+            return '';
+        }
+
+        $styles = [];
+
+        if ($this->bg_color) {
+            $styles[] = 'background:'.$this->bg_color;
+        }
+
+        if ($this->font_color) {
+            $styles[] = 'color:'.$this->font_color;
+        }
+
+        return $this->link || $this->widget ?
+               Html::a(Html::encode($this->label), ($this->link ? $this->link : '/shop/search?tag='.$this->widget), ['style' => implode(';', $styles), 'class' => 'product_label'])
+               :
+               '<span class="product_label"'.($styles ? ' style="'.implode(';', $styles).'"' : '').'>'.
+               Html::encode($this->label).
+               '</span>';
+
     }
 }

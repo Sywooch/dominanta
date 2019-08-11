@@ -1838,3 +1838,31 @@ span.user_acc_delivery {
     font-size: 16px;
     padding: 10px 0px;
 }
+
+
+/* Labels */
+.product_labels {
+    position: absolute;
+    margin-top: 15px;
+    width: 150px;
+}
+
+span.product_label, a.product_label, a.product_label:visited, a.product_label:active, a.product_label:hover {
+    display: inline-block;
+    padding: 1px 4px;
+    color: #fff;
+    text-decoration: none;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+.product_show_labels {
+    position: absolute;
+    margin: 15px 0px 0px 25px;
+}
+
+.product_show_labels span.product_label, .product_show_labels a.product_label {
+    margin-left: 5px;
+    padding: 5px 10px;
+    font-size: 16px;
+}

@@ -206,4 +206,11 @@ class Product extends AbstractModel
     {
         return $this->price - ($this->price * ($this->discount / 100));
     }
+
+    public function getLabels()
+    {
+        return ProductLabel::find()->innerJoin(ProductLabels::tableName(), ProductLabels::tableName().'.label_id='.ProductLabel::tableName().'.id')
+                                   ->where(['product_id' => $this->id])
+                                   ->all();
+    }
 }

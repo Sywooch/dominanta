@@ -7,6 +7,11 @@ use yii\helpers\Html;
 ?>
 
 <div class="product_item">
+    <div class="product_labels">
+    <?php foreach ($product['labels'] AS $label) { ?>
+        <?= $label->content ?>
+    <?php } ?>
+    </div>
     <div class="product_item_image">
         <?= Html::a($photo, $link) ?>
     </div>

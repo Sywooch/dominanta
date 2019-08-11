@@ -51,6 +51,11 @@ foreach ($products AS $product) {
 
             ?>
                 <div class="product_item">
+                    <div class="product_labels">
+                    <?php foreach ($product->getLabels() AS $label) { ?>
+                        <?= $label->content ?>
+                    <?php } ?>
+                    </div>
                     <div class="product_item_image">
                         <?= Html::a($photo, $product->productLink) ?>
                     </div>
