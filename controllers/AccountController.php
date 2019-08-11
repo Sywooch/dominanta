@@ -86,7 +86,12 @@ class AccountController extends AbstractController
                 'csrfToken' => $request->getCsrfToken(),
             ]);
 
-            return $page_content;
+            $replace = [
+                '{{{breadcrumbs}}}' => $this->getBreadcrumbs($this->page),
+                '{{{page_title}}}' => $this->page->page_name,
+            ];
+
+            return str_replace(array_keys($replace), $replace, $page_content);
         }
     }
 

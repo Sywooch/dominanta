@@ -10,6 +10,6 @@ use yii\helpers\Html;
 
 <?php for ($l = count($links) - 1; $l >= 0; $l--) { ?>
 
-<?= $l == count($links) - 1 ? '<span>'.Html::encode($links[$l]['name']).'</span>' : Html::a(Html::encode($links[$l]['name']), $links[$l]['link']).'  <i class="fa fa-angle-right"></i>' ?>
+<?= !$l ? '<span>'.Html::encode($links[$l]['name']).'</span>' : Html::a(Html::encode($links[$l]['name']), $links[$l]['link']).'  <i class="fa fa-angle-right"></i>' ?>
 
 <?php } ?>

@@ -80,9 +80,9 @@ class ShopController extends AbstractController
                     'pid'    => NULL,
                 ]);
 
-                if (!$main_category) {
+                /*if (!$main_category) {
                     return $this->actionPage('shop/'.$url);
-                }
+                }*/
 
                 $models[] = $main_category;
             } else {
@@ -103,9 +103,9 @@ class ShopController extends AbstractController
                         'cat_id'    => $parent_model->id,
                     ]);
 
-                    if (!$try_find_product) {
+                /*    if (!$try_find_product) {
                         return $this->actionPage('shop/'.$url);
-                    }
+                    }*/
 
                     $models[] = $try_find_product;
                 }
@@ -114,9 +114,9 @@ class ShopController extends AbstractController
 
         $model = $models[count($models) - 1];
 
-        if ($model->modelName == 'Product') {
+        if (is_object($model) && $model->modelName == 'Product') {
             return $this->getProduct($model, $models);
-        } elseif ($model->modelName == 'ProductCategory') {
+        } elseif (is_object($model) && $model->modelName == 'ProductCategory') {
             return $this->getProductCategory($model, $models);
         } else {
             $site_options = Yii::$app->site_options;
@@ -145,10 +145,17 @@ class ShopController extends AbstractController
                     'csrfToken' => $request->getCsrfToken(),
                 ]);
 
-                return $page_content;
+                $replace = [
+                    '{{{breadcrumbs}}}' => $this->getBreadcrumbs($this->page),
+                    '{{{page_title}}}' => $this->page->page_name,
+                ];
+
+                return str_replace(array_keys($replace), $replace, $page_content);
             }
         }
     }
+
+
 
     protected function getProductCategory($model = NULL, $models = [])
     {
@@ -650,7 +657,7 @@ class ShopController extends AbstractController
 
     protected function shopBreadcrumbs($models)
     {
-        return $this->renderPartial('breadcrumbs', ['url' => '/shop', 'models' => $models]);
+        return $this->renderPartial('breadcrumbs_shop', ['url' => '/shop', 'models' => $models]);
     }
 
     protected function productProperties($model)
@@ -761,7 +768,7 @@ class ShopController extends AbstractController
 
     protected function search()
     {
-        $searchtext = Yii::$app->request->get('text', false);
+        $searchtext = Yii::$app->request->get('searchtext', false);
         $searchtag  = Yii::$app->request->get('tag', false);
 
         if ($searchtext) {
@@ -770,5 +777,30 @@ class ShopController extends AbstractController
         } else {
 
         }
+
+        $this->page = Page::findByAddress('/shop/search', false);
+
+        if ($this->page->template) {
+            $this->layout = $this->page->template->layout;
+        }
+
+        $site_options = Yii::$app->site_options;
+
+        $request = Yii::$app->getRequest();
+
+        $rendered_page = $this->render('page', [
+            'page' => $this->page,
+            'controller' => $this,
+            'site_options' => $site_options,
+            'csrfParam' => $request->csrfParam,
+            'csrfToken' => $request->getCsrfToken(),
+        ]);
+
+        $replace = [
+            '{{{breadcrumbs}}}' => $this->getBreadcrumbs($this->page),
+            '{{{page_title}}}' => $this->page->page_name,
+        ];
+
+        return str_replace(array_keys($replace), $replace, $rendered_page);
     }
 }
