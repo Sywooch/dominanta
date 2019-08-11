@@ -21,6 +21,10 @@ use app\models\ActiveRecord\AbstractModel;
  */
 class ProductLabel extends AbstractModel
 {
+    public static $entityName = 'Product label';
+
+    public static $entitiesName = 'Product labels';
+
     /**
      * {@inheritdoc}
      */

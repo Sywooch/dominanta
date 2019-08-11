@@ -20,6 +20,11 @@ class ManageModule extends Module
     protected $menu = [
         'Market' => [
             'icon' => 'shopping-cart',
+            'ShopOrder' => [
+                'icon' => 'cart-plus',
+                'url' => '/manage/market/orders',
+                'badge' => false,
+            ],
             'ProductCategory' => [
                 'icon' => 'industry',
                 'url'   => '/manage/market/categories',
@@ -59,11 +64,11 @@ class ManageModule extends Module
                 'url'   => '/manage/site/js',
                 'badge' => [],
             ],
-            'Menu' => [
+            /*'Menu' => [
                 'icon'  => 'list-alt',
                 'url'   => '/manage/site/menu',
                 'badge' => [],
-            ],
+            ],*/
             'Variable' => [
                 'icon'  => 'code',
                 'url'   => '/manage/site/vars',

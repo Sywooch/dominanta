@@ -19,6 +19,10 @@ use app\models\ActiveRecord\AbstractModel;
  */
 class ShopPayment extends AbstractModel
 {
+    public static $entityName = 'Shop payment';
+
+    public static $entitiesName = 'Shop payments';
+
     /**
      * {@inheritdoc}
      */

@@ -18,6 +18,12 @@ class RolesController extends AbstractManageController
         'PageJs',
         'TemplateCss',
         'TemplateJs',
+        'Menu',
+        'Shopcart',
+        'DeliveryAddress',
+        'MailAttachment',
+        'ProductDoc',
+        'ProductResently',
     ];
 
     private function getTree($status = 0, $pid = NULL)

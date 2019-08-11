@@ -15,6 +15,10 @@ use app\models\ActiveRecord\AbstractModel;
  */
 class Vendor extends AbstractModel
 {
+    public static $entityName = 'Vendor';
+
+    public static $entitiesName = 'Vendors';
+
     /**
      * {@inheritdoc}
      */

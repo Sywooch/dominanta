@@ -16,6 +16,10 @@ use app\models\ActiveRecord\AbstractModel;
  */
 class ProductPhoto extends AbstractModel
 {
+    public static $entityName = 'Product photo';
+
+    public static $entitiesName = 'Product photos';
+
     public $upload;
 
     /**

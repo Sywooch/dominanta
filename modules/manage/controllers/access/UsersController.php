@@ -85,7 +85,7 @@ class UsersController extends AbstractManageController
                         }
                     }
 
-                    $save_model->notify = implode(',', $notifies);
+                    $save_model->notify = ','.implode(',', $notifies).',';
                 }
 
                 $save_model->save(false);
@@ -105,14 +105,14 @@ class UsersController extends AbstractManageController
         $models = ModelsHelper::get();
 
         if ($model && $id) {
-            foreach ($models AS $oneModel) {
+            foreach ($models AS $modelName => $oneModel) {
 
                 $n_model = $oneModel['classname'];
 
                 if ($n_model::$notify) {
                     $notify[$modelName] = [
                         'name' => $n_model::$notify,
-                        'checked' => (strpos($model[$controller_model::SCENARIO_SETTINGS]->notify, $modelName)!==false)?1:0,
+                        'checked' => (strpos($model[$controller_model::SCENARIO_SETTINGS]->notify, $modelName) !== false),
                     ];
                 }
             }

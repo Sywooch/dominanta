@@ -25,6 +25,10 @@ use app\models\ActiveRecord\AbstractModel;
  */
 class ProductReview extends AbstractModel
 {
+    public static $entityName = 'Review';
+
+    public static $entitiesName = 'Reviews';
+
     const SCENARIO_ADD = 'add';
     const SCENARIO_EDIT = 'edit';
 

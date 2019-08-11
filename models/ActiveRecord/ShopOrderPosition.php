@@ -20,6 +20,10 @@ use app\models\ActiveRecord\AbstractModel;
  */
 class ShopOrderPosition extends AbstractModel
 {
+    public static $entityName = 'Order position';
+
+    public static $entitiesName = 'Order positions';
+
     /**
      * {@inheritdoc}
      */

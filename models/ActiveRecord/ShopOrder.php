@@ -31,8 +31,25 @@ use app\models\ActiveRecord\AbstractModel;
  */
 class ShopOrder extends AbstractModel
 {
+    public static $entityName = 'Shop order';
+
+    public static $entitiesName = 'Shop orders';
+
     const SCENARIO_ADD = 'add';
     const SCENARIO_EDIT = 'edit';
+
+    const STATUS_WAIT_PAYMENT = 2;
+    const STATUS_READY = 3;
+    const STATUS_COMPLETED = 4;
+
+    public $statuses = [
+        -1 => 'Удалён',
+        0  => 'Отменён',
+        1  => 'Обрабатывается',
+        2  => 'Ожидает оплаты',
+        3  => 'Готов к выдаче',
+        4  => 'Завёршён',
+    ];
 
     public $payment_types = [
         'cashless',
@@ -43,6 +60,8 @@ class ShopOrder extends AbstractModel
         'pickup',
         'courier',
     ];
+
+    public static $notify = 'Уведомление о новых заказах';
 
     public $agreement;
 
@@ -111,6 +130,7 @@ class ShopOrder extends AbstractModel
     public function eventBeforeInsert()
     {
         $this->add_time = $this->dbTime;
+        $this->status = self::STATUS_ACTIVE;
     }
 
     public function eventAfterInsert()
@@ -123,6 +143,19 @@ class ShopOrder extends AbstractModel
                                 .'Номер вашего заказа: '.$this->id,
                 'body_html' => 'Вы успешно сфоримировали заказ товаров на сайте '.$_SERVER['SERVER_NAME'].'.'.PHP_EOL.PHP_EOL
                                 .'Номер вашего заказа: '.$this->id,
+            ]);
+        }
+
+        $notify_users = $this->getUsersForNotify();
+
+        foreach ($notify_users AS $notify_user) {
+            Mail::createAndSave([
+                'to_email'  => $this->email,
+                'subject'   => 'Новый заказ на сайте '.ucfirst($_SERVER['SERVER_NAME']),
+                'body_text' => 'Новый заказ на сайте '.$_SERVER['SERVER_NAME'].'.'.PHP_EOL.PHP_EOL
+                                .'Номер заказа: '.$this->id,
+                'body_html' => 'Новый заказ на сайте  '.$_SERVER['SERVER_NAME'].'.'.PHP_EOL.PHP_EOL
+                                .'Номер заказа: '.$this->id,
             ]);
         }
     }

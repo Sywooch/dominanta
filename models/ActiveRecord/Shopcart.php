@@ -19,6 +19,10 @@ use app\models\ActiveRecord\AbstractModel;
  */
 class Shopcart extends AbstractModel
 {
+    public static $entityName = 'Shopcart';
+
+    public static $entitiesName = 'Shopcart';
+
     public static $cookiename = 'shopcart';
 
     /**

@@ -16,6 +16,10 @@ use app\models\ActiveRecord\AbstractModel;
  */
 class Property extends AbstractModel
 {
+    public static $entityName = 'Property';
+
+    public static $entitiesName = 'Properties';
+
     /**
      * {@inheritdoc}
      */

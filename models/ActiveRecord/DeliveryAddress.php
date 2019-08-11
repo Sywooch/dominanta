@@ -17,6 +17,10 @@ use app\models\ActiveRecord\AbstractModel;
  */
 class DeliveryAddress extends AbstractModel
 {
+    public static $entityName = 'Delivery address';
+
+    public static $entitiesName = 'Delivery addresses';
+
     /**
      * {@inheritdoc}
      */

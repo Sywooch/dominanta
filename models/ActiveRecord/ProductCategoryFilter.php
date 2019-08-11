@@ -19,6 +19,10 @@ use app\models\ActiveRecord\AbstractModel;
  */
 class ProductCategoryFilter extends AbstractModel
 {
+    public static $entityName = 'Category filter';
+
+    public static $entitiesName = 'Category filters';
+
     /**
      * {@inheritdoc}
      */

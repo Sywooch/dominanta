@@ -21,6 +21,10 @@ use Cocur\Slugify\Slugify;
  */
 class ProductProperty extends \app\models\ActiveRecord\AbstractModel
 {
+    public static $entityName = 'Product property';
+
+    public static $entitiesName = 'Product properties';
+
     /**
      * {@inheritdoc}
      */

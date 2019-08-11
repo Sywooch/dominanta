@@ -238,8 +238,8 @@ return [
     'Scheme' => 'Схема',
 
     // Property
-    'Property' => 'Свойство',
-    'Properties' => 'Свойства',
+    'Property' => 'Характеристика',
+    'Properties' => 'Характеристики',
     'Entity' => 'Сущность',
     'Property name' => 'Название свойства',
     'Config' => 'Конфигурация',
@@ -306,19 +306,74 @@ return [
     'Order comment' => 'Комментарий к заказу',
 
     // Reviews
+    'Review' => 'Отзыв',
+    'Reviews' => 'Отзывы',
     'Reviewer' => 'Имя',
     'Review text' => 'Текст отзыва',
 
+    // Callbacks
+    'Callback'  => 'Заказ обратного звонка',
+    'Callbacks' => 'Заказы обратного звонка',
 
 
+    // Delivery address
+    'Delivery address'   => 'Адрес доставки',
+    'Delivery addresses' => 'Адреса доставки',
 
+    // Фильтры категорий
+    'Category filter'  => 'Фильтр категорий',
+    'Category filters' => 'Фильтры категорий',
 
+    // Cross sales
+    'Cross sales' => 'Кросс-сэйл товары',
+    'Cross sale'  => 'Кросс-сэйл товар',
 
+    // Product document
+    'Product document' => 'Документ товара',
+    'Product documents' => 'Документы товаров',
 
+    // Product labels
+    'Product label' => 'Метка товара',
+    'Product labels' => 'Метки товаров',
 
+    // Product label relation
+    'Product label relation'  => 'Связь метки с товарами',
+    'Product label relations' => 'Связи меток с товарами',
 
+    // Product photo
+    'Product photo' => 'Фото товара',
+    'Product photos' => 'Фото товаров',
 
+    // Vendors
+    'Vendor' => 'Производитель',
+    'Vendors' => 'Производители',
 
+    // Subscriber
+    'Subscriber' => 'Подписчик',
+    'Subscribers' => 'Подписчики',
+
+    // Product property
+    'Product property' => 'Характеристика товаров',
+    'Product properties' => 'Характеристики товаров',
+
+    // Resently products
+    'Resently product' => 'Недавнно просмотренный товар',
+    'Resently products' => 'Недавно просмотренные товары',
+
+    // Shopcart
+    'Shopcart' => 'Корзина',
+
+    // Shop order
+    'Shop order' => 'Заказ магазина',
+    'Shop orders' => 'Заказы магазина',
+
+    // Shop order positions
+    'Order position' => 'Позиция заказа',
+    'Order positions' => 'Позиции заказа',
+
+    // Shop payments
+    'Shop payment' => 'Платёж магазина',
+    'Shop payments' => 'Платежи магазина',
 
 
     'Country' => 'Страна',

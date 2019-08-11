@@ -17,6 +17,10 @@ use app\models\ActiveRecord\AbstractModel;
  */
 class ProductCross extends AbstractModel
 {
+    public static $entityName = 'Cross sale';
+
+    public static $entitiesName = 'Cross sales';
+
     /**
      * {@inheritdoc}
      */

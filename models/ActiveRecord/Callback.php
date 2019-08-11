@@ -16,6 +16,10 @@ use app\models\ActiveRecord\AbstractModel;
  */
 class Callback extends AbstractModel
 {
+    public static $entityName = 'Callback';
+
+    public static $entitiesName = 'Callbacks';
+
     /**
      * {@inheritdoc}
      */
