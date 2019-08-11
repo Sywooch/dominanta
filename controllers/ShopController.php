@@ -563,6 +563,10 @@ class ShopController extends AbstractController
 
     protected function getPager($models, $product_page, $limit, $product_count)
     {
+        if (!$product_count) {
+            return '';
+        }
+
         $pages = ceil($product_count / $limit);
         $html = '';
 
@@ -570,9 +574,9 @@ class ShopController extends AbstractController
             return $html;
         }
 
-        $base_link = $this->getParentLink($models);
+        $base_link = $models ? $this->getParentLink($models) : '/shop/search';
         $filter = $this->getFilterLink();
-        $base_link .= $filter ? $filter.'&page=' : '?page=';
+        $base_link .= $filter ? '?'.$filter.'&page=' : '?page=';
         $prev_page = $product_page - 1;
 
         if (!$prev_page) {
@@ -597,12 +601,22 @@ class ShopController extends AbstractController
     protected function getFilterLink()
     {
         $filter = Yii::$app->request->get('filter', []);
+        $searchtext = Yii::$app->request->get('searchtext', '');
+        $searchtag  = Yii::$app->request->get('tag', '');
 
-        if (!$filter) {
-            return '';
+        if ($filter) {
+            return http_build_query(['filter' => $filter]);
         }
 
-        return http_build_query(['filter' => $filter]);
+        if ($searchtext) {
+            return http_build_query(['searchtext' => $searchtext]);
+        }
+
+        if ($searchtag) {
+            return http_build_query(['tag' => $searchtag]);
+        }
+
+        return '';
     }
 
     protected function getProductSort($models, $product_sort)
@@ -771,11 +785,22 @@ class ShopController extends AbstractController
         $searchtext = Yii::$app->request->get('searchtext', false);
         $searchtag  = Yii::$app->request->get('tag', false);
 
-        if ($searchtext) {
-            $products = Product::find()->where(['status' => Product::STATUS_ACTIVE])
-                                       ->andWhere(['like', 'product_name', $searchtext]);
-        } else {
+        $limit = 20;
+        $product_page = Yii::$app->request->get('page', 1);
+        $offset = ($product_page - 1) * $limit;
+        $product_count = 0;
+        $products = [];
 
+        if ($searchtext) {
+            $productsQuery = Product::find()->where(['status' => Product::STATUS_ACTIVE])
+                                            ->andWhere(['like', 'product_name', $searchtext]);
+            $product_count = $productsQuery->count();
+        } elseif ($searchtag) {
+
+        }
+
+        if ($product_count) {
+            $products = $productsQuery->limit($limit)->offset($offset)->all();
         }
 
         $this->page = Page::findByAddress('/shop/search', false);
@@ -799,6 +824,9 @@ class ShopController extends AbstractController
         $replace = [
             '{{{breadcrumbs}}}' => $this->getBreadcrumbs($this->page),
             '{{{page_title}}}' => $this->page->page_name,
+            '{{{products}}}' => $this->renderPartial('search', ['products' => $products, 'product_count' => $product_count]),
+            '{{{product_count}}}' => $product_count,
+            '{{{pager}}}' => $this->getPager(false, $product_page, $limit, $product_count),
         ];
 
         return str_replace(array_keys($replace), $replace, $rendered_page);

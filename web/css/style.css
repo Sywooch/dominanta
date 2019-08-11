@@ -1826,3 +1826,15 @@ span.user_acc_delivery {
 .product_widget .product_item {
     margin-bottom: -1px;
 }
+
+/* Search */
+
+.find_products {
+    outline: 1px solid #d7d7d7;
+    margin-bottom: -5px;
+}
+
+.find_products_count {
+    font-size: 16px;
+    padding: 10px 0px;
+}
