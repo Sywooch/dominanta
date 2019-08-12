@@ -1866,3 +1866,113 @@ span.product_label, a.product_label, a.product_label:visited, a.product_label:ac
     padding: 5px 10px;
     font-size: 16px;
 }
+
+/* About company features */
+.about_company {
+    background: #F3F7FA;
+}
+
+.main_block_decription .container {
+    padding-top: 70px;
+    padding-bottom: 70px;
+    color: #444444;
+}
+
+.about_company .container {
+    background: url('/images/logo_background.png') no-repeat bottom right;
+}
+
+.main_block_decription_header {
+    font-weight: bold;
+    font-size: 40px;
+}
+
+.main_block_decription_header a, .main_block_decription_header a:visited, .main_block_decription_header a:active {
+    float: right;
+    font-weight: normal;
+    font-size: 18px;
+    text-decoration: none;
+    margin-top: 20px;
+}
+
+.main_block_decription_header a:hover {
+    text-decoration: underline;
+}
+
+.about_feature_block {
+    width: 20%;
+    min-width: 190px;
+    float: left;
+    text-align: center;
+    border-left: 1px solid #d7d7d7;
+    height: 240px;
+    margin-top: 30px;
+}
+
+.about_feature_image {
+    border: 2px solid #0E73BA;
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    margin: 20px auto 30px;
+}
+
+.about_image_text {
+    font-size: 16px;
+    padding: 0px 20px;
+}
+
+/* Services */
+.s_icon {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    border-radius: 5px;
+    margin-top: 30px;
+    margin-left: 30px;
+}
+
+.s_delivery {
+/*     margin-right: 10px; */
+}
+
+.s_payment {
+/*     margin: 0px 10px; */
+}
+
+.s_wholesales {
+/*     margin-left: 10px; */
+}
+
+.s_delivery .s_icon {
+    background: #FFFFFF url('/images/s_delivery_icon.png') no-repeat 50% 50%;
+}
+
+.s_payment .s_icon {
+    background: #FFFFFF url('/images/s_payment_icon.png') no-repeat 50% 50%;
+}
+
+.s_wholesales .s_icon {
+    background: #FFFFFF url('/images/s_wholesales_icon.png') no-repeat 50% 50%;
+}
+
+.s_wholesales {
+    background: url('/images/s_wholesales_img.png') no-repeat;
+}
+
+.s_delivery {
+    background: url('/images/s_delivery_img.png') no-repeat;
+}
+
+.s_payment {
+    background: url('/images/s_payment_img.png') no-repeat;
+}
+
+
+
+.s_image_block {
+    height: 240px;
+    border-radius: 0px;
+
+/*     margin: 0px 10px; */
+}
