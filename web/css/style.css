@@ -508,6 +508,10 @@ span.top_map_city {
     margin-bottom: 30px;
 }
 
+.content_block_fluid {
+    margin-top: -1px;
+}
+
 .breadcrumbs-line a, .breadcrumbs-line a:visited, .breadcrumbs-line a:active, .breadcrumbs-line span, .breadcrumbs-line i {
     font-size: 16px;
     color: #BDBDBD;
@@ -1868,7 +1872,7 @@ span.product_label, a.product_label, a.product_label:visited, a.product_label:ac
 }
 
 /* About company features */
-.about_company {
+.about_company, .main_block_advices {
     background: #F3F7FA;
 }
 
@@ -1932,18 +1936,6 @@ span.product_label, a.product_label, a.product_label:visited, a.product_label:ac
     margin-left: 30px;
 }
 
-.s_delivery {
-/*     margin-right: 10px; */
-}
-
-.s_payment {
-/*     margin: 0px 10px; */
-}
-
-.s_wholesales {
-/*     margin-left: 10px; */
-}
-
 .s_delivery .s_icon {
     background: #FFFFFF url('/images/s_delivery_icon.png') no-repeat 50% 50%;
 }
@@ -1968,11 +1960,50 @@ span.product_label, a.product_label, a.product_label:visited, a.product_label:ac
     background: url('/images/s_payment_img.png') no-repeat;
 }
 
-
-
 .s_image_block {
-    height: 240px;
+    height: 360px;
     border-radius: 0px;
+    max-width: 360px;
+}
 
-/*     margin: 0px 10px; */
+.s_overlay {
+    background: #000;
+    color: #fff;
+    font-size: 22px;
+    padding: 15px 0px 15px 30px;
+    margin: 214px -4px 0px -4px;
+    opacity: 0.7;
+}
+
+.s_more {
+    background: #fff;
+    padding: 26px 0px 26px 30px;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 1px;
+}
+
+.main_block_advices .s_image_block {
+    min-height: 160px;
+    height: auto;
+    border: none;
+}
+
+.main_block_advices .s_more {
+    background: #F3F7FA;
+    margin: 206px -5px 0px;
+    font-size: 22px;
+}
+
+.main_block_advices .s_more span {
+    display: block;
+    font-weight: normal;
+    font-size: 14px;
+    color: #888888;
+}
+
+.main_market_description {
+    font-size: 16px;
+    line-height: 30px;
+    color: #888888;
 }
