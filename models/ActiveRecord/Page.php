@@ -39,6 +39,8 @@ class Page extends AbstractModel
 
     public $product_id;
 
+    public $photo;
+
     /**
      *
      */

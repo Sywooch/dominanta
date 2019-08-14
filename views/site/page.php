@@ -30,7 +30,9 @@ if ($page->meta_description) {
     ]);
 }
 
+$directory = $page->uploadFolder;
 
+$current_photo = $directory.DIRECTORY_SEPARATOR.$page->id.'.jpg';
 
 if ($page->template) {
     $template_content = $page->template->getHtmlContent($page->template->template_content, $controller);
@@ -38,6 +40,31 @@ if ($page->template) {
     $page_content = str_replace('{{{content}}}', $page_content, $template_content);
 } else {
     $page_content = $page->getHtmlContent($page->page_content, $controller);
+}
+
+/*
+, rgba(0,0,0,0.1);
+            background-blend-mode: color;
+*/
+
+if (file_exists($current_photo)) {
+    $page_background = $page->getPreview($current_photo, 1440, 500);
+    $css = "
+        .content_block_fluid {
+            background: url('".str_replace(Yii::getAlias('@webroot'), '', $page_background)."') no-repeat center top;
+        }
+
+        .breadcrumbs-line a, .breadcrumbs-line a:visited, .breadcrumbs-line a:active, .breadcrumbs-line span, .breadcrumbs-line i {
+            color: #fff !important;
+        }
+
+        .page_title {
+          color: #fff;
+          margin-top: 370px;
+          margin-bottom: 30px;
+        }
+    ";
+    $this->registerCss($css, [], 'background_page_css');
 }
 
 echo $page_content;

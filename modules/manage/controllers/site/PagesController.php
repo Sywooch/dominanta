@@ -3,7 +3,10 @@
 namespace app\modules\manage\controllers\site;
 
 use Yii;
+use yii\helpers\FileHelper;
+use yii\web\Response;
 use yii\web\View;
+use yii\web\UploadedFile;
 use app\modules\manage\controllers\AbstractManageController;
 use app\models\ActiveRecord\Css;
 use app\models\ActiveRecord\Js;
@@ -180,5 +183,105 @@ class PagesController extends AbstractManageController
         } else {
             return '/';
         }
+    }
+
+    public function actionPhoto($id)
+    {
+        $model = $this->getById($id);
+        $directory = $model->uploadFolder;
+
+        $current_photo = $directory.DIRECTORY_SEPARATOR.$id.'.jpg';
+
+        if (Yii::$app->request->isPost) {
+            $save_photo = Yii::$app->request->post('photo', false);
+
+            if ($save_photo) {
+                if ($save_photo != $id) {
+                    $old_preview = $model->getPreview($directory.DIRECTORY_SEPARATOR.$save_photo.'.jpg', 450, 150);
+
+                    if (file_exists($old_preview)) {
+                        unlink($old_preview);
+                    }
+
+                    rename($directory.DIRECTORY_SEPARATOR.$save_photo.'.jpg', $current_photo);
+                    $model->getPreview($current_photo, 450, 150, true);
+                    $model->getPreview($current_photo, 1440, 500, true);
+                }
+            } elseif (file_exists($current_photo)) {
+                $preview = $model->getPreview($current_photo, 450, 150);
+
+                if (file_exists($preview)) {
+                    unlink($preview);
+                }
+
+                unlink($current_photo);
+            }
+
+
+            if (Yii::$app->request->isPjax) {
+                $model = false;
+            } else {
+                return $this->redirect(['/manage/site/pages', 'pid' => $model->pid], 301);
+            }
+        }
+
+        return $this->render('photo', [
+            'model' => $model,
+            'is_modal' => true,
+            'current_photo' => $current_photo,
+        ]);
+    }
+
+    public function actionUpload($id)
+    {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $page = $this->getById($id);
+        $photo = UploadedFile::getInstance($page, 'photo');
+
+        $ext = str_replace('.jpeg', 'jpg', strtolower($photo->extension));
+
+        if ($photo) {
+            if ($ext != 'jpg') {
+                return [
+                        'status' => 'error',
+                        'message' => Yii::t('app', 'The file must be with the extension "{ext}"', ['ext' => '.jpg']),
+                      ];
+            }
+
+            $directory = $page->uploadFolder;
+
+            if (!is_dir($directory)) {
+                FileHelper::createDirectory($directory);
+            }
+
+
+            $photoId  = $page::generateFilename($page->photo);
+            $fileName = $photoId.'.'.$ext;
+            $filePath = $directory .DIRECTORY_SEPARATOR. $fileName;
+            $webPath  = str_replace(Yii::getAlias('@webroot'), '', $filePath);
+
+            if ($photo->saveAs($filePath)) {
+                return [
+                    'files' => [
+                        [
+                            'fname' => $photoId.'.'.$ext,
+                            'thumbnail' => str_replace(Yii::getAlias('@webroot'), '', $page->getPreview($filePath, 450, 150)),
+                            'photo_id' => $photoId,
+                        ],
+                    ],
+                ];
+            } else {
+                return [
+                    'status' => 'error',
+                    'message' => Yii::t('app', 'Error saving file'),
+                ];
+            }
+        }
+
+        return [
+            'status' => 'error',
+            'message' => Yii::t('app', 'File upload error'),
+        ];
     }
 }

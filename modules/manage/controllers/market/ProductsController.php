@@ -246,7 +246,7 @@ class ProductsController extends AbstractManageController
             if ($ext != 'jpg') {
                 return [
                         'status' => 'error',
-                        'message' => Yii::t('app', 'The file must be with the extension "{ext}"', ['ext' => '.jpg']).'=='.$ext.'==',
+                        'message' => Yii::t('app', 'The file must be with the extension "{ext}"', ['ext' => '.jpg']),
                       ];
             }
 

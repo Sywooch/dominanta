@@ -32,10 +32,11 @@ $this->params['top_panel'] = $add_button;
         'columns' => [
             [
                 'class' => 'yii\grid\ActionColumn',
-                'headerOptions' => ['width' => '100', 'class' => 'text-center'],
+                'headerOptions' => ['width' => '120', 'class' => 'text-center'],
                 'contentOptions' => ['class' => 'text-center', 'style' => 'vertical-align: middle'],
                 'template' => ($rules[$page_model->modelName]['is_edit'] ? '{fast} ' : ' ').
                               ($rules[$page_model->modelName]['is_edit'] ? '{edit} ' : ' ').
+                              ($rules[$page_model->modelName]['is_edit'] ? '{photo} ' : ' ').
                               ($rules[$page_model->modelName]['is_add'] ? '{add} ' : ' ').
                               ($rules[$page_model->modelName]['is_delete'] ? '{delete} ' : ' '),
                 'buttons' => [
@@ -57,6 +58,18 @@ $this->params['top_panel'] = $add_button;
                                        'aria-label' => Yii::t('app', 'Edit'),
                                        'data' => [
                                           'toggle' => 'tooltip',
+                                      ]]
+                              );
+                    },
+                    'photo' => function ($url, $model) {
+                        return Html::a(new Icon('image', ['class' => 'fa-lg']),
+                                      ['photo', 'id' => $model->id],
+                                      ['title' => Yii::t('app', 'Photo'),
+                                       'aria-label' => Yii::t('app', 'Photo'),
+                                       'data' => [
+                                          'tooltip' => 'true',
+                                          'toggle' => 'modal',
+                                          'target' => '.bs-example-modal-lg'
                                       ]]
                               );
                     },

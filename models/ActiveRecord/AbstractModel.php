@@ -500,8 +500,12 @@ class AbstractModel extends ActiveRecord implements InterfaceModel
                ])->where(['status' => User::STATUS_ACTIVE])->andWhere(['like', 'notify', $this->modelName])->all();
     }
 
-    public function getPreview($path, $width = 250, $height = 250)
+    public function getPreview($path, $width = 250, $height = 250, $refresh = false)
     {
+        if (!file_exists($path)) {
+            return false;
+        }
+
         if (!$width || !$height) {
             $size = Image::getImagine()->open($path)->getSize();
 
@@ -522,7 +526,7 @@ class AbstractModel extends ActiveRecord implements InterfaceModel
         $preview_dir  = $this->uploadFolder.'/'.$this->id;
         $preview_path = $preview_dir.'/'.$width.'_'.$height.'_'.StringHelper::Basename($path);
 
-        if (!file_exists($preview_path)) {
+        if (!file_exists($preview_path) || $refresh) {
             if (!is_dir($preview_dir)) {
                 @mkdir($preview_dir, 0777, true);
             }
