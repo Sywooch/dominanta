@@ -54,6 +54,11 @@ if (file_exists($current_photo)) {
             background: url('".str_replace(Yii::getAlias('@webroot'), '', $page_background)."') no-repeat center top;
         }
 
+        .breadcrumbs-line {
+            position: absolute;
+            z-index: 20;
+        }
+
         .breadcrumbs-line a, .breadcrumbs-line a:visited, .breadcrumbs-line a:active, .breadcrumbs-line span, .breadcrumbs-line i {
             color: #fff !important;
         }
@@ -61,7 +66,16 @@ if (file_exists($current_photo)) {
         .page_title {
           color: #fff;
           margin-top: 370px;
-          margin-bottom: 30px;
+          position: absolute;
+          z-index: 20;
+        }
+
+        .container_content_block {
+            margin-top: 530px;
+        }
+
+        .background_overlay {
+            display: block;
         }
     ";
     $this->registerCss($css, [], 'background_page_css');

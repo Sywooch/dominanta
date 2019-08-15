@@ -2007,3 +2007,13 @@ span.product_label, a.product_label, a.product_label:visited, a.product_label:ac
     line-height: 30px;
     color: #888888;
 }
+
+.background_overlay {
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+    height: 500px;
+    background: #000;
+    opacity: 0.3;
+    display: none;
+}

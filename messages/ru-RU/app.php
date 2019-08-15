@@ -399,4 +399,17 @@ return [
     'October' => 'Октябрь',
     'November' => 'Ноябрь',
     'December' => 'Декабрь',
+
+    'of January' => 'января',
+    'of February' => 'февраля',
+    'of March' => 'марта',
+    'of April' => 'апреля',
+    'of May' => 'мая',
+    'of June' => 'июня',
+    'of July' => 'июля',
+    'of August' => 'августа',
+    'of September' => 'сентября',
+    'of October' => 'октября',
+    'of November' => 'ноября',
+    'of December' => 'декабря',
 ];
