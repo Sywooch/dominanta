@@ -142,7 +142,7 @@ class ShopOrder extends AbstractModel
                 'subject'   => 'Новый заказ на сайте '.ucfirst($_SERVER['SERVER_NAME']),
                 'body_text' => 'Вы успешно сфоримировали заказ товаров на сайте '.$_SERVER['SERVER_NAME'].'.'.PHP_EOL.PHP_EOL
                                 .'Номер вашего заказа: '.$this->id,
-                'body_html' => 'Вы успешно сфоримировали заказ товаров на сайте '.$_SERVER['SERVER_NAME'].'.'.PHP_EOL.PHP_EOL
+                'body_html' => 'Вы успешно сфоримировали заказ товаров на сайте '.$_SERVER['SERVER_NAME'].'.<br /><br />'
                                 .'Номер вашего заказа: '.$this->id,
             ]);
         }
@@ -151,11 +151,11 @@ class ShopOrder extends AbstractModel
 
         foreach ($notify_users AS $notify_user) {
             Mail::createAndSave([
-                'to_email'  => $this->email,
+                'to_email'  => $notify_user->email,
                 'subject'   => 'Новый заказ на сайте '.ucfirst($_SERVER['SERVER_NAME']),
                 'body_text' => 'Новый заказ на сайте '.$_SERVER['SERVER_NAME'].'.'.PHP_EOL.PHP_EOL
                                 .'Номер заказа: '.$this->id,
-                'body_html' => 'Новый заказ на сайте  '.$_SERVER['SERVER_NAME'].'.'.PHP_EOL.PHP_EOL
+                'body_html' => 'Новый заказ на сайте  '.$_SERVER['SERVER_NAME'].'.<br /><br />'
                                 .'Номер заказа: '.$this->id,
             ]);
         }

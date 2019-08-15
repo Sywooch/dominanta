@@ -20,6 +20,8 @@ class Callback extends AbstractModel
 
     public static $entitiesName = 'Callbacks';
 
+    public static $notify = 'Уведомление о заказе обратного звонка';
+
     /**
      * {@inheritdoc}
      */
@@ -54,5 +56,23 @@ class Callback extends AbstractModel
     public function eventBeforeInsert()
     {
         $this->add_time = $this->dbTime;
+    }
+
+    public function eventAfterInsert()
+    {
+        $notify_users = $this->getUsersForNotify();
+
+        foreach ($notify_users AS $notify_user) {
+            Mail::createAndSave([
+                'to_email'  => $notify_user->email,
+                'subject'   => 'Уведомление о заказе обратного звонка на сайте '.ucfirst($_SERVER['SERVER_NAME']),
+                'body_text' => 'Заказ обратного звонка на сайте '.$_SERVER['SERVER_NAME'].'.'.PHP_EOL.PHP_EOL
+                                .'ФИО: '.$this->fio.PHP_EOL
+                                .'Телефон: '.$this->phone.PHP_EOL,
+                'body_html' => 'Заказ обратного звонка на сайте '.$_SERVER['SERVER_NAME'].'.<br /><br />'
+                                .'ФИО: '.$this->fio.'<br />'
+                                .'Телефон: '.$this->phone.'<br />',
+            ]);
+        }
     }
 }

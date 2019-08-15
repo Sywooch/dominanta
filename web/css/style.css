@@ -1362,21 +1362,39 @@ span.user_acc_delivery {
     margin: 0px;
 }
 
-#account_form label, #password_form label, .delivery_form label, #shopcart_form label, #review_form label, #callback-form label {
+#account_form label,
+#password_form label,
+.delivery_form label,
+#shopcart_form label,
+#review_form label,
+#callback-form label,
+#feedback-form label {
     font-size: 16px;
     color: #5B5B5B;
     font-weight: normal;
     margin-top: 20px;
 }
 
-#account_form input, #password_form input, .delivery_form input, #shopcart_form input, #review_form input, #review_form textarea, #callback-form input {
+#account_form input,
+#password_form input,
+.delivery_form input,
+#shopcart_form input,
+#review_form input,
+#review_form textarea,
+#callback-form input,
+#feedback-form input{
     font-size: 16px;
     padding: 24px 15px;
     border: 1px solid #d7d7d7;
     border-radius: 5px;
 }
 
-#account_form button, #password_form button, #shopcart_form button, #review_form button, #callback-form button {
+#account_form button,
+#password_form button,
+#shopcart_form button,
+#review_form button,
+#callback-form button,
+#feedback-form button {
     background: #0E73BA;
     border-radius: 5px;
     border: none;
@@ -1385,6 +1403,19 @@ span.user_acc_delivery {
     padding: 20px 50px;
     font-weight: normal;
     margin-top: 40px;
+}
+
+#feedback-form {
+    margin-top: 30px;
+    background: #F3F7FA;
+    padding: 30px;
+}
+
+.feedback_header {
+    font-weight: bold;
+    font-size: 30px;
+    color: #5B5B5B;
+    margin-bottom: 30px;
 }
 
 /* Orders */

@@ -375,6 +375,10 @@ return [
     'Shop payment' => 'Платёж магазина',
     'Shop payments' => 'Платежи магазина',
 
+    // Feedback
+    'Feedback' => 'Обратная связь',
+    'Message'  => 'Сообщение',
+
 
     'Country' => 'Страна',
     'City' => 'Город',
