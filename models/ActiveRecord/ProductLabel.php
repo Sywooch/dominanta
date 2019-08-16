@@ -32,7 +32,7 @@ class ProductLabel extends AbstractModel
     {
         return [
             [['status'], 'integer'],
-            [['label'], 'required'],
+            [['label'], 'required', 'on' => self::SCENARIO_FORM],
             [['label', 'font_color', 'bg_color', 'link', 'widget'], 'string', 'max' => 255],
         ];
     }
@@ -46,8 +46,8 @@ class ProductLabel extends AbstractModel
             'id' => Yii::t('app', 'ID'),
             'status' => Yii::t('app', 'Status'),
             'label' => Yii::t('app', 'Label'),
-            'font_color' => Yii::t('app', 'Font Color'),
-            'bg_color' => Yii::t('app', 'Bg Color'),
+            'font_color' => Yii::t('app', 'Font color'),
+            'bg_color' => Yii::t('app', 'Background color'),
             'link' => Yii::t('app', 'Link'),
             'widget' => Yii::t('app', 'Widget'),
         ];

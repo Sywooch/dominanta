@@ -12,6 +12,8 @@ use Cocur\Slugify\Slugify;
 use app\modules\manage\controllers\AbstractManageController;
 use app\models\ActiveRecord\ProductCategory;
 use app\models\ActiveRecord\ProductCategoryFilter;
+use app\models\ActiveRecord\ProductLabel;
+use app\models\ActiveRecord\ProductLabels;
 use app\models\ActiveRecord\ProductPhoto;
 use app\models\ActiveRecord\ProductProperty;
 use app\models\ActiveRecord\Property;
@@ -204,6 +206,45 @@ class ProductsController extends AbstractManageController
             'model' => $model,
             'is_modal' => true,
             'current_photos' => $current_photos,
+        ]);
+    }
+
+    public function actionLabels($id)
+    {
+        $model = $this->getById($id);
+
+        $current_labels = $model->getLabels();
+
+        if (Yii::$app->request->isPost) {
+            $save_labels = Yii::$app->request->post('labels', []);
+
+            foreach ($save_labels AS $label_id => $save_label) {
+                if (isset($current_labels[$label_id])) {
+                    unset($current_labels[$label_id]);
+                } else {
+                    ProductLabels::createAndSave([
+                        'product_id' => $model->id,
+                        'label_id' => $label_id,
+                    ]);
+                }
+            }
+
+            foreach ($current_labels AS $label_id => $del_label) {
+                ProductLabels::findOne(['product_id' => $model->id, 'label_id' => $label_id])->delete();
+            }
+
+            if (Yii::$app->request->isPjax) {
+                $model = false;
+            } else {
+                return $this->redirect(['/manage/market/products', 'cat_id' => $model->cat_id], 301);
+            }
+        }
+
+        return $this->render('labels', [
+            'model' => $model,
+            'is_modal' => true,
+            'current_labels' => $current_labels,
+            'all_labels' => ProductLabel::find()->all(),
         ]);
     }
 

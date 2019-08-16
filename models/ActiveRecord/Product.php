@@ -211,6 +211,7 @@ class Product extends AbstractModel
     {
         return ProductLabel::find()->innerJoin(ProductLabels::tableName(), ProductLabels::tableName().'.label_id='.ProductLabel::tableName().'.id')
                                    ->where(['product_id' => $this->id])
+                                   ->indexBy('id')
                                    ->all();
     }
 }

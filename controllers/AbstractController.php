@@ -81,7 +81,7 @@ class AbstractController extends Controller
 
         if (!$this->page) {
             Yii::$app->response->statusCode = 404;
-            $this->page = Page::findByAddress('404'.$page_extension, $only_active);
+            $this->page = Page::findByAddress('404'.$page_extension, false);
         }
 
         if (!$this->page) {

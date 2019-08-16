@@ -335,6 +335,11 @@ return [
     // Product labels
     'Product label' => 'Метка товара',
     'Product labels' => 'Метки товаров',
+    'Label' => 'Метка',
+    'Labels' => 'Метки',
+    'Widget' => 'Тэг',
+    'Font color' => 'Цвет текста',
+    'Background color' => 'Цвет фона',
 
     // Product label relation
     'Product label relation'  => 'Связь метки с товарами',
