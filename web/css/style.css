@@ -372,7 +372,7 @@ span.top_map_city {
 .dropdown_menu {
     display: none;
     position: absolute;
-    z-index: 20;
+    z-index: 50;
     background: #fff;
     width: 100%;
     margin: 0px -15px;
@@ -1840,26 +1840,92 @@ span.user_acc_delivery {
 
 .product_widget .carousel {
     border: 1px solid #d7d7d7;
-    border: 1px solid #d7d7d7;
+    margin-right: 1px;
 }
 
-.product_widget .carousel-control {
+.product_widget .carousel-control, .main_banners .carousel-control {
     background-image: none;
     width: 50px;
 }
 
-.product_widget .carousel-control.left {
+.product_widget .carousel-control.left, .main_banners .carousel-control.left {
     background: url('/images/photo_left_arrow.png') no-repeat center 50%;
     margin-left: -50px;
 }
 
-.product_widget .carousel-control.right {
+.product_widget .carousel-control.right, .main_banners .carousel-control.right {
     background: url('/images/photo_right_arrow.png') no-repeat center 50%;
     margin-right: -50px;
 }
 
 .product_widget .product_item {
     margin-bottom: -1px;
+/*     margin-right: -1px; */
+    width: 25%;
+    outline: none;
+/*     border-right: 1px solid #d7d7d7; */
+    background: url('/images/product_i.png') repeat-y right;
+    border-bottom: 1px solid #d7d7d7;
+}
+
+@media all and (max-width:1251px) {
+  .product_widget, .main_banners {
+      margin: 0px 40px;
+  }
+
+  .product_widget .product_item {
+      width: 25%;
+  }
+}
+
+@media all and (max-width:1200px) {
+  .product_widget, .main_banners {
+      margin: 0px;
+  }
+
+  .product_widget .product_item {
+      width: 25%;
+  }
+}
+
+@media all and (max-width:1050px) {
+  .product_widget, .main_banners {
+    margin: 40px;
+  }
+
+  .product_widget .product_item {
+    width: 25%;
+  }
+}
+
+@media all and (max-width: 992px) {
+  .product_widget, .main_banners {
+    margin: 0px;
+  }
+
+  .product_widget .product_item {
+    width: 50%;
+  }
+}
+
+@media all and (max-width:830px) {
+  .product_widget, .main_banners {
+    margin: 40px;
+  }
+
+  .product_widget .product_item {
+    width: 50%;
+  }
+}
+
+@media all and (max-width:768px) {
+  .product_widget, .main_banners {
+    margin: 0px;
+  }
+
+  .product_widget .product_item {
+    width: 50%;
+  }
 }
 
 /* Search */
