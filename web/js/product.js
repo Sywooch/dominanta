@@ -160,6 +160,10 @@ var productPage = {
         $('.product_photo_slides img').removeClass('product_photo_active_slide');
         $(obj).addClass('product_photo_active_slide');
 
+        if ($('.product_photo_slides img').length > 3) {
+            $('.product_photo_slides').animate({scrollTop: (slideId - 1) * 160 }, 600);
+        }
+
         $('.product_photo_big').animate({scrollLeft: this.slideWidth * (this.currentSlide - 1) }, 600);
     },
     minusEvent: function() {

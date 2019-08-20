@@ -74,7 +74,7 @@ class ProductsController extends AbstractManageController
         if (isset($model->id)) {
             $query = new Query;
 
-            $properties = $query->select(['prop_id' => 'property.id', 'property_value', 'title', 'slug', 'filter_order'])
+            $properties = $query->select(['prop_id' => Property::tableName().'.id', 'property_value', 'title', Property::tableName().'.slug', 'filter_order'])
                   ->from(ProductProperty::tableName())
                   ->innerJoin(Property::tableName(), Property::tableName().'.id='.ProductProperty::tableName().'.property_id')
                   ->innerJoin(ProductCategoryFilter::tableName(), Property::tableName().'.id='.ProductCategoryFilter::tableName().'.property_id')

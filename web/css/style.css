@@ -644,10 +644,13 @@ span.top_map_city {
 }
 
 .product_photo_slides {
-    width: 132px;
+    width: 180px;
     float: right;
-    margin-right: 40px;
+    margin-right: 20px;
     margin-top: 20px;
+    height: 515px;
+    overflow-y: hidden;
+    overflow-x: visible;
 }
 
 .product_photo_slides img {
@@ -662,7 +665,7 @@ span.top_map_city {
 }
 
 .product_photo_main {
-/*     margin-right: 270px; */
+    padding-top: 75px;
 }
 
 .photo_left_arrow {
@@ -678,7 +681,7 @@ span.top_map_city {
     float: right;
     height: 450px;
     width: 20px;
-    margin-right: 20px;
+    margin-right: 0px;
     background: transparent url('/images/photo_right_arrow.png') no-repeat 50% 50%;
     cursor: pointer;
 }
@@ -710,9 +713,14 @@ span.top_map_city {
 
 @media all and (max-width:1200px) {
     .product_photo_slides {
-        width: 100%;
+       /* width: 100%;
         float: none;
         margin: 20px;
+        height: 180px;
+        width: 480;
+        overflow-y: visible;
+        overflow-x: hidden;*/
+       display: none;
     }
 
     .product_photo_big {
@@ -724,6 +732,10 @@ span.top_map_city {
     .product_photo_big img {
         width: 100%;
     }
+
+    .photo_right_arrow {
+        margin-right: 20px;
+    }
 }
 
 @media all and (max-width:992px) {
@@ -734,10 +746,15 @@ span.top_map_city {
     }
 
     .product_photo_slides {
-        width: 132px;
+        width: 180px;
         float: right;
-        margin-right: 40px;
+        margin-right: 20px;
         margin-top: 20px;
+        display: block;
+    }
+
+    .photo_right_arrow {
+        margin-right: 10px;
     }
 
     .col_product_price {
@@ -794,10 +811,11 @@ span.top_map_city {
 
 @media all and (max-width:768px) {
     .product_photo_big {
-        margin-left: 52px;
-        margin-right: 52px;
+/*         margin-left: 52px; */
+/*         margin-right: 52px; */
         text-align: center;
         width: 320px;
+        margin: 0px auto;
     }
 
     .product_photo_big img {
@@ -808,6 +826,14 @@ span.top_map_city {
         width: 100%;
         float: none;
         margin: 20px;
+    }
+
+    .product_photo_slides {
+        display: none;
+    }
+
+    .photo_right_arrow {
+      margin-right: 10px;
     }
 }
 
@@ -823,6 +849,15 @@ span.top_map_city {
     color: #5B5B5B;
     text-decoration: none;
     border-bottom: 3px solid transparent;
+}
+
+@media all and (max-width:768px) {
+  .product_tabs a, .product_tabs a:active, .product_tabs a:visited {
+      font-size: 14px;
+      padding: 7px;
+      display: block;
+  }
+
 }
 
 .product_tabs a:hover {
@@ -856,6 +891,19 @@ span.top_map_city {
 
 .product_tab_content {
     margin-right: 400px;
+}
+
+@media all and (max-width:768px) {
+  .product_vendor_logo {
+    float: none;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .product_tab_content {
+    margin-right: 0px;
+  }
 }
 
 .product_property_row {
@@ -937,6 +985,12 @@ span.product_property_value {
     border: 1px solid #0E73BA;
     border-radius: 5px;
     padding: 15px 30px;
+}
+
+@media all and (max-width:768px) {
+    .add_review_button_block {
+        text-align: center;
+    }
 }
 
 .product_review_row {
