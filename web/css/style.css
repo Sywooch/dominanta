@@ -2170,6 +2170,13 @@ span.product_label, a.product_label, a.product_label:visited, a.product_label:ac
     color: #888888;
 }
 
+.main_market_header {
+    font-weight: bold;
+    font-size: 30px;
+    color: #444444;
+    margin: 60px 0px 30px;
+}
+
 .background_overlay {
     position: absolute;
     z-index: 10;
@@ -2177,5 +2184,6 @@ span.product_label, a.product_label, a.product_label:visited, a.product_label:ac
     height: 500px;
     background: #000;
     opacity: 0.3;
+    margin-top: -1px;
     display: none;
 }

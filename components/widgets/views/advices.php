@@ -7,9 +7,11 @@
 
 use yii\helpers\Html;
 
-foreach ($advices AS $advice) {
+if ($advices) {
 
-$preview = $advice->getPreview($advice->uploadFolder.DIRECTORY_SEPARATOR.$advice->id.'.jpg', 410, 210);
+    foreach ($advices AS $advice) {
+
+    $preview = $advice->getPreview($advice->uploadFolder.DIRECTORY_SEPARATOR.$advice->id.'.jpg', 410, 210);
 
 ?>
 
@@ -21,5 +23,17 @@ $preview = $advice->getPreview($advice->uploadFolder.DIRECTORY_SEPARATOR.$advice
                     </div>
                 </div>
             </div>
+
+<?php
+
+    }
+
+} else {
+
+?>
+
+<div class="well" style="font-size: 24px">
+    <i class="fa fa-clock-o"></i> На данный момент в этот раздел ничего не добавлено.
+</div>
 
 <?php } ?>

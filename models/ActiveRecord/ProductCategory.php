@@ -89,7 +89,7 @@ class ProductCategory extends AbstractModel
     {
         $checkQuery = self::find()->where(['slug' => $this->slug])->andWhere(['pid' => $this->pid == '' ? NULL : $this->pid]);
 
-        $find = $checkQuery->max();
+        $find = $checkQuery->count();
 
         if ($find) {
             $this->slug .= '-'.$find;

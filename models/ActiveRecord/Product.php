@@ -114,7 +114,7 @@ class Product extends AbstractModel
     {
         $checkQuery = self::find()->where(['slug' => $this->slug])->andWhere(['cat_id' => $this->cat_id == '' ? NULL : $this->cat_id]);
 
-        $find = $checkQuery->max();
+        $find = $checkQuery->count();
 
         if ($find) {
             $this->slug .= '-'.$find;

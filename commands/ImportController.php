@@ -183,6 +183,7 @@ echo " - EXISTS".PHP_EOL;
 
         if (!$pagination) {
             $pages = $html->find('ul.pagination li a');
+//var_dump($pages);
             unset($html);
 echo "Pages: ".count($pages).PHP_EOL;
             if (count($pages)) {
@@ -242,7 +243,7 @@ echo "Pages: ".count($pages).PHP_EOL;
         $new_product = [
             'cat_id' => $cat_id,
             'product_name' => trim(Html::decode($title)),
-            'slug' => $slug,-
+            'slug' => $slug,
             'product_desc' => $this->my_mb_ucfirst(trim($html->find('div._goods-description-text')[0]->innertext)),
             'price' => $price,
             'unit' => $unit,
