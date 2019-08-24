@@ -56,12 +56,13 @@ $this->params['select_menu'] = Url::to(['/manage/market/categories']);
         'columns' => [
             [
                 'class' => 'yii\grid\ActionColumn',
-                'headerOptions' => ['width' => '80', 'class' => 'text-center'],
+                'headerOptions' => ['width' => '100', 'class' => 'text-center'],
                 'contentOptions' => ['class' => 'text-center', 'style' => 'vertical-align: middle'],
                 'template' => ($rules[$page_model->modelName]['is_edit'] ? '{fast} ' : ' ').
                               ($rules[$page_model->modelName]['is_edit'] ? '{edit} ' : ' ').
                               ($rules[$page_model->modelName]['is_edit'] ? '{show} ' : ' ').
                               ($rules[$page_model->modelName]['is_edit'] ? '{hide} ' : ' ').
+                              ($rules[$page_model->modelName]['is_edit'] ? '{photo} ' : ' ').
                               ($rules[$page_model->modelName]['is_delete'] ? '{delete}' : ''),
                 'buttons' => [
                     'fast' => function ($url, $model) {
@@ -118,6 +119,17 @@ $this->params['select_menu'] = Url::to(['/manage/market/categories']);
                                           'toggle' => 'tooltip',
                                       ]]
                               );
+                    },
+                    'photo' => function ($url, $model) {
+                        return Html::a(new Icon('image', ['class' => 'fa-lg']), ['photo', 'id' => $model->id],
+                                      ['title' => Yii::t('app', 'Photo'),
+                                       'aria-label' => Yii::t('app', 'Photo'),
+                                       'data' => [
+                                          'tooltip' => 'true',
+                                          'toggle' => 'modal',
+                                          'target' => '.bs-example-modal-lg'
+                                      ]]
+                               );
                     },
                     'delete' => function ($url, $model) {
                         if ($model->status == $model::STATUS_DELETED) {

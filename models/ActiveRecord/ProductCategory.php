@@ -33,6 +33,8 @@ class ProductCategory extends AbstractModel
 
     public $count_cache = [];
 
+    public $photo;
+
     /**
      * {@inheritdoc}
      */

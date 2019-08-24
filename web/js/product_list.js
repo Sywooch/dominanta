@@ -95,7 +95,12 @@ var productList = {
         } else {
             $(obj).find('span').removeClass('product_filter_checkbox');
             $(obj).find('span').addClass('product_filter_checkbox_active');
-            $(obj).append('<input type="hidden" name="filter[' + $(obj).data('filter') + '][]" value="' + $(obj).data('value') + '" data-filter="' + $(obj).data('filter') + '" />');
+console.log($(obj).data('filter'));
+            if ($(obj).data('filter') == 'vendor') {
+                $(obj).append('<input type="hidden" name="vendor[]" value="' + $(obj).data('value') + '" data-filter="vendor" />');
+            } else {
+                $(obj).append('<input type="hidden" name="filter[' + $(obj).data('filter') + '][]" value="' + $(obj).data('value') + '" data-filter="' + $(obj).data('filter') + '" />');
+            }
         }
 
         this.getProductsCount();
@@ -110,10 +115,18 @@ var productList = {
         $('#product_list_form input').each(function(){
             if ($(this).attr('name') != 'filter_button') {
                 if ($(this).data('filter')) {
-                    if (!filter['filter'][$(this).data('filter')]) {
-                        filter['filter'][$(this).data('filter')] = [$(this).val()];
+                    if ($(this).data('filter') == 'vendor') {
+                        if (!filter['vendor']) {
+                            filter['vendor'] = [$(this).val()];
+                        } else {
+                            filter['vendor'][filter['vendor'].length] = $(this).val();
+                        }
                     } else {
-                        filter['filter'][$(this).data('filter')][filter['filter'][$(this).data('filter')].length] = $(this).val();
+                        if (!filter['filter'][$(this).data('filter')]) {
+                            filter['filter'][$(this).data('filter')] = [$(this).val()];
+                        } else {
+                            filter['filter'][$(this).data('filter')][filter['filter'][$(this).data('filter')].length] = $(this).val();
+                        }
                     }
                 } else {
                     filter[$(this).attr('name')] = $(this).val()

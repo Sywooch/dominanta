@@ -125,36 +125,90 @@ class CategoriesController extends AbstractManageController
         return $this->redirect(['/manage/market/categories', 'cat_id' => $model->pid], 301);
     }
 
-    public function actionUpload()
+    public function actionPhoto($id)
+    {
+        $model = $this->getById($id);
+        $directory = $model->uploadFolder;
+
+        $current_photo = $directory.DIRECTORY_SEPARATOR.$id.'.jpg';
+
+        if (Yii::$app->request->isPost) {
+            $save_photo = Yii::$app->request->post('photo', false);
+
+            if ($save_photo) {
+                if ($save_photo != $id) {
+                    $old_preview = $model->getPreview($directory.DIRECTORY_SEPARATOR.$save_photo.'.jpg', 410, 230);
+
+                    if (file_exists($old_preview)) {
+                        unlink($old_preview);
+                    }
+
+                    rename($directory.DIRECTORY_SEPARATOR.$save_photo.'.jpg', $current_photo);
+                    $model->getPreview($current_photo, 410, 230, true);
+                }
+            } elseif (file_exists($current_photo)) {
+                $preview = $model->getPreview($current_photo, 410, 230);
+
+                if (file_exists($preview)) {
+                    unlink($preview);
+                }
+
+                unlink($current_photo);
+            }
+
+
+            if (Yii::$app->request->isPjax) {
+                $model = false;
+            } else {
+                return $this->redirect(['/manage/market/categories', 'pid' => $model->pid], 301);
+            }
+        }
+
+        return $this->render('photo', [
+            'model' => $model,
+            'is_modal' => true,
+            'current_photo' => $current_photo,
+        ]);
+    }
+
+    public function actionUpload($id)
     {
         Yii::$app->response->format = Response::FORMAT_JSON;
 
-        $model = $this->__model->create();
-        $cssFile = UploadedFile::getInstance($model, 'upload');
+        $page = $this->getById($id);
+        $photo = UploadedFile::getInstance($page, 'photo');
 
-        if ($cssFile) {
-            if ($cssFile->extension != 'css') {
+        $ext = str_replace('.jpeg', 'jpg', strtolower($photo->extension));
+
+        if ($photo) {
+            if ($ext != 'jpg') {
                 return [
                         'status' => 'error',
-                        'message' => Yii::t('app', 'The file must be with the extension "{ext}"', ['ext' => 'css']),
+                        'message' => Yii::t('app', 'The file must be with the extension "{ext}"', ['ext' => '.jpg']),
                       ];
             }
 
-            $directory = $model->uploadFolder;
+            $directory = $page->uploadFolder;
 
             if (!is_dir($directory)) {
                 FileHelper::createDirectory($directory);
             }
 
 
-            $fileName = $model::generateFilename($model->upload).'.'.$cssFile->extension;
-            $filePath = $directory .'/'. $fileName;
+            $photoId  = $page::generateFilename($page->photo);
+            $fileName = $photoId.'.'.$ext;
+            $filePath = $directory .DIRECTORY_SEPARATOR. $fileName;
             $webPath  = str_replace(Yii::getAlias('@webroot'), '', $filePath);
 
-            if ($cssFile->saveAs($filePath)) {
+            if ($photo->saveAs($filePath)) {
                 return [
-                    'status' => 'ok',
-                    'message' => $webPath,
+                    'files' => [
+                        [
+                            'fname' => $photoId.'.'.$ext,
+                            'thumbnail' => str_replace(Yii::getAlias('@webroot'), '', $page->getPreview($filePath, 410, 230)),
+                            'photo_id' => $photoId,
+                        ],
+                    ],
                 ];
             } else {
                 return [

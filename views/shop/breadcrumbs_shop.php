@@ -8,7 +8,7 @@ use yii\helpers\Html;
 
 <a href="/">Главная</a> <i class="fa fa-angle-right"></i>
 
-<?= $models ? Html::a('Каталог товаров', $url).' <i class="fa fa-angle-right"></i>' : '<span>Каталог товаров</span>' ?>
+<?= $models ? Html::a('Каталог', $url).' <i class="fa fa-angle-right"></i>' : '<span>Каталог</span>' ?>
 
 <?php
 

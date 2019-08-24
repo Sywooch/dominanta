@@ -46,6 +46,11 @@ class ManageModule extends Module
                 'url'   => '/manage/market/labels',
                 'badge' => [],
             ],
+            'Vendor' => [
+                'icon' => 'briefcase',
+                'url'   => '/manage/market/vendors',
+                'badge' => [],
+            ],
         ],
         'Site' => [
             'icon' => 'globe',

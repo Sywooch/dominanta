@@ -19,13 +19,15 @@ class Vendor extends AbstractModel
 
     public static $entitiesName = 'Vendors';
 
+    public $photo;
+
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['title'], 'required'],
+            [['title'], 'required', 'on' => self::SCENARIO_FORM],
             [['title'], 'string', 'max' => 255],
         ];
     }

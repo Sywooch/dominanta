@@ -22,6 +22,7 @@ use app\models\ActiveRecord\ProductProperty;
 use app\models\ActiveRecord\ProductReview;
 use app\models\ActiveRecord\ProductResently;
 use app\models\ActiveRecord\Property;
+use app\models\ActiveRecord\Vendor;
 use app\models\ActiveRecord\User;
 
 class ShopController extends AbstractController
@@ -193,6 +194,7 @@ class ShopController extends AbstractController
             }
 
             $links[] = [
+                'id'    => $subcat->id,
                 'name'  => $subcat->category_name,
                 'link'  => $parent_link.'/'.$subcat->slug,
                 'items' => $sublinks,
@@ -258,6 +260,23 @@ class ShopController extends AbstractController
            ->andWhere(['>', 'filter_order', 0])
            ->orderBy(['filter_order' => SORT_ASC, ProductProperty::tableName().'.slug' => SORT_ASC])
            ->all();
+
+
+        $vendor_query = new Query;
+        $vendors = $vendor_query->select([Vendor::tableName().'.id', Vendor::tableName().'.title'])
+                                ->distinct()
+                                ->from(Vendor::tableName())
+                                ->innerJoin(Product::tableName(), Product::tableName().'.vendor_id='.Vendor::tableName().'.id')
+                                ->andWhere([Product::tableName().'.cat_id' => $model->id])
+                                ->andWhere([Product::tableName().'.status' => Product::STATUS_ACTIVE])
+                                ->orderBy(['title' => SORT_ASC])
+                                ->all();
+
+        $vendor_filter = $request->get('vendor', []);
+
+        foreach ($vendors AS $idx => $vendor) {
+            $vendors[$idx]['active'] = in_array($vendor['id'], $vendor_filter);
+        }
 
         $all_filter = [];
         $active_filter = $request->get('filter', []);
@@ -342,6 +361,14 @@ class ShopController extends AbstractController
             }
         }
 
+        if ($vendor_filter) {
+            if (!$get_count) {
+                $product_query->andWhere(['vendor_id' => $vendor_filter]);
+            }
+
+            $count_query->andWhere(['vendor_id' => $vendor_filter]);
+        }
+
         $product_count = $count_query->one()['cnt'];
 
         if ($get_count) {
@@ -424,7 +451,7 @@ class ShopController extends AbstractController
             '{{{products_sort}}}' => $this->getProductSort($models, $product_sort),
             '{{{filter_categories}}}' => $this->getCatsList($model, $models),
             '{{{show_count}}}' => $this->getProductShowCount($models, $show_count),
-            '{{{all_filters}}}' => $this->getFilters($all_filter),
+            '{{{all_filters}}}' => $this->getFilters($all_filter, $vendors, $vendor_filter),
             '{{{pager}}}' => $this->getPager($models, $product_page, $limit, $product_count),
             '{{{cat_min_price}}}' => $cat_min_price,
             '{{{cat_max_price}}}' => $cat_max_price,
@@ -668,9 +695,13 @@ class ShopController extends AbstractController
         return floor($min_price['min_price']);
     }
 
-    protected function getFilters($all_properties)
+    protected function getFilters($all_properties, $vendors, $vendor_filter)
     {
-        return $this->renderPartial('filters', ['all_properties' => $all_properties]);
+        return $this->renderPartial('filters', [
+            'all_properties' => $all_properties,
+            'vendors' => $vendors,
+            'vendor_filter' => $vendor_filter
+        ]);
     }
 
 

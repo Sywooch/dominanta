@@ -3,28 +3,56 @@
 /* @var $this yii\web\View */
 
 use yii\helpers\Html;
+use app\models\ActiveRecord\ProductCategory;
+
+$model = new ProductCategory;
 
 if ($links) {
 
 ?>
 
 <div class="row">
+<div class="row">
 
-    <?php foreach ($links AS $category) { ?>
+    <?php foreach ($links AS $category) { $model->id = $category['id']; ?>
 
     <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-        <h4><?= Html::a(Html::encode($category['name']), $category['link']) ?></h4>
+        <div class="product_category_item thumbnail">
+            <div class="product_category_item_image" <?= file_exists($model->uploadFolder.DIRECTORY_SEPARATOR.$category['id'].'.jpg') ?
+            'style="background: url(\''.str_replace(Yii::getAlias('@webroot'), '', $model->getPreview($model->uploadFolder.DIRECTORY_SEPARATOR.$category['id'].'.jpg', 410, 230)).'\') 50% 50%"'
+            : '' ?>>
+                <?= Html::a('', $category['link']) ?>
+            </div>
+            <div class="product_category_item_header">
+                <?= $category['items'] ? Html::encode($category['name']) : Html::a(Html::encode($category['name']), $category['link']) ?>
+            </div>
+            <div class="product_category_item_subcats">
+                <?php for ($i = 0; $i < 5 && $i < count($category['items']); $i++) { ?>
+                    <?= Html::a(Html::encode($category['items'][$i]['name']), $category['items'][$i]['link']) ?>
+                <?php } ?>
 
-        <?php foreach ($category['items'] AS $subcat) { ?>
-
-        <div><?= Html::a(Html::encode($subcat['name']), $subcat['link']) ?></div>
-
+                <?php if (count($category['items']) > 5) { ?>
+                <div class="product_category_item_subcats_hidden" id="hidden_subcats_<?= $category['id'] ?>">
+                    <?php for ($i = 5; $i < count($category['items']); $i++) { ?>
+                        <?= Html::a(Html::encode($category['items'][$i]['name']), $category['items'][$i]['link']) ?>
+                    <?php } ?>
+                </div>
+                <?php } ?>
+            </div>
+        </div>
+        <?php if (count($category['items']) > 5) { ?>
+        <div class="product_category_item_show_all" data-id="<?= $category['id'] ?>">
+             Смотреть все подкатегории &nbsp;&nbsp;<i class="fa fa-angle-down"></i>
+        <?php } else { ?>
+        <div class="product_category_item_bottom_all">
+             &nbsp;
         <?php } ?>
-
+        </div>
     </div>
 
     <?php } ?>
 
+</div>
 </div>
 
 <?php
