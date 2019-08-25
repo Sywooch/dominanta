@@ -30,9 +30,9 @@ class ProductWidget extends Widget
         if ($this->filter == 'resently') {
             $shopcart = ShopcartController::getShopcartData();
 
-            $rQuery = Product::find()->where(['status' => Product::STATUS_ACTIVE])
-                                     ->innerJoin(ProductResently::tableName(), ProductResently::tableName().'.product_id='.Product::tableName().'.id')
-                                     ->where(['!=', 'product_id', $this->call_model->product_id]);
+            $rQuery = Product::find()->innerJoin(ProductResently::tableName(), ProductResently::tableName().'.product_id='.Product::tableName().'.id')
+                                     ->where(['status' => Product::STATUS_ACTIVE])
+                                     ->andWhere(['!=', 'product_id', $this->call_model->product_id]);
 
             if ($shopcart['user_id']) {
                 $rQuery->andWhere(['user_id' => $shopcart['user_id']]);
@@ -42,12 +42,12 @@ class ProductWidget extends Widget
 
             $products = $rQuery->orderBy(['add_time' => SORT_DESC])->limit(12)->all();
         } else {
-            $products = Product::find()->where(['status' => Product::STATUS_ACTIVE])
-                                     ->innerJoin(ProductLabels::tableName(), ProductLabels::tableName().'.product_id='.Product::tableName().'.id')
-                                     ->innerJoin(ProductLabel::tableName(), ProductLabels::tableName().'.label_id='.ProductLabel::tableName().'.id')
-                                     ->where(['widget' => $this->filter])
-                                     ->limit(12)
-                                     ->all();
+            $products = Product::find()->innerJoin(ProductLabels::tableName(), ProductLabels::tableName().'.product_id='.Product::tableName().'.id')
+                                       ->innerJoin(ProductLabel::tableName(), ProductLabels::tableName().'.label_id='.ProductLabel::tableName().'.id')
+                                       ->where(['status' => Product::STATUS_ACTIVE])
+                                       ->andWhere(['widget' => $this->filter])
+                                       ->limit(12)
+                                       ->all();
         }
 
         if ($products) {
