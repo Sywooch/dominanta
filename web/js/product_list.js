@@ -1,4 +1,5 @@
 var productList = {
+    mobileFilterShow: false,
     loadEvent: function() {
         productList.loadTrigger(this);
     },
@@ -9,6 +10,20 @@ var productList = {
         $('.product_filter_value').on('click', this.productFilterEvent);
         $('.product_filter_actions a').on('click', this.clearFilterEvent);
         $('.product_filter_header_text').on('click', this.filterCollapseEvent);
+        $('.product_mobile_filters_button a').on('click', this.mobileFilterShowEvent);
+    },
+    mobileFilterShowEvent: function() {
+        productList.mobileFilterShowTrigger(this);
+        return false;
+    },
+    mobileFilterShowTrigger: function(obj) {
+        if (this.mobileFilterShow) {
+            $('.product_filter_column').fadeOut(300);
+            this.mobileFilterShow = false;
+        } else {
+            $('.product_filter_column').fadeIn(300);
+            this.mobileFilterShow = true;
+        }
     },
     filterCollapseEvent: function() {
         productList.filterCollapseTrigger(this);

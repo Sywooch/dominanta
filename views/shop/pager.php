@@ -16,7 +16,7 @@ use yii\helpers\Html;
     <?= Html::a('1', $base_link.'1') ?>
 <?php } ?>
 
-<?= $product_page > 3 ? '<span class="pager_dots">...</span>' : '' ?>
+<?= $product_page > 4 ? '<span class="pager_dots">...</span>' : '' ?>
 
 <?php
 
@@ -31,7 +31,7 @@ use yii\helpers\Html;
 
 <?php } ?>
 
-<?= $product_page < $pages - 2 ? '<span class="pager_dots">...</span>' : '' ?>
+<?= $product_page < $pages - 2 && $product_page > 4 ? '<span class="pager_dots">...</span>' : '' ?>
 
 <?php if ($product_page == $pages) { ?>
     <span><?= $pages ?></span>
