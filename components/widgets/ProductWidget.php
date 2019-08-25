@@ -31,7 +31,7 @@ class ProductWidget extends Widget
             $shopcart = ShopcartController::getShopcartData();
 
             $rQuery = Product::find()->innerJoin(ProductResently::tableName(), ProductResently::tableName().'.product_id='.Product::tableName().'.id')
-                                     ->where(['status' => Product::STATUS_ACTIVE])
+                                     ->where([Product::tableName().'.status' => Product::STATUS_ACTIVE])
                                      ->andWhere(['!=', 'product_id', $this->call_model->product_id]);
 
             if ($shopcart['user_id']) {
@@ -44,7 +44,7 @@ class ProductWidget extends Widget
         } else {
             $products = Product::find()->innerJoin(ProductLabels::tableName(), ProductLabels::tableName().'.product_id='.Product::tableName().'.id')
                                        ->innerJoin(ProductLabel::tableName(), ProductLabels::tableName().'.label_id='.ProductLabel::tableName().'.id')
-                                       ->where(['status' => Product::STATUS_ACTIVE])
+                                       ->where([Product::tableName().'.status' => Product::STATUS_ACTIVE])
                                        ->andWhere(['widget' => $this->filter])
                                        ->limit(12)
                                        ->all();
