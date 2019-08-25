@@ -31,7 +31,7 @@ foreach ($products AS $product) {
         <?= $header ?>
     </div>
 
-    <div id="<?= $id ?>" class="carousel slide" data-ride="carousel" data-interval="false">
+    <div id="<?= $id ?>" class="carousel slide" data-ride="carousel" data-interval="<?= $interval ?>">
 
         <!-- Wrapper for slides -->
         <div class="carousel-inner" role="listbox">

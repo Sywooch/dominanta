@@ -16,6 +16,8 @@ class ProductWidget extends Widget
 
     public $call_model, $controller, $filter, $header;
 
+    public $interval = false;
+
     public static function getName()
     {
         return self::$name;
@@ -52,6 +54,7 @@ class ProductWidget extends Widget
             return $this->render('product', [
                 'header'   => $this->header,
                 'products' => $products,
+                'interval' => $this->interval,
             ]);
         } else {
             return '';

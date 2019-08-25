@@ -1056,6 +1056,12 @@ span.product_property_value {
     min-height: 610px;
 }
 
+@media (max-width: 768px) {
+  .product_category_item {
+      min-height: 0px;
+  }
+}
+
 .product_category_item_image {
     height: 230px;
 }
