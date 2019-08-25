@@ -7,10 +7,12 @@ use yii\helpers\Html;
 ?>
 
 <?php if ($product_page == 1) { ?>
-    <span class="pager_prev_page">Предыдущая страница</span>
+    <span class="pager_prev_page hidden-xs hidden-sm">Предыдущая страница</span>
+    <span class="pager_prev_page hidden-lg hidden-md"><i class="fa fa-angle-left"></i></span>
     <span>1</span>
 <?php } else { ?>
-    <?= Html::a('Предыдущая страница', $base_link.$prev_page, ['class' => 'pager_prev_page']) ?>
+    <?= Html::a('Предыдущая страница', $base_link.$prev_page, ['class' => 'pager_prev_page hidden-xs hidden-sm']) ?>
+    <?= Html::a('<i class="fa fa-angle-left"></i>', $base_link.$prev_page, ['class' => 'pager_prev_page hidden-lg hidden-md']) ?>
     <?= Html::a('1', $base_link.'1') ?>
 <?php } ?>
 
@@ -33,8 +35,10 @@ use yii\helpers\Html;
 
 <?php if ($product_page == $pages) { ?>
     <span><?= $pages ?></span>
-    <span class="pager_next_page">Следующая страница</span>
+    <span class="pager_next_page hidden-xs hidden-sm">Следующая страница</span>
+    <span class="pager_next_page hidden-lg hidden-md"><i class="fa fa-angle-right"></i></span>
 <?php } else { ?>
     <?= Html::a($pages, $base_link.$pages) ?>
-    <?= Html::a('Следующая страница', $base_link.$next_page, ['class' => 'pager_next_page']) ?>
+    <?= Html::a('Следующая страница', $base_link.$next_page, ['class' => 'pager_next_page hidden-xs hidden-sm']) ?>
+    <?= Html::a('<i class="fa fa-angle-right"></i>', $base_link.$next_page, ['class' => 'pager_next_page hidden-lg hidden-md']) ?>
 <?php } ?>
