@@ -531,7 +531,7 @@ class ShopController extends AbstractController
             '{{{vendor_photo}}}' => $vendor && file_exists($vendor->uploadFolder.'/'.$model->vendor_id.'.jpg') ? Html::img(str_replace(Yii::getAlias('@webroot'), '',  $vendor->uploadFolder.'/'.$model->vendor_id.'.jpg'), ['alt' => $vendor->title]) : '',
             '{{{product_description}}}' => $model->product_desc,
             '{{{product_properties}}}' => $properties['page'],
-            '{{{product_weight_display}}}' => $property_weight_calc ? '<span class="product_weight_label">Общий вес:</span> <span class="product_weight_value">'.$properties['weight'].' кг</span>' : '',
+            '{{{product_weight_display}}}' => '<span class="product_weight_label">'.($property_weight_calc ? 'Общий вес:' : '&nbsp;').'</span> <span class="product_weight_value">'.($property_weight_calc ? $properties['weight'].' кг' : '&nbsp;').'</span>',
             '{{{product_weight_calc}}}' => $property_weight_calc,
             '{{{product_photo_preview}}}' => $photos['previews'],
             '{{{product_photo_slides}}}' => $photos['slides'],

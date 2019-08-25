@@ -691,7 +691,7 @@ span.top_map_city {
 }
 
 .product_photo_big {
-    margin-left: 57px;
+/*     margin-left: 57px; */
     text-align: center;
     width: 450px;
     overflow-x: hidden;
@@ -709,8 +709,19 @@ span.top_map_city {
     background-position: 50% 50%;
     background-repeat: no-repeat;
     float: left;
+    background-size: contain;
 }
 
+/*
+@media all and (max-width:520px) {
+    .product_photo_big_slide {
+        width: 200px;
+        height: 200px;
+
+        background: red;
+    }
+}
+*/
 @media all and (max-width:1200px) {
     .product_photo_slides {
        /* width: 100%;
@@ -724,7 +735,7 @@ span.top_map_city {
     }
 
     .product_photo_big {
-        margin-left: 52px;
+/*         margin-left: 52px; */
         text-align: center;
         width: 430px;
     }
@@ -740,7 +751,7 @@ span.top_map_city {
 
 @media all and (max-width:992px) {
     .product_photo_big {
-        margin-left: 52px;
+/*         margin-left: 52px; */
         text-align: center;
         width: 420px;
     }
@@ -818,6 +829,10 @@ span.top_map_city {
         margin: 0px auto;
     }
 
+    .product_photo_main {
+        margin-bottom: 10px;
+    }
+
     .product_photo_big img {
         width: 100%;
     }
@@ -834,6 +849,21 @@ span.top_map_city {
 
     .photo_right_arrow {
       margin-right: 10px;
+    }
+}
+
+@media all and (max-width:400px) {
+    .product_stars {
+        float: none;
+        margin: 10px 20px;
+    }
+
+    .product_weight_info {
+        margin-top: 20px;
+    }
+
+    .product_count_weight {
+        margin: 0px;
     }
 }
 
@@ -975,6 +1005,11 @@ span.product_property_value {
 
 .product_weight_value {
     font-weight: bold;
+    white-space: nowrap;
+}
+
+.product_weight_label {
+    white-space: nowrap;
 }
 
 /* Reviews */
@@ -1035,6 +1070,12 @@ span.product_property_value {
 
 #modal_review .modal-dialog {
     width: 680px;
+}
+
+@media (max-width: 768px) {
+  #modal_review .modal-dialog {
+      width: auto;
+  }
 }
 
 #review_form, #callback-form {
@@ -2181,7 +2222,7 @@ span.user_acc_delivery {
 
 @media all and (max-width:630px) {
   .product_widget, .main_banners {
-    margin: 40px;
+    margin: 40px 0px 40px 10px;
   }
 
   .product_widget .product_item {

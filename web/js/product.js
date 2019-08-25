@@ -14,7 +14,28 @@ var productPage = {
         $('.review_form_stars span').on('mouseover', this.starMouseOverEvent);
         $('.review_form_stars span').on('mouseout', this.starMouseOutEvent);
         $('.review_form_stars span').on('click', this.starSelectEvent);
+        $(window).resize(this.resizeEvent)
+        this.setSlideWidth();
         this.setSlideshowWidth();
+    },
+    resizeEvent: function() {
+        productPage.resizeTrigger(this);
+    },
+    resizeTrigger: function(obj) {
+        this.setSlideWidth();
+        this.setSlideshowWidth();
+    },
+    setSlideWidth: function() {
+        if (this.slideWidth + 130 > $(window).width()) {
+            this.slideWidth = $(window).width() - 180;
+        }
+
+        $('.product_photo_big_slide').width(this.slideWidth);
+        $('.product_photo_big_slide').height(this.slideWidth);
+        $('.product_photo_big_slideshow').height(this.slideWidth);
+        $('.photo_left_arrow').height(this.slideWidth);
+        $('.photo_right_arrow').height(this.slideWidth);
+        $('.product_photo_big').width(this.slideWidth);
     },
     starMouseOverEvent: function() {
         productPage.starMouseOverTrigger(this);
