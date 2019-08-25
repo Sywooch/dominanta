@@ -153,6 +153,7 @@ class AbstractModel extends ActiveRecord implements InterfaceModel
     {
         $modelname = self::className();
         $model = new $modelname;
+        $model->loadDefaultValues();
         $model->load(Yii::$app->request->get());
         return $model;
     }
@@ -161,6 +162,7 @@ class AbstractModel extends ActiveRecord implements InterfaceModel
     {
         $modelname = self::className();
         $model = new $modelname;
+        $model->loadDefaultValues();
 
         foreach ($fields AS $property => $value) {
             $model->$property = $value;

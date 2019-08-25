@@ -26,7 +26,7 @@ class m190624_204227_create_product_table extends Migration
             'price' => $this->decimal(10,2)->notNull()->defaultValue(0),
             'old_price' => $this->decimal(10,2)->defaultValue(NULL),
             'quantity' => $this->decimal(9,3)->defaultValue(0),
-            'discount' => $this->text()->defaultValue(NULL),
+            'discount' => $this->decimal(10,2)->notNull()->defaultValue(0),
             'labels' => $this->text()->defaultValue(NULL),
             'properties' => $this->text()->defaultValue(NULL),
             'unit' => $this->string()->notNull()->defaultValue('pcs'),

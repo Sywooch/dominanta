@@ -52,11 +52,11 @@ class Product extends AbstractModel
     {
         return [
             [['cat_id', 'status', 'vendor_id'], 'integer'],
-            [['product_name', 'slug'], 'required', 'on' => self::SCENARIO_FORM],
+            [['product_name', 'slug', 'price', 'cat_id'], 'required', 'on' => self::SCENARIO_FORM],
             ['slug', 'match', 'pattern' => '/^[A-z0-9_-]*$/i', 'on' => self::SCENARIO_FORM],
             ['slug', 'uniqueSlugValidator', 'on' => self::SCENARIO_FORM],
             [['product_desc', 'discount', 'labels', 'properties', 'link', 'meta_keywords', 'meta_description'], 'string'],
-            [['price', 'old_price', 'quantity', 'packing_quantity'], 'number'],
+            [['price', 'old_price', 'quantity', 'packing_quantity', 'discount'], 'number'],
             [['last_update'], 'safe'],
             [['product_name', 'slug', 'unit', 'ext_code', 'int_code', 'title'], 'string', 'max' => 255],
             [['cat_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProductCategory::className(), 'targetAttribute' => ['cat_id' => 'id']],

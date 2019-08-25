@@ -141,6 +141,7 @@ abstract class AbstractManageController extends Controller implements AbstractMa
         $model = $this->getById($id);
         $model->status = $model::STATUS_DELETED;
         $model->save(false);
+        return $model;
     }
 
     public function actionRestore($id)
@@ -148,6 +149,7 @@ abstract class AbstractManageController extends Controller implements AbstractMa
         $model = $this->getById($id);
         $model->status = $model::STATUS_ACTIVE;
         $model->save(false);
+        return $model;
     }
 
     public function render($view, $params = [])

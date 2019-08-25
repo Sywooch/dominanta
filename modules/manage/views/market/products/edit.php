@@ -105,6 +105,7 @@ if (!$model) {
 
                     <?= $form->field($model, 'vendor_id')
                              ->dropdownList(Vendor::find()->select(['title', 'id'])
+                                                          ->orderBy(['title' => SORT_ASC])
                                                           ->indexBy('id')->column(), ['prompt' => '']) ?>
 
                     <hr />

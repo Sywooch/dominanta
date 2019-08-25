@@ -252,7 +252,7 @@ class ProductsController extends AbstractManageController
     {
         $model = parent::actionDelete($id);
         Yii::$app->session->setFlash('success', Yii::t('app', 'Record has been deleted'));
-        return $this->redirect(['/manage/market/products', 'cat_id' => $model->pid], 301);
+        return $this->redirect(['/manage/market/products', 'cat_id' => $model->cat_id], 301);
     }
 
     public function actionShow($id)
@@ -261,7 +261,7 @@ class ProductsController extends AbstractManageController
         $model->status = $model::STATUS_ACTIVE;
         $model->save(false);
         Yii::$app->session->setFlash('success', Yii::t('app', 'Record has been published'));
-        return $this->redirect(['/manage/market/products', 'cat_id' => $model->pid], 301);
+        return $this->redirect(['/manage/market/products', 'cat_id' => $model->cat_id], 301);
     }
 
     public function actionHide($id)
@@ -270,7 +270,7 @@ class ProductsController extends AbstractManageController
         $model->status = $model::STATUS_INACTIVE;
         $model->save(false);
         Yii::$app->session->setFlash('success', Yii::t('app', 'Record has been hidden'));
-        return $this->redirect(['/manage/market/products', 'cat_id' => $model->pid], 301);
+        return $this->redirect(['/manage/market/products', 'cat_id' => $model->cat_id], 301);
     }
 
     public function actionUpload($id)

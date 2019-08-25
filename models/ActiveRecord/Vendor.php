@@ -61,4 +61,9 @@ class Vendor extends AbstractModel
     {
         return $this->hasMany(Product::className(), ['vendor_id' => 'id']);
     }
+
+    public function eventBeforeDelete()
+    {
+        Product::updateAll(['vendor_id' => NULL], ['vendor_id' => $this->id]);
+    }
 }
