@@ -194,7 +194,7 @@ class ManageModule extends Module
                                     $item_badges[] = $model_class::find()->where($one_badge)->count();
                                 }
 
-                                $prepare_second_level['badge'] = implode(' / ', $item_badges);
+                                $prepare_second_level['badge'] = implode(' <br /> ', $item_badges);
                             }
                         } else {
                             $prepare_second_level['badge'] = $menu_item['badge'];

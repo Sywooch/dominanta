@@ -256,13 +256,13 @@ span.top_map_city {
 }
 
 @media all and (max-width:992px) {
-    .top_shopping_cart {
+    .top_shopping_cart, .top_shopping_cart:active, .top_shopping_cart:visited {
         margin-top: 10px;
     }
 }
 
 @media all and (max-width:450px) {
-    .top_shopping_cart {
+    .top_shopping_cart, .top_shopping_cart:active, .top_shopping_cart:visited {
       width: 75px;
     }
 
