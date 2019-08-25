@@ -12,6 +12,8 @@ use app\models\ActiveRecord\ProductCategory;
 use app\models\ActiveRecord\ProductPhoto;
 use app\models\ActiveRecord\Vendor;
 
+$category_object = new ProductCategory;
+
 if (!$model) {
     $this->title = 'Ok';
     $ok_js = 'location.reload()';
@@ -84,7 +86,7 @@ if (!$model) {
                 <div role="tabpanel" class="tab-pane fade active in" id="tab_content_basic" aria-labelledby="form-tab-basic">
                     <?= $form->field($model, 'product_name') ?>
 
-                    <?= $form->field($model, 'cat_id')->dropdownList((new ProductCategory())->getListCat(0), ['prompt' => '']); ?>
+                    <?= $form->field($model, 'cat_id')->dropdownList($category_object->getListCat(0), ['prompt' => '', 'options' => $category_object->disabled_cats]); ?>
 
                     <?= $form->field($model, 'slug') ?>
 

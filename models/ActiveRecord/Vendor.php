@@ -28,8 +28,19 @@ class Vendor extends AbstractModel
     {
         return [
             [['title'], 'required', 'on' => self::SCENARIO_FORM],
-            [['title'], 'string', 'max' => 255],
+            [['title', 'photo'], 'string', 'max' => 255],
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_SEARCH] = ['title'];
+
+        return $scenarios;
     }
 
     /**

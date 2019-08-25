@@ -35,6 +35,10 @@ class ProductCategory extends AbstractModel
 
     public $photo;
 
+    public $disabled_cats = [];
+
+    public $cats_with_products = [];
+
     /**
      * {@inheritdoc}
      */
@@ -189,6 +193,18 @@ class ProductCategory extends AbstractModel
             $cat_list[$one_cat->id] = str_repeat('- ', $level).Html::encode($one_cat->category_name);
 
             $subcats_list = $this->getListCat($level + 1, $one_cat->id, $filter);
+
+            if ($subcats_list) {
+                $this->disabled_cats[$one_cat->id] = [
+                    'disabled' => true,
+                ];
+            } else {
+                if (Product::find()->where(['cat_id' => $one_cat->id])->count()) {
+                    $this->cats_with_products[$one_cat->id] = [
+                        'disabled' => true,
+                    ];
+                }
+            }
 
             foreach ($subcats_list AS $subcat_id => $subcat_name) {
                 $cat_list[$subcat_id] = $subcat_name;

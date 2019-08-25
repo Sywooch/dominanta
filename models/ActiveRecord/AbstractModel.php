@@ -523,7 +523,7 @@ class AbstractModel extends ActiveRecord implements InterfaceModel
             }
         }
 
-        $preview_dir  = $this->uploadFolder.'/'.$this->id;
+        $preview_dir  = $this->uploadFolder.($this->id ? '/'.$this->id : '');
         $preview_path = $preview_dir.'/'.$width.'_'.$height.'_'.StringHelper::Basename($path);
 
         if (!file_exists($preview_path) || $refresh) {

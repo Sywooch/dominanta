@@ -178,9 +178,9 @@ class CategoriesController extends AbstractManageController
         $page = $this->getById($id);
         $photo = UploadedFile::getInstance($page, 'photo');
 
-        $ext = str_replace('.jpeg', 'jpg', strtolower($photo->extension));
-
         if ($photo) {
+            $ext = str_replace('.jpeg', 'jpg', strtolower($photo->extension));
+
             if ($ext != 'jpg') {
                 return [
                         'status' => 'error',

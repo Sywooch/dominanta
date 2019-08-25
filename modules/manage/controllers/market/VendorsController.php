@@ -24,14 +24,25 @@ class VendorsController extends AbstractManageController
     {
         if ($id) {
             $model = $this->getById($id);
+
+            if (file_exists($model->uploadFolder.'/'.$model->id.'.jpg')) {
+                $model->photo = str_replace(Yii::getAlias('@webroot'), '',  $model->uploadFolder.'/'.$model->id.'.jpg');
+            }
         } else {
             $model = $this->__model->create();
         }
 
         $model->scenario = $model::SCENARIO_FORM;
 
+
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $model->save(false);
+
+            if ($model->photo) {
+                if (basename($model->photo) != $model->id.'.jpg') {
+                    rename($model->uploadFolder.'/'.basename($model->photo), $model->uploadFolder.'/'.$model->id.'.jpg');
+                }
+            }
 
             Yii::$app->session->setFlash('success', Yii::t('app', 'Record has been saved'));
 
@@ -58,13 +69,16 @@ class VendorsController extends AbstractManageController
         Yii::$app->response->format = Response::FORMAT_JSON;
 
         $model = $this->__model->create();
-        $cssFile = UploadedFile::getInstance($model, 'upload');
+        $photo = UploadedFile::getInstance($model, 'photo');
+        $ext = str_replace('.jpeg', 'jpg', strtolower($photo->extension));
 
-        if ($cssFile) {
-            if ($cssFile->extension != 'css') {
+        if ($photo) {
+            $ext = str_replace('.jpeg', 'jpg', strtolower($photo->extension));
+
+            if ($ext != 'jpg') {
                 return [
                         'status' => 'error',
-                        'message' => Yii::t('app', 'The file must be with the extension "{ext}"', ['ext' => 'css']),
+                        'message' => Yii::t('app', 'The file must be with the extension "{ext}"', ['ext' => '.jpg']),
                       ];
             }
 
@@ -75,14 +89,18 @@ class VendorsController extends AbstractManageController
             }
 
 
-            $fileName = $model::generateFilename($model->upload).'.'.$cssFile->extension;
+            $fileName = $model::generateFilename($model->photo).'.'.$ext;
             $filePath = $directory .'/'. $fileName;
-            $webPath  = str_replace(Yii::getAlias('@webroot'), '', $filePath);
 
-            if ($cssFile->saveAs($filePath)) {
+
+            if ($photo->saveAs($filePath)) {
+                $webPath = $model->getPreview($filePath, 100, false, true);
+                unlink($filePath);
+
                 return [
                     'status' => 'ok',
                     'message' => $webPath,
+                    'fname' => basename($webPath),
                 ];
             } else {
                 return [
