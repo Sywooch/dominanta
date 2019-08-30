@@ -119,4 +119,23 @@ class Mail extends AbstractModel
         $this->create_time = $this->dbTime;
         $this->mail_setting_id = $mail_setting ? $mail_setting->id : NULL;
     }
+
+    public static function createAndSave($fields = [], $template = 'default')
+    {
+        $tpl = MailTemplate::findOne(['slug' => $template]);
+
+        if (!$tpl && $template != 'default') {
+            $tpl = MailTemplate::findOne(['slug' => 'default']);
+        }
+
+        if ($tpl) {
+            $fields['body_html'] = '<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title></title></head></body>'.
+                                   str_replace('{{{content}}}', $fields['body_html'], $tpl->content).
+                                   '</body></html>';
+
+            $fields['body_text'] = str_replace('{{{content}}}', $fields['body_text'], strip_tags(str_replace(['<br>', '<br/>', '<br />'], "\n", $tpl->content)));
+        }
+
+        return parent::createAndSave($fields);
+    }
 }

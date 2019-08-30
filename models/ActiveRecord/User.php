@@ -155,12 +155,9 @@ class User extends AbstractModel implements IdentityInterface
             Mail::createAndSave([
                 'to_email'  => $this->email,
                 'subject'   => 'Регистрация на сайте '.ucfirst($_SERVER['SERVER_NAME']),
-                'body_text' => 'Вы успешно зарегистрировались на сайте '.$_SERVER['SERVER_NAME'].'.'.PHP_EOL.PHP_EOL.
-                               'Для активации аккаунта перейдите, пожалуйста, по ссылке - '.$link,
-                'body_html' => 'Вы успешно зарегистрировались на сайте '.$_SERVER['SERVER_NAME'].'.'.PHP_EOL.PHP_EOL.
-                               'Для активации аккаунта перейдите, пожалуйста, по ссылке - '.
-                               Html::a($link, $link)
-            ]);
+                'body_text' => $link,
+                'body_html' => $link,
+            ], 'reg');
         }
     }
 

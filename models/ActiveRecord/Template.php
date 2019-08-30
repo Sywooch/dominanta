@@ -33,7 +33,7 @@ class Template extends AbstractModel
             [['layout', 'template_name'], 'required', 'on' => self::SCENARIO_FORM],
             [['template_content', 'settings'], 'string'],
             [['layout', 'template_name'], 'string', 'max' => 255],
-           // ['template_content', 'match', 'pattern' => '/\\{\\{\\{content\\}\\}\\}/', 'message' => Yii::t('app', 'You need to add the value of {{{content}}} to the template content')]
+            ['template_content', 'match', 'pattern' => '/\\{\\{\\{content\\}\\}\\}/', 'message' => Yii::t('app', 'You need to add the value of {{{content}}} to the template content')]
         ];
     }
 

@@ -19,7 +19,7 @@ use Cocur\Slugify\Slugify;
  * @property Product $product
  * @property Property $property
  */
-class ProductProperty extends \app\models\ActiveRecord\AbstractModel
+class ProductProperty extends AbstractModel
 {
     public static $entityName = 'Product property';
 

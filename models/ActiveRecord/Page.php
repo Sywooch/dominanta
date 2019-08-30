@@ -164,7 +164,7 @@ class Page extends AbstractModel
     {
         $links[] = [
             'name' => $this->page_name,
-            'link' => $this->absoluteUrl,
+            'link' => $this->status == self::STATUS_ACTIVE ? $this->absoluteUrl : false,
         ];
 
         if ($this->parent) {

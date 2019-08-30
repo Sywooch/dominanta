@@ -384,6 +384,11 @@ return [
     'Feedback' => 'Обратная связь',
     'Message'  => 'Сообщение',
 
+    // Mail Templates
+    'Mail template' => 'Шаблон рассылок',
+    'Mail templates' => 'Шаблоны рассылок',
+    'Template ID' => 'Идентификатор шаблона',
+
 
     'Country' => 'Страна',
     'City' => 'Город',

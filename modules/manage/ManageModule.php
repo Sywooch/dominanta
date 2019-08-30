@@ -7,6 +7,7 @@ use yii\base\Module;
 use app\components\helpers\ModelsHelper;
 use app\models\ActiveRecord\Mail;
 use app\models\ActiveRecord\MailSetting;
+use app\models\ActiveRecord\MailTemplate;
 use app\models\ActiveRecord\Option;
 use app\models\ActiveRecord\Page;
 use app\models\ActiveRecord\ProductCategory;
@@ -114,6 +115,11 @@ class ManageModule extends Module
                 'url' => '/manage/mail/queue',
                 'icon' => 'send-o',
                 'badge' => [['>=', 'status', Mail::STATUS_INACTIVE], ['status' => Mail::STATUS_INACTIVE]],
+            ],
+            'MailTemplate' => [
+                'url' => '/manage/mail/templates',
+                'icon' => 'file-o',
+                'badge' => [],
             ],
         ],
     ];
