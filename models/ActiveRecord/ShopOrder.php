@@ -143,7 +143,7 @@ class ShopOrder extends AbstractModel
     public function sendEmails()
     {
         if ($this->status == self::STATUS_ACTIVE) {
-            $products_list = '<table style="border: 1px solid #d7d7d7; border-collpase: collapse">';
+            $products_list = '<table style="border: 1px solid #d7d7d7; border-collapse: collapse; width: 100%">';
             $amount = 0;
 
             foreach ($this->shopOrderPosition AS $position) {
@@ -158,7 +158,7 @@ class ShopOrder extends AbstractModel
                     $photo = '';
                 }
 
-                $products_list .= '<tr><td style="border: 1px solid #d7d7d7">'.Html::encode($position->product->product_name).'<br />'.$photo.'<td>'.
+                $products_list .= '<tr><td style="border: 1px solid #d7d7d7">'.Html::encode($position->product->product_name).'<br />'.$photo.'</td>'.
                                   '<td style="border: 1px solid #d7d7d7">x '.$position->quantity.'</td>'.
                                   '<td style="border: 1px solid #d7d7d7">'.Yii::$app->formatter->asDecimal($position->price, 2).' руб.</td></tr>';
 
