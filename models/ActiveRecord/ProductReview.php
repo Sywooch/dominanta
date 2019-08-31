@@ -3,6 +3,7 @@
 namespace app\models\ActiveRecord;
 
 use Yii;
+use yii\helpers\Html;
 use app\models\ActiveRecord\AbstractModel;
 
 /**
@@ -31,6 +32,8 @@ class ProductReview extends AbstractModel
 
     const SCENARIO_ADD = 'add';
     const SCENARIO_EDIT = 'edit';
+
+    public static $notify = 'Уведомление о новых отзывах';
 
     /**
      * @inheritdoc
@@ -107,5 +110,19 @@ class ProductReview extends AbstractModel
     public function eventBeforeInsert()
     {
         $this->add_time = $this->dbTime;
+    }
+
+    public function eventAfterInsert()
+    {
+        $notify_users = $this->getUsersForNotify();
+
+        foreach ($notify_users AS $notify_user) {
+            Mail::createAndSave([
+                'to_email'  => $notify_user->email,
+                'subject'   => 'Новый отзыв на сайте '.ucfirst($_SERVER['SERVER_NAME']),
+                'body_text' => 'Добавлен новый отзыв к товару: '.$this->product->product_name,
+                'body_html' => 'Добавлен новый отзыв к товару: '.Html::encode($this->product->product_name),
+            ]);
+        }
     }
 }

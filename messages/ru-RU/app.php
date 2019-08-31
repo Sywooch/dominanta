@@ -389,7 +389,13 @@ return [
     'Mail templates' => 'Шаблоны рассылок',
     'Template ID' => 'Идентификатор шаблона',
 
+    // Banners
+    'Banner'  => 'Баннер',
+    'Banners' => 'Баннеры',
+    'Banner text' => 'Текст баннера',
 
+
+    'Photo' => 'Фото',
     'Country' => 'Страна',
     'City' => 'Город',
     'Phones' => 'Телефоны',

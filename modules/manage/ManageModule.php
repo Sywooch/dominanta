@@ -5,6 +5,7 @@ namespace app\modules\manage;
 use Yii;
 use yii\base\Module;
 use app\components\helpers\ModelsHelper;
+use app\models\ActiveRecord\Banner;
 use app\models\ActiveRecord\Mail;
 use app\models\ActiveRecord\MailSetting;
 use app\models\ActiveRecord\MailTemplate;
@@ -84,6 +85,11 @@ class ManageModule extends Module
                 'icon'  => 'code',
                 'url'   => '/manage/site/vars',
                 'badge' => [],
+            ],
+            'Banner' => [
+                'icon'  => 'tv',
+                'url'   => '/manage/site/banners',
+                'badge' => [['>=', 'status', Banner::STATUS_INACTIVE], ['status' => Banner::STATUS_ACTIVE]]
             ],
             'Option' => [
                 'icon'  => 'sliders',
