@@ -127,9 +127,9 @@ class SiteController extends AbstractController
             Mail::createAndSave([
                 'to_email'  => $user->email,
                 'subject'   => 'Восстановление пароля на сайте '.ucfirst($_SERVER['SERVER_NAME']),
-                'body_text' => 'Новый пароль вашего аккаунта на сайте '.$_SERVER['SERVER_NAME'].':'.PHP_EOL.PHP_EOL.$newPass,
-                'body_html' => 'Новый пароль вашего на сайте '.$_SERVER['SERVER_NAME'].':<br /><br />'.$newPass,
-            ]);
+                'body_text' => $newPass,
+                'body_html' => $newPass,
+            ], 'restore');
 
             $page = $this->actionPage('/info_pages/restore_success', false);
         }

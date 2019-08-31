@@ -311,6 +311,8 @@ class ShopcartController extends AbstractController
                 $item->delete();
             }
 
+            $model->sendEmails();
+
             Yii::$app->session->setFlash('success', '<i class="fa fa-check"></i> '.Yii::t('app', 'Заказ №'.$model->id.' оформлен!'));
             return 'redirect';
         }

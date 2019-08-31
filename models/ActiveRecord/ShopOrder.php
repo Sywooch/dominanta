@@ -3,6 +3,7 @@
 namespace app\models\ActiveRecord;
 
 use Yii;
+use yii\helpers\Html;
 use app\models\ActiveRecord\AbstractModel;
 
 /**
@@ -136,28 +137,55 @@ class ShopOrder extends AbstractModel
 
     public function eventAfterInsert()
     {
-        if ($this->status == self::STATUS_INACTIVE) {
+
+    }
+
+    public function sendEmails()
+    {
+        if ($this->status == self::STATUS_ACTIVE) {
+            $products_list = '<table style="border: 1px solid #d7d7d7; border-collpase: collapse">';
+            $amount = 0;
+
+            foreach ($this->shopOrderPosition AS $position) {
+                $img = ProductPhoto::find()->where(['product_id' => $position->product_id])
+                                          ->limit(1)
+                                          ->orderBy(['photo_order' => SORT_ASC])
+                                          ->one();
+
+                if ($img) {
+                    $photo = Html::img(Yii::$app->site_options->scheme.'://'.$_SERVER['SERVER_NAME'].str_replace(Yii::getAlias('@webroot'), '', $position->product->getPreview($img->photoPath, 142, 142)));
+                } else {
+                    $photo = '';
+                }
+
+                $products_list .= '<tr><td style="border: 1px solid #d7d7d7">'.Html::encode($position->product->product_name).'<br />'.$photo.'<td>'.
+                                  '<td style="border: 1px solid #d7d7d7">x '.$position->quantity.'</td>'.
+                                  '<td style="border: 1px solid #d7d7d7">'.Yii::$app->formatter->asDecimal($position->price, 2).' руб.</td></tr>';
+
+                $amount += $position->price;
+            }
+
+
+            $products_list .= '<tr><td style="border: 1px solid #d7d7d7; font-weight: bold; text-align: right" colspan="3">'.Yii::$app->formatter->asDecimal($amount, 2).' руб.</td></tr></table>';
+
             Mail::createAndSave([
                 'to_email'  => $this->email,
                 'subject'   => 'Новый заказ на сайте '.ucfirst($_SERVER['SERVER_NAME']),
-                'body_text' => 'Вы успешно сфоримировали заказ товаров на сайте '.$_SERVER['SERVER_NAME'].'.'.PHP_EOL.PHP_EOL
-                                .'Номер вашего заказа: '.$this->id,
-                'body_html' => 'Вы успешно сфоримировали заказ товаров на сайте '.$_SERVER['SERVER_NAME'].'.<br /><br />'
-                                .'Номер вашего заказа: '.$this->id,
-            ]);
-        }
+                'body_text' => $this->id,
+                'body_html' => $this->id.$products_list,
+            ], 'order_client');
 
-        $notify_users = $this->getUsersForNotify();
 
-        foreach ($notify_users AS $notify_user) {
-            Mail::createAndSave([
-                'to_email'  => $notify_user->email,
-                'subject'   => 'Новый заказ на сайте '.ucfirst($_SERVER['SERVER_NAME']),
-                'body_text' => 'Новый заказ на сайте '.$_SERVER['SERVER_NAME'].'.'.PHP_EOL.PHP_EOL
-                                .'Номер заказа: '.$this->id,
-                'body_html' => 'Новый заказ на сайте  '.$_SERVER['SERVER_NAME'].'.<br /><br />'
-                                .'Номер заказа: '.$this->id,
-            ]);
+            $notify_users = $this->getUsersForNotify();
+
+            foreach ($notify_users AS $notify_user) {
+                Mail::createAndSave([
+                    'to_email'  => $notify_user->email,
+                    'subject'   => 'Новый заказ на сайте '.ucfirst($_SERVER['SERVER_NAME']),
+                    'body_text' => $this->id,
+                    'body_html' => $this->id.$products_list,
+                ], 'order_admin');
+            }
         }
     }
 
