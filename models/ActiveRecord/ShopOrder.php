@@ -166,7 +166,7 @@ class ShopOrder extends AbstractModel
             }
 
 
-            $products_list .= '<tr><td style="border: 1px solid #d7d7d7; font-weight: bold; text-align: right" colspan="3">'.Yii::$app->formatter->asDecimal($amount, 2).' руб.</td></tr></table>';
+            $products_list .= '<tr><td style="border: 1px solid #d7d7d7; font-weight: bold; text-align: right" colspan="3">Итого: '.Yii::$app->formatter->asDecimal($amount, 2).' руб.</td></tr></table>';
 
             Mail::createAndSave([
                 'to_email'  => $this->email,
