@@ -27,8 +27,20 @@ class Banner extends AbstractModel
     {
         return [
             [['status'], 'integer'],
-            [['banner_text'], 'string'],
+            [['status'], 'required', 'on' => self::SCENARIO_FORM],
+            [['banner_text', 'photo'], 'string'],
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function scenarios()
+    {
+        $scenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_SEARCH] = [];
+
+        return $scenarios;
     }
 
     /**
