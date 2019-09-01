@@ -10,12 +10,14 @@ use yii\helpers\Html;
 ?>
 
 <div id="main-banners-carousel" class="carousel slide main_banners" data-ride="carousel">
+     <?php if (count($banners) > 1) { ?>
     <!-- Indicators -->
     <ol class="carousel-indicators">
         <?php for ($s = 0; $s < count($banners); $s++) { ?>
         <li data-target="#main-banners-carousel" data-slide-to="<?= $s ?>"<?= !$s ? ' class="active"' : '' ?>></li>
         <?php } ?>
     </ol>
+    <?php } ?>
 
     <!-- Wrapper for slides -->
     <div class="carousel-inner" role="listbox">
