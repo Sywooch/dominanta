@@ -536,6 +536,9 @@ class AbstractModel extends ActiveRecord implements InterfaceModel
             Image::thumbnail($path, $width, $height)->save($preview_path, ['quality' => 75]);
         }
 
+echo Yii::getAlias('@web');
+echo Yii::getAlias('@webroot');
+die();
         return str_replace(Yii::getAlias('@app/web'), '', $preview_path);
     }
 }
