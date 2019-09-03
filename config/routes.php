@@ -6,6 +6,8 @@ return [
     'logout'              => 'site/logout',
     'activate/<token:.*>' => 'site/activate',
     'restore/<token:.*>'  => 'site/restore',
+    'subscribe/<token:.*>'  => 'site/subscribe',
+    'unsubscribe/<token:.*>'  => 'site/unsubscribe',
     [
         'pattern'  => 'manage/<controller>/<action:\w*>/<id:\d*>',
         'route'    => 'manage/<controller>/<action>',

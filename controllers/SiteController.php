@@ -11,6 +11,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use app\models\ActiveRecord\Mail;
 use app\models\ActiveRecord\Page;
+use app\models\ActiveRecord\Subscriber;
 use app\models\ActiveRecord\User;
 
 class SiteController extends AbstractController
@@ -146,5 +147,45 @@ class SiteController extends AbstractController
     {
         Yii::$app->user->logout();
         return $this->goHome();
+    }
+
+    /**
+     * Activate subscribe.
+     *
+     * @return Response|string
+     */
+    public function actionSubscribe($token)
+    {
+        $user = Subscriber::findOne(['hash' => $token, 'status' => Subscriber::STATUS_INACTIVE]);
+
+        if (!$user) {
+            $page = $this->actionPage('/info_pages/subscribe_fail', false);
+        } else {
+            $user->status = Subscriber::STATUS_ACTIVE;
+            $user->hash = Yii::$app->security->generateRandomString();
+            $user->save();
+            $page = $this->actionPage('/info_pages/subscribe_success', false);
+        }
+
+        return $page;
+    }
+
+    /**
+     * Activate unsubscribe.
+     *
+     * @return Response|string
+     */
+    public function actionUnsubscribe($token)
+    {
+        $user = Subscriber::findOne(['hash' => $token]);
+
+        if (!$user) {
+            $page = $this->actionPage('/info_pages/unsubscribe_fail', false);
+        } else {
+            $user->delete();
+            $page = $this->actionPage('/info_pages/unsubscribe_success', false);
+        }
+
+        return $page;
     }
 }
