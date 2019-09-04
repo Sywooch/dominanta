@@ -385,14 +385,20 @@ return [
     'Message'  => 'Сообщение',
 
     // Mail Templates
-    'Mail template' => 'Шаблон рассылок',
-    'Mail templates' => 'Шаблоны рассылок',
+    'Mail template' => 'Шаблон отправления',
+    'Mail templates' => 'Шаблоны отправлений',
     'Template ID' => 'Идентификатор шаблона',
 
     // Banners
     'Banner'  => 'Баннер',
     'Banners' => 'Баннеры',
     'Banner text' => 'Текст баннера',
+
+    // SUbscribe
+    'Subscribe' => 'Рассылка',
+    'Subscribes' => 'Рассылки',
+    'Mail subject' => 'Тема письма',
+    'Mail text' => 'Текст письма',
 
 
     'Photo' => 'Фото',

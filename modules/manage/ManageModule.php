@@ -14,6 +14,7 @@ use app\models\ActiveRecord\Page;
 use app\models\ActiveRecord\ProductCategory;
 use app\models\ActiveRecord\Product;
 use app\models\ActiveRecord\Role;
+use app\models\ActiveRecord\Subscribe;
 use app\models\ActiveRecord\Template;
 use app\models\ActiveRecord\User;
 
@@ -112,20 +113,25 @@ class ManageModule extends Module
         ],
         'Mail' => [
             'icon' => 'envelope',
-            'MailSetting' => [
-                'url' => '/manage/mail/settings',
-                'icon' => 'at',
-                'badge' => ['status' => MailSetting::STATUS_ACTIVE],
+            'Subscribe' => [
+                'url' => '/manage/mail/subscribes',
+                'icon' => 'envelope-open-o',
+                'badge' => [['>=', 'status', Subscribe::STATUS_INACTIVE], ['status' => Subscribe::STATUS_INACTIVE]],
+            ],
+            'MailTemplate' => [
+                'url' => '/manage/mail/templates',
+                'icon' => 'file-o',
+                'badge' => [],
             ],
             'Mail' => [
                 'url' => '/manage/mail/queue',
                 'icon' => 'send-o',
                 'badge' => [['>=', 'status', Mail::STATUS_INACTIVE], ['status' => Mail::STATUS_INACTIVE]],
             ],
-            'MailTemplate' => [
-                'url' => '/manage/mail/templates',
-                'icon' => 'file-o',
-                'badge' => [],
+            'MailSetting' => [
+                'url' => '/manage/mail/settings',
+                'icon' => 'at',
+                'badge' => ['status' => MailSetting::STATUS_ACTIVE],
             ],
         ],
     ];
