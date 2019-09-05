@@ -15,12 +15,10 @@ class SubscribesController extends AbstractManageController
     {
         $controller_model = $this->__model;
 
-
         $data_provider = $this->__model->search(['>=', 'status', $controller_model::STATUS_INACTIVE], ['defaultOrder' => ['id' => SORT_DESC]]);
         return $this->render('index', [
             'data_provider' => $data_provider,
             'search' => $this->__model,
-            'subscribes' => Subscriber::find()->where(['status' => Subscriber::STATUS_ACTIVE])->count(),
         ]);
     }
 
@@ -35,7 +33,7 @@ class SubscribesController extends AbstractManageController
             $default_template = MailTemplate::findOne(['slug' => 'default']);
 
             if ($default_template) {
-                $model->mail_text = str_replace('{{{content}}}', ' ', $default_template->content);
+                $model->mail_text = str_replace('{{{content}}}', '<br /><br />', $default_template->content);
             }
         }
 

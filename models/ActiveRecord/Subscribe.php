@@ -31,7 +31,7 @@ class Subscribe extends AbstractModel
     {
         return [
             [['status'], 'integer'],
-            [['mail_subject', 'mail_text'], 'required', 'on' => self::SCENARIO_FORM],
+            [['mail_subject', 'mail_text', 'status'], 'required', 'on' => self::SCENARIO_FORM],
             [['mail_text'], 'string'],
             [['mail_subject'], 'string', 'max' => 255],
         ];

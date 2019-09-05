@@ -399,6 +399,7 @@ return [
     'Subscribes' => 'Рассылки',
     'Mail subject' => 'Тема письма',
     'Mail text' => 'Текст письма',
+    'Draft' => 'Черновик',
 
 
     'Photo' => 'Фото',

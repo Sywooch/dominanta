@@ -6,6 +6,7 @@ use yiister\gentelella\widgets\grid\GridView;
 use app\models\ActiveRecord\MailSetting;
 use app\models\ActiveRecord\Mail;
 use app\models\ActiveRecord\SendedSubscribe;
+use app\models\ActiveRecord\Subscriber;
 
 $this->title = Yii::t('app', $page_model->entitiesName);
 
@@ -83,7 +84,7 @@ $this->params['top_panel'] = $add_button;
             [
                 'attribute' => 'status',
                 'content' => function($data) {
-                    return new Icon($data->statusIcon, ['class' => 'fa-lg', 'data-toggle' => 'tooltip', 'title' => $data->statusText, 'aria-label' => $data->statusText]);
+                    return new Icon($data->statusIcon, ['class' => 'fa-lg', 'data-toggle' => 'tooltip', 'title' => $data->statusText, 'aria-label' => $data->statusText]).' '.$data->statusText;
                 }
             ],
             'mail_subject',
@@ -92,9 +93,9 @@ $this->params['top_panel'] = $add_button;
                 'content' => function($data) {
                     global $subscribes;
 
-                    $sended = SendedSubsribe::find()->where(['subscribe_id' => $data->id])->count();
+                    $sended = SendedSubscribe::find()->where(['subscribe_id' => $data->id])->count();
 
-                    return ($data->status == $data::STATUS_SENDED ? $sended : $subscribes).
+                    return ($data->status == $data::STATUS_SENDED ? $sended : Subscriber::find()->where(['status' => Subscriber::STATUS_ACTIVE])->count()).
                            ' / '.$sended.' / '.
                            SendedSubscribe::find()->where(['subscribe_id' => $data->id])->andWhere(['!=', 'send_errors', NULL])->count();
 
