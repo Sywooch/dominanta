@@ -35,6 +35,9 @@ $config = [
                 ],
             ],
         ],
+        'site_options' => [
+            'class' => 'app\components\bootstrap\SiteOptions',
+        ],
         'i18n' => [
             'translations' => [
                 'app*' => [

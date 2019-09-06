@@ -126,6 +126,11 @@ class Product extends AbstractModel
     public function eventBeforeUpdate()
     {
         $this->last_update = self::getDbTime();
+        $this->cat->last_update = self::getDbTime();
+        $this->cat->save();
+
+        file_put_contents(Page::staticUploadFolder().'/sitemap.ind', time());
+        file_put_contents(self::staticUploadFolder().'/catalog.ind', time());
     }
 
     /**

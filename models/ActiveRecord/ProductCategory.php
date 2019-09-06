@@ -107,6 +107,14 @@ class ProductCategory extends AbstractModel
     public function eventBeforeUpdate()
     {
         $this->last_update = self::getDbTime();
+
+        if ($this->pid) {
+            $this->parentCat->last_update = self::getDbTime();
+            $this->parentCat->save();
+        }
+
+        file_put_contents(Page::staticUploadFolder().'/sitemap.ind', time());
+        file_put_contents(Product::staticUploadFolder().'/catalog.ind', time());
     }
 
     /**

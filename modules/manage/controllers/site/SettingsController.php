@@ -13,6 +13,7 @@ class SettingsController extends AbstractManageController
         'site_title' => 'Site title',
         'site_title_position' => 'Site title position',
         'site_title_separator' => 'Site title separator',
+        'site_address' => 'Site address',
         'main_page' => 'Main page',
         'page_extension' => 'Page extension',
         'scheme' => 'Scheme',

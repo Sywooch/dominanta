@@ -213,6 +213,7 @@ return [
     'Options' => 'Опции',
     'Option value' => 'Значение',
     'User role for registration' => 'Группа пользователя для регистрации',
+    'Site address' => 'Адрес сайта',
 
     // CSS
     'CSS' => 'CSS',
