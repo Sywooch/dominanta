@@ -31,5 +31,4 @@ tests/_support/_generated
 
 /config/db.php
 /web/sitemap.xml
-
-obk16.ru*
+/web/yandex-market.xml
