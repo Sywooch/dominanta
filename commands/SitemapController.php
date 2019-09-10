@@ -33,7 +33,7 @@ class SitemapController extends Controller
             $st = microtime();
 
             if ($this->generate()) {
-                unlink(Page::staticUploadFolder().'/sitemap.ind');
+                //unlink(Page::staticUploadFolder().'/sitemap.ind');
                 $end = (microtime() - $st) / 60;
 
                 echo "Complete! ".$end.' sec.'.PHP_EOL;
