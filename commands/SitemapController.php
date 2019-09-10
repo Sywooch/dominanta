@@ -32,7 +32,12 @@ class SitemapController extends Controller
         if (file_exists(Page::staticUploadFolder().'/sitemap.ind')) {
             if ($this->generate()) {
                 unlink(Page::staticUploadFolder().'/sitemap.ind');
+                echo "Complete!".PHP_EOL;
+            } else {
+                echo "Error.".PHP_EOL;
             }
+        } else {
+            echo "No changes.".PHP_EOL;
         }
     }
 
@@ -41,7 +46,12 @@ class SitemapController extends Controller
         if (file_exists(Product::staticUploadFolder().'/catalog.ind')) {
             if ($this->generateYml()) {
                 unlink(Product::staticUploadFolder().'/catalog.ind');
+                echo "Complete!".PHP_EOL;
+            } else {
+                echo "Error.".PHP_EOL;
             }
+        } else {
+            echo "No changes.".PHP_EOL;
         }
     }
 
