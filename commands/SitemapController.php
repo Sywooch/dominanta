@@ -29,16 +29,20 @@ class SitemapController extends Controller
 
     public function actionUpdate()
     {
-        if (file_exists(Page::staticUploadFolder().'/sitemap.ind')) {
+       // if (file_exists(Page::staticUploadFolder().'/sitemap.ind')) {
+            $st = microtime();
+
             if ($this->generate()) {
                 unlink(Page::staticUploadFolder().'/sitemap.ind');
-                echo "Complete!".PHP_EOL;
+                $end = (microtime() - $st) / 60;
+
+                echo "Complete! ".$end.' sec.'.PHP_EOL;
             } else {
                 echo "Error.".PHP_EOL;
             }
-        } else {
-            echo "No changes.".PHP_EOL;
-        }
+      //  } else {
+      //      echo "No changes.".PHP_EOL;
+      //  }
     }
 
     public function actionYml()
