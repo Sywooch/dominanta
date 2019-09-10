@@ -168,8 +168,7 @@ $this->params['select_menu'] = Url::to(['/manage/market/categories']);
             [
                 'attribute' => 'slug',
                 'content' => function($data) {
-                    $count_subcats = $data->countAllSubcats;
-                    return Html::a(Html::encode($data->slug), [!$count_subcats['all'] && $count_subcats['products_all'] ? '/manage/market/products' : '', 'cat_id' => $data->id]);
+                    return Html::a(Html::encode($data->slug), $data->catLink, ['target' => '_blank']);
                 }
 
 /*                'content' => function($data) {

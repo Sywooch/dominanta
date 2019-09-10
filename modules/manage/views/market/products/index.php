@@ -172,7 +172,7 @@ $this->params['select_menu'] = Url::to(['/manage/market/products']);
                 'encodeLabel' => false,
                 'label' => Yii::t('app', 'Product name').'<br />'.Yii::t('app', 'Slug'),
                 'content' => function($data) {
-                    return Html::encode($data->product_name).'<br /><br /><i>'.Html::encode($data->slug).'</i>';
+                    return Html::encode($data->product_name).'<br /><br /><i>'.Html::a(Html::encode($data->slug), $data->productLink, ['target' => '_blank']).'</i>';
                 }
             ],
             [

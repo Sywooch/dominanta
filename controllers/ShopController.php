@@ -82,13 +82,17 @@ class ShopController extends AbstractController
                     'pid'    => NULL,
                 ]);
 
-                /*if (!$main_category) {
+                if (!$main_category) {
                     return $this->actionPage('shop/'.$url);
-                }*/
+                }
 
                 $models[] = $main_category;
             } else {
                 $parent_model = $models[count($models) - 1];
+
+                if (!$parent_model) {
+                    return $this->actionPage('shop/'.$url);
+                }
 
                 $try_find_cat = ProductCategory::findOne([
                     'slug'   => $url_part,
@@ -105,9 +109,9 @@ class ShopController extends AbstractController
                         'cat_id'    => $parent_model->id,
                     ]);
 
-                /*    if (!$try_find_product) {
+                    if (!$try_find_product) {
                         return $this->actionPage('shop/'.$url);
-                    }*/
+                    }
 
                     $models[] = $try_find_product;
                 }
