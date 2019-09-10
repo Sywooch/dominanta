@@ -35,7 +35,6 @@ class SitemapController extends Controller
             if ($this->generate()) {
                 //unlink(Page::staticUploadFolder().'/sitemap.ind');
                 $end = (microtime(1) - $st);
-
                 echo "Complete! ".$end.' sec.'.PHP_EOL;
             } else {
                 echo "Error.".PHP_EOL;
@@ -47,16 +46,19 @@ class SitemapController extends Controller
 
     public function actionYml()
     {
-        if (file_exists(Product::staticUploadFolder().'/catalog.ind')) {
+     //   if (file_exists(Product::staticUploadFolder().'/catalog.ind')) {
+            $st = microtime(1);
+
             if ($this->generateYml()) {
-                unlink(Product::staticUploadFolder().'/catalog.ind');
-                echo "Complete!".PHP_EOL;
+              //  unlink(Product::staticUploadFolder().'/catalog.ind');
+                $end = (microtime(1) - $st);
+                echo "Complete! ".$end.' sec.'.PHP_EOL;
             } else {
                 echo "Error.".PHP_EOL;
             }
-        } else {
-            echo "No changes.".PHP_EOL;
-        }
+       // } else {
+      //      echo "No changes.".PHP_EOL;
+      //  }
     }
 
     protected function configuration()
