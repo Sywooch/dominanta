@@ -13,6 +13,11 @@ if (!$model) {
     $this->title = 'Ok';
     $ok_js = 'location.reload()';
     $this->registerJs($ok_js, yii\web\View::POS_END);
+
+?>
+
+<?php
+
 } else {
     $this->title = Yii::t('app', $model->id ? 'Edit' : 'Add').($model->id ? ' «'.$model->category_name.'»' : '');
     $this->params['select_menu'] = Url::to(['/manage/market/categories']);
@@ -23,6 +28,9 @@ if (!$model) {
     }
 
     $this->params['submit_button'] = Html::submitButton('<i class="fa fa-save"></i> '.Yii::t('app', 'Save'), $submit_options);
+
+    $form_config['options']['onsubmit'] = "\$('#yml_message').removeClass('hidden')";
+
     $form = ActiveForm::begin($form_config);
     //$slug_tpl = '{label}<div class="input-group"><div class="input-group-addon">'.$model->parentUrl.'</div>{input}'.($model->page_extension ? '<div class="input-group-addon">'.Html::encode($model->page_extension).'</div>' : '').'</div><div class="help-block">{error}</div>';
 
@@ -102,6 +110,10 @@ if (!$model) {
 
     </div>
     <div class="col-md-2 col-xs-hidden"></div>
+</div>
+
+<div class="text-center hidden" id="yml_message" style="font-size: 18px;">
+    <i class="fa fa-spinner fa-pulse fa-fw"></i> Генерация импорта для Яндекс.Маркета...
 </div>
 
 <?php

@@ -140,7 +140,7 @@ class ManageModule extends Module
     public function init()
     {
         parent::init();
-
+//print_r(Yii::$app->site_options);
         if (!Yii::$app->user->isGuest) {
             $this->params['user'] = Yii::$app->user->identity;
             $this->params['role'] = Yii::$app->user->identity->role;

@@ -5,6 +5,8 @@ namespace app\models\ActiveRecord;
 use Yii;
 use yii\helpers\Html;
 use app\models\ActiveRecord\AbstractModel;
+use app\models\Service\Sitemap;
+use app\models\Service\Yml;
 
 /**
  * This is the model class for table "product_category".
@@ -112,9 +114,20 @@ class ProductCategory extends AbstractModel
             $this->parentCat->last_update = self::getDbTime();
             $this->parentCat->save();
         }
+    }
 
-        file_put_contents(Page::staticUploadFolder().'/sitemap.ind', time());
-        file_put_contents(Product::staticUploadFolder().'/catalog.ind', time());
+    public function eventAfterInsert()
+    {
+        $this->eventAfterUpdate();
+    }
+
+    public function eventAfterUpdate()
+    {
+        $sitemap = new Sitemap;
+        $sitemap->generate();
+
+        $yml = new Yml;
+        $yml->generate();
     }
 
     /**

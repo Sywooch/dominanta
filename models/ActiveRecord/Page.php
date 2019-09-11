@@ -193,10 +193,8 @@ class Page extends AbstractModel
     public function sitemap()
     {
         if ($this->sitemap) {
-            file_put_contents(self::staticUploadFolder().'/sitemap.ind', time());
-
-           // $sitemap = new Sitemap;
-           // $sitemap->generate();
+            $sitemap = new Sitemap;
+            $sitemap->generate();
         }
     }
 

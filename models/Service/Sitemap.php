@@ -6,11 +6,12 @@ use Yii;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
 use app\models\ActiveRecord\Page;
-use app\models\ActiveRecord\Option;
+use app\models\ActiveRecord\Product;
+use app\models\ActiveRecord\ProductCategory;
 
 class Sitemap extends Model
 {
-    protected $xml, $root, $webpath, $sitemap, $main_page, $scheme;
+    protected $xml, $root, $webpath, $sitemap, $main_page, $scheme, $site_address;
 
     protected $lastmod_format = 'Y-m-d';
 
@@ -18,18 +19,14 @@ class Sitemap extends Model
 
     protected function configuration()
     {
-        $this->webpath = Yii::getAlias('@webroot');
+        $this->webpath = isset(Yii::$aliases['@webroot']) ? Yii::getAlias('@webroot') : Yii::getAlias('@app').'/web';;
         $this->sitemap = $this->webpath.'/sitemap.xml';
 
-        $options = Option::find()->select(['option', 'option_value'])->where(['option' => ['main_page', 'scheme']])->indexBy('option')->column();
+        $options = Yii::$app->site_options;
 
-        $main_page = Option::findOne(['option' => 'main_page']);
-
-        if (isset($options['main_page'])) {
-            $this->main_page = $main_page->option_value;
-        }
-
-        $this->scheme = isset($options['scheme']) ? $options['scheme'] : 'http';
+        $this->main_page = $options->main_page;
+        $this->scheme = $options->scheme ? $options->scheme : 'http';
+        $this->site_address = $options->site_address;
     }
 
     protected function checkConf()
@@ -78,12 +75,58 @@ class Sitemap extends Model
 
         foreach ($pages AS $page) {
             $this->addPage([
-                'loc'     => $this->scheme.'://'.$_SERVER['SERVER_NAME'].(($this->main_page == $page->slug && $page->pid === NULL)?'/':$page->absoluteUrl),
+                'loc'     => $this->scheme.'://'.$this->site_address.(($this->main_page == $page->slug && $page->pid === NULL)?'/':$page->absoluteUrl),
                 'lastmod' => (new \DateTime($page->last_update))->format($this->lastmod_format),
             ]);
         }
 
+        $this->generateShopCats();
         $this->xml->save($this->sitemap);
+    }
+
+    protected function generateShopCats($cat_id = NULL, $url = '/shop')
+    {
+        $items = Product::find()->where(['status' => Product::STATUS_ACTIVE])->andWhere(['cat_id' => $cat_id])->all();
+        $generate_subitems = false;
+
+        if (!$items) {
+            $items = ProductCategory::find()->where(['status' => ProductCategory::STATUS_ACTIVE])->andWhere(['pid' => $cat_id])->all();
+            $generate_subitems = true;
+        }
+
+        foreach ($items AS $item) {
+            $this->addPage([
+                'loc'     => $this->scheme.'://'.$this->site_address.$url.'/'.$item->slug,
+                'lastmod' => (new \DateTime($item->last_update))->format($this->lastmod_format),
+            ]);
+
+            if ($generate_subitems) {
+                $this->generateShopCats($item->id, $url.'/'.$item->slug);
+            }
+        }
+    }
+
+    protected function getCatList($pid = NULL, $url = '/shop')
+    {
+        $categories = [];
+        $cats = ProductCategory::find()->where(['status' => ProductCategory::STATUS_ACTIVE])->andWhere(['pid' => $pid])->all();
+
+        foreach ($cats AS $cat) {
+            $subcats = $this->getCatList($cat->id, $url.'/'.$cat->slug);
+
+            $categories[$cat->id] = [
+                'name'    => $cat->category_name,
+                'pid'     => $cat->pid,
+                'subcats' => $subcats ? true : false,
+                'url'     => $url.'/'.$cat->slug,
+            ];
+
+            foreach ($subcats AS $sid => $subcat) {
+                $categories[$sid] = $subcat;
+            }
+        }
+
+        return $categories;
     }
 
 }

@@ -75,7 +75,11 @@ class CategoriesController extends AbstractManageController
             if (Yii::$app->request->isPjax) {
                 $model = false;
             } else {
-                return $this->redirect(['/manage/market/categories', 'cat_id' => $model->pid], 301);
+                if ($model->pid) {
+                    return $this->redirect(['/manage/market/categories', 'cat_id' => $model->pid], 301);
+                } else {
+                    return $this->redirect(['/manage/market/categories'], 301);
+                }
             }
         }
 
