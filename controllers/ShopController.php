@@ -232,7 +232,7 @@ class ShopController extends AbstractController
         $replace = [
             '{{{breadcrumbs}}}' => $this->shopBreadcrumbs($models),
             '{{{page_title}}}' => $model ? $model->category_name : 'Каталог товаров',
-            '{{{cats_list}}}' => $this->renderPartial('product_cats', ['links' => $links, 'category' => $model]),
+            '{{{cats_list}}}' => $this->renderPartial('product_cats', ['links' => $links, 'cat_model' => $model]),
         ];
 
         return str_replace(array_keys($replace), $replace, $rendered_page);
