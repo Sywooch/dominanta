@@ -56,7 +56,7 @@ if ($links) {
 </div>
 
 <div class="category_description">
-    <?= $category->description ?>
+    <?= $category->category_description ?>
 </div>
 
 <?php
