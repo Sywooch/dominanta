@@ -6,6 +6,7 @@ use Yii;
 use yii\web\IdentityInterface;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use app\components\helpers\ModelsHelper;
 use app\models\ActiveRecord\AbstractModel;
 
 /**
@@ -356,5 +357,35 @@ class User extends AbstractModel implements IdentityInterface
     public function loginUser($long_login = false)
     {
         Yii::$app->user->login($this, $long_login ? 3600 * 24 * 30 : 0);
+    }
+
+    public function getRules()
+    {
+        $rules = [];
+        $models = ModelsHelper::get();
+
+        if ($this->role->is_admin) {
+            foreach ($this->role->rules AS $rule) {
+                $rules[$rule['model']] = [
+                    'is_view'    => $rule['is_view'],
+                    'is_add'     => $rule['is_add'],
+                    'is_edit'    => $rule['is_edit'],
+                    'is_delete'  => $rule['is_delete'],
+                ];
+
+                unset($models[$rule['model']]);
+            }
+        }
+
+        foreach ($models AS $model_name => $model_data) {
+            $rules[$model_name] = [
+                'is_view'    => 0,
+                'is_add'     => 0,
+                'is_edit'    => 0,
+                'is_delete'  => 0,
+            ];
+        }
+
+        return $rules;
     }
 }

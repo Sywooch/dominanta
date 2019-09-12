@@ -7,6 +7,7 @@
 
 use yii\helpers\Html;
 use Cocur\Slugify\Slugify;
+use rmrevin\yii\fontawesome\component\Icon;
 use app\models\ActiveRecord\ProductPhoto;
 
 $id = 'product_widget_carousel_'.(new Slugify())->slugify($header);
@@ -60,6 +61,7 @@ foreach ($products AS $product) {
                         <?= Html::a($photo, $product->productLink) ?>
                     </div>
                     <div class="product_item_title">
+                        <?= (!Yii::$app->user->isGuest && Yii::$app->user->identity->rules['Product']['is_edit']) ? Html::a(new Icon('pencil'), ['/manage/market/products/edit', 'id' => $product->id], ['target' => '_blank']) : '' ?>
                         <?= Html::a(Html::encode($product['product_name']), $product->productLink) ?>
                     </div>
                     <div class="product_item_unit">Цена за шт.</div>

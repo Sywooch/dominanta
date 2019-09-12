@@ -3,6 +3,7 @@
 /* @var $this yii\web\View */
 
 use yii\helpers\Html;
+use rmrevin\yii\fontawesome\component\Icon;
 use app\models\ActiveRecord\ProductCategory;
 
 $model = new ProductCategory;
@@ -24,6 +25,7 @@ if ($links) {
                 <?= Html::a('', $category['link']) ?>
             </div>
             <div class="product_category_item_header">
+                <?= (!Yii::$app->user->isGuest && Yii::$app->user->identity->rules['ProductCategory']['is_edit']) ? Html::a(new Icon('pencil'), ['/manage/market/categories/edit', 'id' => $category['id']], ['target' => '_blank']) : '' ?>
                 <?= $category['items'] ? Html::encode($category['name']) : Html::a(Html::encode($category['name']), $category['link']) ?>
             </div>
             <div class="product_category_item_subcats">

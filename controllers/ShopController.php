@@ -9,6 +9,7 @@ use yii\filters\VerbFilter;
 use yii\helpers\Html;
 use yii\web\Response;
 use yii\web\NotFoundHttpException;
+use rmrevin\yii\fontawesome\component\Icon;
 use app\controllers\ShopcartController;
 use app\models\ActiveRecord\Page;
 use app\models\ActiveRecord\Product;
@@ -231,7 +232,7 @@ class ShopController extends AbstractController
 
         $replace = [
             '{{{breadcrumbs}}}' => $this->shopBreadcrumbs($models),
-            '{{{page_title}}}' => $model ? $model->category_name : 'Каталог товаров',
+            '{{{page_title}}}' => $model ? $model->category_name.((!Yii::$app->user->isGuest && Yii::$app->user->identity->rules['ProductCategory']['is_edit']) ? ' '.Html::a(new Icon('pencil'), ['/manage/market/categories/edit', 'id' => $model->id], ['target' => '_blank']) : '') : 'Каталог товаров',
             '{{{cats_list}}}' => $this->renderPartial('product_cats', ['links' => $links, 'cat_model' => $model]),
         ];
 
@@ -527,7 +528,7 @@ class ShopController extends AbstractController
 
         $replace = [
             '{{{breadcrumbs}}}' => $this->shopBreadcrumbs($models),
-            '{{{page_title}}}' => $model->product_name,
+            '{{{page_title}}}' => $model->product_name.((!Yii::$app->user->isGuest && Yii::$app->user->identity->rules['Product']['is_edit']) ? ' '.Html::a(new Icon('pencil'), ['/manage/market/products/edit', 'id' => $model->id], ['target' => '_blank']) : ''),
             '{{{product_price}}}' => Yii::$app->formatter->asDecimal(floatval($model->realPrice), 2),
             '{{{product_old_price}}}' => $model->old_price > 0 ? Yii::$app->formatter->asDecimal(floatval($model->old_price), 2).' <i class="fa fa-ruble"></i>' : '',
             '{{{product_discount}}}' => $model->discount > 0 ? '- '.$model->discount : '',

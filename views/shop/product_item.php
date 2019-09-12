@@ -3,6 +3,7 @@
 /* @var $this yii\web\View */
 
 use yii\helpers\Html;
+use rmrevin\yii\fontawesome\component\Icon;
 
 ?>
 
@@ -16,6 +17,7 @@ use yii\helpers\Html;
         <?= Html::a($photo, $link) ?>
     </div>
     <div class="product_item_title">
+        <?= (!Yii::$app->user->isGuest && Yii::$app->user->identity->rules['Product']['is_edit']) ? Html::a(new Icon('pencil'), ['/manage/market/products/edit', 'id' => $product['prod_id']], ['target' => '_blank']) : '' ?>
         <?= Html::a(Html::encode($product['product_name']), $link) ?>
     </div>
     <div class="product_item_unit">Цена за шт.</div>
