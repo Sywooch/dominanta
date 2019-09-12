@@ -55,6 +55,10 @@ if ($links) {
 </div>
 </div>
 
+<div class="category_description">
+    <?= $category->description ?>
+</div>
+
 <?php
 
 } else {
