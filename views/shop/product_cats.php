@@ -52,11 +52,11 @@ if ($links) {
 
     <?php } ?>
 
-</div>
+<div class="category_description col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <?= $cat_model->category_description ?>
 </div>
 
-<div class="category_description">
-    <?= $cat_model->category_description ?>
+</div>
 </div>
 
 <?php
