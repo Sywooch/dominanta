@@ -14,6 +14,7 @@ use app\models\ActiveRecord\Page;
 use app\models\ActiveRecord\ProductCategory;
 use app\models\ActiveRecord\Product;
 use app\models\ActiveRecord\Role;
+use app\models\ActiveRecord\ShopOrder;
 use app\models\ActiveRecord\Subscribe;
 use app\models\ActiveRecord\Template;
 use app\models\ActiveRecord\User;
@@ -26,7 +27,7 @@ class ManageModule extends Module
             'ShopOrder' => [
                 'icon' => 'cart-plus',
                 'url' => '/manage/market/orders',
-                'badge' => false,
+                'badge' => [['>=', 'status', ShopOrder::STATUS_INACTIVE], ['status' => [ShopOrder::STATUS_ACTIVE, ShopOrder::STATUS_WAIT_PAYMENT, ShopOrder::STATUS_READY]]],
             ],
             'ProductCategory' => [
                 'icon' => 'industry',
