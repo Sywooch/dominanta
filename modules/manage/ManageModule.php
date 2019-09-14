@@ -209,7 +209,8 @@ class ManageModule extends Module
                                 $item_badges = [];
 
                                 foreach ($menu_item['badge'] AS $one_badge) {
-                                    $item_badges[] = $model_class::find()->where($one_badge)->count();
+                                    $item_badges[] = '<span'.($item_badges ? ' style="color: lime"' : '').'>'.
+                                                      $model_class::find()->where($one_badge)->count().'</span>';
                                 }
 
                                 $prepare_second_level['badge'] = implode(' <br /> ', $item_badges);
