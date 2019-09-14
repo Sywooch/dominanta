@@ -22,6 +22,15 @@ use rmrevin\yii\fontawesome\component\Icon;
     </div>
     <div class="product_item_unit">Цена за шт.</div>
     <div class="product_item_price">
+        <span class="product_item_discount">
+            <?= $product['discount'] > 0 ? '-'.intval($product['discount']).'%' : '' ?>
+        </span>
+        <span class="product_item_oldprice">
+            <?php if ($product['old_price'] > 0 || $product['discount'] > 0) { ?>
+                <?= Yii::$app->formatter->asDecimal($product['discount'] > 0 ? $product['discount'] : $product['price'], 2) ?>
+                <i class="fa fa-ruble"></i>
+            <?php } ?>
+        </span>
         <?= Yii::$app->formatter->asDecimal($product['real_price'], 2) ?>
         <i class="fa fa-ruble"></i>
     </div>

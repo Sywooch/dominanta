@@ -591,8 +591,8 @@ span.top_map_city {
     font-weight: bold;
     font-size: 30px;
     color: #E78325;
-    top: -30px;
-    right: -40px;
+    top: -80px;
+    right: -130px;
 }
 
 .product_code {
@@ -788,9 +788,12 @@ span.top_map_city {
     }
 
     .product_discount {
+        position: absolute;
         font-size: 20px;
-        top: -10px;
-        right: -30px;
+        top: auto;
+        right: auto;
+        margin-top: -30px;
+        margin-left: 70px;
     }
 
     .product_code {
@@ -1469,6 +1472,21 @@ span.product_property_value {
     display: inline-block;
     vertical-align: middle;
     padding: 20px;
+}
+
+.product_item_discount {
+    font-size: 12px;
+    color: #E78325;
+    position: absolute;
+    margin-top: -17px;
+}
+
+.product_item_oldprice {
+    font-size: 12px;
+    position: absolute;
+    margin-top: 20px;
+    text-decoration: line-through;
+    color: #888;
 }
 
 .product_item_button {
