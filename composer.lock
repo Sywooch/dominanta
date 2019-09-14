@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "91222cfeaebddc12b7ad078664a35ca3",
+    "content-hash": "7c0d1e5616718314829105e93b9892eb",
     "packages": [
         {
             "name": "2amigos/yii2-file-upload-widget",
@@ -839,26 +839,30 @@
         },
         {
             "name": "himiklab/yii2-recaptcha-widget",
-            "version": "1.2.1",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/himiklab/yii2-recaptcha-widget.git",
-                "reference": "cc8a023bf51db3b40f1b8532cd94fc00c532edf5"
+                "reference": "341ae7e19e12783f3dfd8984a49185e0a44021ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/himiklab/yii2-recaptcha-widget/zipball/cc8a023bf51db3b40f1b8532cd94fc00c532edf5",
-                "reference": "cc8a023bf51db3b40f1b8532cd94fc00c532edf5",
+                "url": "https://api.github.com/repos/himiklab/yii2-recaptcha-widget/zipball/341ae7e19e12783f3dfd8984a49185e0a44021ea",
+                "reference": "341ae7e19e12783f3dfd8984a49185e0a44021ea",
                 "shasum": ""
             },
             "require": {
                 "yiisoft/yii2": "~2.0.11",
                 "yiisoft/yii2-httpclient": "*"
             },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8.34"
+            },
             "type": "yii2-extension",
             "autoload": {
                 "psr-4": {
-                    "himiklab\\yii2\\recaptcha\\": ""
+                    "himiklab\\yii2\\recaptcha\\": "src/",
+                    "himiklab\\yii2\\recaptcha\\tests\\": "tests/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -871,7 +875,7 @@
                     "homepage": "https://github.com/himiklab/"
                 }
             ],
-            "description": "Yii2 Google reCAPTCHA widget",
+            "description": "Yii2 Google reCAPTCHA v2 and v3 widget",
             "keywords": [
                 "captcha",
                 "google",
@@ -879,7 +883,7 @@
                 "widget",
                 "yii2"
             ],
-            "time": "2018-07-03T13:34:52+00:00"
+            "time": "2019-05-14T07:40:36+00:00"
         },
         {
             "name": "imagine/imagine",

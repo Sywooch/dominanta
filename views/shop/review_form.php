@@ -8,6 +8,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\widgets\Pjax;
+use himiklab\yii2\recaptcha\ReCaptcha3;
 
 Pjax::begin(['enablePushState' => false]);
 
@@ -44,6 +45,8 @@ if ($model) {
         <?= $form->field($model, 'product_id')->hiddenInput() ?>
     </div>
 </div>
+
+<?= $form->field($model, 'reCaptcha', ['template' => '{input}{error}'])->widget(ReCaptcha3::className(), ['action' => 'homepage']) ?>
 
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

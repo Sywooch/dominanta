@@ -23,9 +23,9 @@ $config = [
     'components' => [
         'reCaptcha' => [
             'name' => 'reCaptcha',
-            'class' => 'himiklab\yii2\recaptcha\ReCaptcha',
-            'siteKey' => isset($params['reCaptcha']) && isset($params['reCaptcha']['siteKey']) ? $params['reCaptcha']['siteKey'] : '',
-            'secret'  => isset($params['reCaptcha']) && isset($params['reCaptcha']['secret']) ? $params['reCaptcha']['secret'] : '',
+            'class' => 'himiklab\yii2\recaptcha\ReCaptchaConfig',
+            'siteKeyV3' => isset($params['reCaptcha']) && isset($params['reCaptcha']['siteKey']) ? $params['reCaptcha']['siteKey'] : '',
+            'secretV3'  => isset($params['reCaptcha']) && isset($params['reCaptcha']['secret']) ? $params['reCaptcha']['secret'] : '',
         ],
         'formatter' => [
             'defaultTimeZone' => 'Europe/Moscow',

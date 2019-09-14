@@ -5,6 +5,7 @@ namespace app\models\ActiveRecord;
 use Yii;
 use yii\helpers\Html;
 use app\models\ActiveRecord\AbstractModel;
+use himiklab\yii2\recaptcha\ReCaptchaValidator3;
 
 /**
  * This is the model class for table "product_review".
@@ -30,6 +31,8 @@ class ProductReview extends AbstractModel
 
     public static $entitiesName = 'Reviews';
 
+    public $reCaptcha;
+
     const SCENARIO_ADD = 'add';
     const SCENARIO_EDIT = 'edit';
 
@@ -41,7 +44,7 @@ class ProductReview extends AbstractModel
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_ADD] = ['product_id', 'reviewer', 'review_text', 'rate'];
+        $scenarios[self::SCENARIO_ADD] = ['product_id', 'reviewer', 'review_text', 'rate', 'reCaptcha'];
         $scenarios[self::SCENARIO_EDIT] = ['reviewer', 'review_text', 'rate'];
 
         return $scenarios;
@@ -61,6 +64,12 @@ class ProductReview extends AbstractModel
             [['approver'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['approver' => 'id']],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['product_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
+            [['reCaptcha'], ReCaptchaValidator3::className(),
+              'threshold' => 0.5,
+              'action' => 'homepage',
+              'on' => [self::SCENARIO_ADD],
+              'message' => 'Ошибка проверки подлинности пользователя. Обновите страницу и попробуйте ещё раз.',
+            ],
         ];
     }
 

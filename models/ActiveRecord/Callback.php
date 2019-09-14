@@ -4,6 +4,7 @@ namespace app\models\ActiveRecord;
 
 use Yii;
 use app\models\ActiveRecord\AbstractModel;
+use himiklab\yii2\recaptcha\ReCaptchaValidator3;
 
 /**
  * This is the model class for table "callback".
@@ -19,6 +20,8 @@ class Callback extends AbstractModel
     public static $entityName = 'Callback';
 
     public static $entitiesName = 'Callbacks';
+
+    public $reCaptcha;
 
     public static $notify = 'Уведомление о заказе обратного звонка';
 
@@ -36,6 +39,11 @@ class Callback extends AbstractModel
                 return '+'.str_replace(['+', '(', ')', '-', ' '], '', $value);
             }],
             ['phone', 'match', 'pattern' => '/^\+7\d{10,10}$/i', 'enableClientValidation' => false],
+            [['reCaptcha'], ReCaptchaValidator3::className(),
+              'threshold' => 0.5,
+              'action' => 'homepage',
+              'message' => 'Ошибка проверки подлинности пользователя. Обновите страницу и попробуйте ещё раз.',
+            ],
         ];
     }
 

@@ -8,6 +8,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\widgets\Pjax;
+use himiklab\yii2\recaptcha\ReCaptcha3;
 
 Pjax::begin();
 
@@ -35,6 +36,9 @@ if ($model) {
 ]); ?>
 
 <?= $form->field($model['restore'], '[restore]email_or_phone')->textInput()->label('Электронная почта или телефон') ?>
+
+<?= $form->field($model['restore'], '[restore]reCaptcha', ['template' => '{input}{error}'])->widget(ReCaptcha3::className(), ['action' => 'homepage']) ?>
+
 
 <div class="form-group">
     <div>

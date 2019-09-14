@@ -4,6 +4,7 @@ namespace app\models\ActiveRecord;
 
 use Yii;
 use app\models\ActiveRecord\AbstractModel;
+use himiklab\yii2\recaptcha\ReCaptchaValidator3;
 
 /**
  * This is the model class for table "feedback".
@@ -23,6 +24,8 @@ class Feedback extends AbstractModel
 
     public static $notify = 'Уведомление формы обратной связи';
 
+    public $reCaptcha;
+
     /**
      * {@inheritdoc}
      */
@@ -33,6 +36,11 @@ class Feedback extends AbstractModel
             [['message'], 'string'],
             [['f_name', 'phone', 'email'], 'string', 'max' => 255],
             [['f_name', 'phone', 'email', 'message'], 'required'],
+            [['reCaptcha'], ReCaptchaValidator3::className(),
+              'threshold' => 0.5,
+              'action' => 'homepage',
+              'message' => 'Ошибка проверки подлинности пользователя. Обновите страницу и попробуйте ещё раз.',
+            ],
         ];
     }
 

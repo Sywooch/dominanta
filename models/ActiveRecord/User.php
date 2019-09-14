@@ -6,6 +6,7 @@ use Yii;
 use yii\web\IdentityInterface;
 use yii\helpers\Html;
 use yii\helpers\Url;
+use himiklab\yii2\recaptcha\ReCaptchaValidator3;
 use app\components\helpers\ModelsHelper;
 use app\models\ActiveRecord\AbstractModel;
 
@@ -36,6 +37,8 @@ class User extends AbstractModel implements IdentityInterface
 
     public $remember_me, $_user, $repassword, $agree, $email_or_phone, $old_password, $new_password;
 
+    public $reCaptcha;
+
     const SCENARIO_LOGIN = 'login';
     const SCENARIO_ADD = 'add';
     const SCENARIO_EDIT = 'edit';
@@ -59,8 +62,8 @@ class User extends AbstractModel implements IdentityInterface
         $scenarios[self::SCENARIO_EDIT] = ['email', 'realname', 'phone', 'role_id'];
         $scenarios[self::SCENARIO_SETTINGS] = ['timeZone', 'language', 'notify'];
         $scenarios[self::SCENARIO_SEARCH] = ['email', 'realname', 'role_id', 'create_time', 'last_activity', 'language', 'timeZone', 'phone'];
-        $scenarios[self::SCENARIO_REG] = ['email', 'realname', 'phone', 'password', 'repassword', 'agree'];
-        $scenarios[self::SCENARIO_RESTORE] = ['email_or_phone'];
+        $scenarios[self::SCENARIO_REG] = ['email', 'realname', 'phone', 'password', 'repassword', 'agree', 'reCaptcha'];
+        $scenarios[self::SCENARIO_RESTORE] = ['email_or_phone', 'reCaptcha'];
         $scenarios[self::SCENARIO_ACCOUNT] = ['email', 'realname', 'phone'];
         $scenarios[self::SCENARIO_ACCOUNT_PASSWORD] = ['new_password', 'old_password'];
 
@@ -102,6 +105,12 @@ class User extends AbstractModel implements IdentityInterface
             ['email_or_phone', 'filter', 'filter' => function ($value) {
                 return str_replace(['+', '(', ')', ' '], '', $value);
             }, 'on' => self::SCENARIO_RESTORE],
+            [['reCaptcha'], ReCaptchaValidator3::className(),
+              'threshold' => 0.5,
+              'action' => 'homepage',
+              'on' => [self::SCENARIO_RESTORE, self::SCENARIO_REG],
+              'message' => 'Ошибка проверки подлинности пользователя. Обновите страницу и попробуйте ещё раз.',
+            ],
         ];
     }
 
