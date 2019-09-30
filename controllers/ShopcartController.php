@@ -53,6 +53,7 @@ class ShopcartController extends AbstractController
      */
     public function beforeAction($action)
     {
+    echo $action->id;
         if ($action->id == 'result' || $action->id == 'success' || $action->id ==  'fail') {
             $this->enableCsrfValidation = false;
         }
