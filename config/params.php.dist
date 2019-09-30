@@ -5,4 +5,10 @@ return [
         'siteKey' => '',
         'secret'  => '',
     ],
+    'robokassa' => [
+        'sMerchantLogin' => '',
+        'sMerchantPass1' => '',
+        'sMerchantPass2' => '',
+        'isTest' => true,
+    ],
 ];

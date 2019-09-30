@@ -30,5 +30,6 @@ tests/_output/*
 tests/_support/_generated
 
 /config/db.php
+/config/params.php
 /web/sitemap.xml
 /web/yandex-market.xml
