@@ -51,6 +51,18 @@ class ShopcartController extends AbstractController
     /**
      * @inheritdoc
      */
+    public function beforeAction($action)
+    {
+        if ($action->id == 'result' || $action->id == 'success' || $action->id ==  'fail') {
+            $this->enableCsrfValidation = false;
+        }
+
+        return parent::beforeAction($action);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function behaviors()
     {
         return [
@@ -350,7 +362,7 @@ class ShopcartController extends AbstractController
 
                 /** @var \robokassa\Merchant $merchant */
                 $merchant = Yii::$app->get('robokassa');
-                return $merchant->payment($online_payment->amount, $online_payment->id, 'Оплата заказа '.$model->id, null, $model->email);
+                return $merchant->payment($online_payment->amount, $online_payment->id, 'Оплата заказа №'.$model->id, null, $model->email);
             }
 
             Yii::$app->session->setFlash('success', '<i class="fa fa-check"></i> '.Yii::t('app', 'Заказ №'.$model->id.' оформлен!'));
