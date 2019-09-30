@@ -197,8 +197,8 @@ class ShopcartController extends AbstractController
 
         $shopcart_form = $shopcart ? $this->getShopcartForm($shopcart) : '';
 
-        if ($shopcart_form == 'redirect') {
-            return $this->redirect(['/shopcart/processed'], 301);
+        if (!is_string($shopcart_form)) {
+            return $shopcart_form;
         }
 
         $this->page = Page::findByAddress('/shopcart/view', false);
@@ -354,7 +354,7 @@ class ShopcartController extends AbstractController
             }
 
             Yii::$app->session->setFlash('success', '<i class="fa fa-check"></i> '.Yii::t('app', 'Заказ №'.$model->id.' оформлен!'));
-            return 'redirect';
+            return $this->redirect(['/shopcart/processed'], 301);
         }
 
         $total = 0;
