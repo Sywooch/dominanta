@@ -30,6 +30,27 @@ class ShopcartController extends AbstractController
     /**
      * @inheritdoc
      */
+    public function actions()
+    {
+        return [
+            'result' => [
+                'class' => '\robokassa\ResultAction',
+                'callback' => [$this, 'resultCallback'],
+            ],
+            'success' => [
+                'class' => '\robokassa\SuccessAction',
+                'callback' => [$this, 'successCallback'],
+            ],
+            'fail' => [
+                'class' => '\robokassa\FailAction',
+                'callback' => [$this, 'failCallback'],
+            ],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function behaviors()
     {
         return [
@@ -299,19 +320,38 @@ class ShopcartController extends AbstractController
             }
 
             $model->save();
+            $amount = 0;
 
             foreach ($shopcart AS $item) {
+                $item_end_price = $item->product->price - ($item->product->price * ($item->product->discount / 100));
+
                 ShopOrderPosition::createAndSave([
                     'order_id'   => $model->id,
                     'product_id' => $item->product_id,
                     'quantity'   => $item->quantity,
-                    'price'      => $item->product->price - ($item->product->price * ($item->product->discount / 100)),
+                    'price'      => $item_end_price,
                 ]);
 
                 $item->delete();
+
+                $amount += $item->quantity * $item_end_price;
             }
 
             $model->sendEmails();
+
+            if (!$model->payment_type) {
+                $online_payment = ShopPayment::createAndSave([
+                    'order_id' => $model->id,
+                    'status' => ShopPayment::STATUS_INACTIVE,
+                    'amount' => $amount,
+                    'payed' => 0,
+                    'hash' => '',
+                ]);
+
+                /** @var \robokassa\Merchant $merchant */
+                $merchant = Yii::$app->get('robokassa');
+                return $merchant->payment($online_payment->amount, $online_payment->id, 'Оплата заказа '.$model->id, null, $model->email);
+            }
 
             Yii::$app->session->setFlash('success', '<i class="fa fa-check"></i> '.Yii::t('app', 'Заказ №'.$model->id.' оформлен!'));
             return 'redirect';

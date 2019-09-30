@@ -27,6 +27,14 @@ $config = [
             'siteKeyV3' => isset($params['reCaptcha']) && isset($params['reCaptcha']['siteKey']) ? $params['reCaptcha']['siteKey'] : '',
             'secretV3'  => isset($params['reCaptcha']) && isset($params['reCaptcha']['secret']) ? $params['reCaptcha']['secret'] : '',
         ],
+        'robokassa' => [
+            'class' => '\robokassa\Merchant',
+            'baseUrl' => 'https://auth.robokassa.ru/Merchant/Index.aspx',
+            'sMerchantLogin' => isset($params['robokassa']) && isset($params['robokassa']['sMerchantLogin']) ? $params['robokassa']['sMerchantLogin'] : '',
+            'sMerchantPass1' => isset($params['robokassa']) && isset($params['robokassa']['sMerchantPass1']) ? $params['robokassa']['sMerchantPass1'] : '',
+            'sMerchantPass2' => isset($params['robokassa']) && isset($params['robokassa']['sMerchantPass2']) ? $params['robokassa']['sMerchantPass2'] : '',
+            'isTest' => isset($params['robokassa']) && isset($params['robokassa']['isTest']) ? $params['robokassa']['isTest'] : '',
+        ],
         'formatter' => [
             'defaultTimeZone' => 'Europe/Moscow',
             'dateFormat' => 'dd.MM.yyyy',
