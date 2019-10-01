@@ -112,8 +112,8 @@ class ShopcartController extends AbstractController
     {
         //$order = $this->getOrder($nInvId, $su)
 
-        Yii::$app->session->setFlash('danger', '<i class="fa fa-ban"></i> '.Yii::t('app', 'Оплата по заказу №'.$nInvId.' отменена!'.print_r($shp, 1)));
-        return $this->redirect(['/shopcart/processed'], 301);
+        Yii::$app->session->setFlash('danger', '<i class="fa fa-ban"></i> '.Yii::t('app', 'Оплата по заказу №'.$nInvId.' отменена! '.$nOutSum.print_r($shp, 1)));
+        return $this->redirect(['/shopcart/error'], 301);
     }
 
     public static function getShopcartData()
@@ -295,8 +295,38 @@ class ShopcartController extends AbstractController
         $replace = [
             '{{{breadcrumbs}}}' => $this->breadcrumbs($this->page->title),
             '{{{page_title}}}' => $this->page->title,
-            '{{{messagetype}}}' => Yii::$app->session->hasFlash('success') ? 'success' : 'danger',
-            '{{{message}}}' => Yii::$app->session->hasFlash('success') ? Yii::$app->session->getFlash('success') : Yii::$app->session->getFlash('danger'),
+            '{{{messagetype}}}' => 'success',
+            '{{{message}}}' => Yii::$app->session->getFlash('success'),
+        ];
+
+        return str_replace(array_keys($replace), $replace, $rendered_page);
+    }
+
+    protected function error()
+    {
+        $this->page = Page::findByAddress('/shopcart/processed', false);
+
+        if ($this->page->template) {
+            $this->layout = $this->page->template->layout;
+        }
+
+        $this->page->title = 'Ошибка оплаты заказа';
+
+        $site_options = Yii::$app->site_options;
+        $request = Yii::$app->getRequest();
+        $rendered_page = $this->render('page', [
+            'page' => $this->page,
+            'controller' => $this,
+            'site_options' => $site_options,
+            'csrfParam' => $request->csrfParam,
+            'csrfToken' => $request->getCsrfToken(),
+        ]);
+
+        $replace = [
+            '{{{breadcrumbs}}}' => $this->breadcrumbs($this->page->title),
+            '{{{page_title}}}' => $this->page->title,
+            '{{{messagetype}}}' => 'danger',
+            '{{{message}}}' => Yii::$app->session->getFlash('danger'),
         ];
 
         return str_replace(array_keys($replace), $replace, $rendered_page);
