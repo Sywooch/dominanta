@@ -53,7 +53,6 @@ class ShopcartController extends AbstractController
      */
     public function beforeAction($action)
     {
-   // echo $action->id; die();
         if ($action->id == 'result' || $action->id == 'success' || $action->id ==  'fail') {
             $this->enableCsrfValidation = false;
         }
@@ -85,6 +84,36 @@ class ShopcartController extends AbstractController
                 ],
             ],*/
         ];
+    }
+
+    protected function getOrder($id)
+    {
+        return ShopOrder::findOne($id);
+    }
+
+    /**
+     * Callback.
+     * @param \robokassa\Merchant $merchant merchant.
+     * @param integer $nInvId invoice ID.
+     * @param float $nOutSum sum.
+     * @param array $shp user attributes.
+         */
+    public function successCallback($merchant, $nInvId, $nOutSum, $shp)
+    {
+        $this->loadModel($nInvId)->updateAttributes(['status' => Invoice::STATUS_ACCEPTED]);
+        return $this->goBack();
+    }
+    public function resultCallback($merchant, $nInvId, $nOutSum, $shp)
+    {
+        $this->loadModel($nInvId)->updateAttributes(['status' => Invoice::STATUS_SUCCESS]);
+        return 'OK' . $nInvId;
+    }
+    public function failCallback($merchant, $nInvId, $nOutSum, $shp)
+    {
+        //$order = $this->getOrder($nInvId, $su)
+
+        Yii::$app->session->setFlash('danger', '<i class="fa fa-check"></i> '.Yii::t('app', 'Оплата по заказу №'.$nInvId.' отменена!'.print_r($shp, 1)));
+        return $this->redirect(['/shopcart/processed'], 301);
     }
 
     public static function getShopcartData()
