@@ -92,7 +92,7 @@ class ShopcartController extends AbstractController
 
     public function failCallback($merchant, $nInvId, $nOutSum, $shp)
     {
-        $payment = $this->getOrder($nInvId, $nOutSum);
+        $payment = $this->getPayment($nInvId, $nOutSum);
         $payment->status = ShopPayment::STATUS_DELETED;
         $payment->save();
 
