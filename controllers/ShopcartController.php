@@ -80,13 +80,20 @@ class ShopcartController extends AbstractController
          */
     public function successCallback($merchant, $nInvId, $nOutSum, $shp)
     {
-        $this->loadModel($nInvId)->updateAttributes(['status' => Invoice::STATUS_ACCEPTED]);
-        return $this->goBack();
+        $payment = $this->getPayment($nInvId, $nOutSum);
+        $payment->payed = $nOutSum;
+        $payment->save();
+
+        Yii::$app->session->setFlash('success', '<i class="fa fa-check"></i> Заказ №'.$nInvId.' успешно оформлен и оплачен!');
+        return $this->redirect(['/shopcart/processes'], 301);
     }
 
     public function resultCallback($merchant, $nInvId, $nOutSum, $shp)
     {
-        $this->loadModel($nInvId)->updateAttributes(['status' => Invoice::STATUS_SUCCESS]);
+        $payment = $this->getPayment($nInvId, $nOutSum);
+        $payment->status = ShopPayment::STATUS_ACTIVE;
+        $payment->save();
+
         return 'OK' . $nInvId;
     }
 
