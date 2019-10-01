@@ -60,35 +60,15 @@ class ShopcartController extends AbstractController
         return parent::beforeAction($action);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
+    protected function getPayment($id, $amount)
     {
-        return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout'],
-                'rules' => [
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
-            /*'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
-                ],
-            ],*/
-        ];
-    }
+        $payment = ShopPayment::findOne(['order_id' => $id, 'amount' => $amount, 'status' => ShopPayment::STATUS_INACTIVE]);
 
-    protected function getOrder($id)
-    {
-        return ShopOrder::findOne($id);
+        if (!$payment) {
+            throw new NotFoundHttpException('Заказ не найден');
+        }
+
+        return $payment;
     }
 
     /**
@@ -103,17 +83,60 @@ class ShopcartController extends AbstractController
         $this->loadModel($nInvId)->updateAttributes(['status' => Invoice::STATUS_ACCEPTED]);
         return $this->goBack();
     }
+
     public function resultCallback($merchant, $nInvId, $nOutSum, $shp)
     {
         $this->loadModel($nInvId)->updateAttributes(['status' => Invoice::STATUS_SUCCESS]);
         return 'OK' . $nInvId;
     }
+
     public function failCallback($merchant, $nInvId, $nOutSum, $shp)
     {
-        //$order = $this->getOrder($nInvId, $su)
+        $payment = $this->getOrder($nInvId, $nOutSum);
+        $payment->status = ShopPayment::STATUS_DELETED;
+        $payment->save();
 
-        Yii::$app->session->setFlash('danger', '<i class="fa fa-ban"></i> '.Yii::t('app', 'Оплата по заказу №'.$nInvId.' отменена! '.$nOutSum.print_r($shp, 1)));
+        Yii::$app->session->setFlash('danger', '<i class="fa fa-ban"></i> Оплата по заказу №'.$nInvId.' отменена!<br />'.Html::a('Попробовать провести оплату снова', '/shopcart/payment?order_id='.$nInvId));
         return $this->redirect(['/shopcart/error'], 301);
+    }
+
+    protected function payment()
+    {
+        $request = Yii::$app->request;
+        $order_id = get('order_id', 0);
+
+        $order =  ShopOrder::findOne(['id' => $order_id, 'status' => ShopOrder::STATUS_ACTIVE, 'payment_type' => 0]);
+
+        if (!$order) {
+            throw new NotFoundHttpException('Заказ не найден');
+        }
+
+        $amount = 0;
+        $payed  = 0;
+
+        foreach ($order->shopOrderPosition AS $pos) {
+            $amount += $pos->price * $pos->quantity;
+        }
+
+        foreach ($order->shopPayments AS $pay) {
+            $amount -= $pay->payed;
+        }
+
+        if (!$amount) {
+            throw new NotFoundHttpException('Заказ не найден');
+        }
+
+        $online_payment = ShopPayment::createAndSave([
+            'order_id' => $order->id,
+            'status' => ShopPayment::STATUS_INACTIVE,
+            'amount' => $amount,
+            'payed' => 0,
+            'hash' => '',
+        ]);
+
+        /** @var \robokassa\Merchant $merchant */
+        $merchant = Yii::$app->get('robokassa');
+        return $merchant->payment($amount, $order->id, 'Оплата заказа №'.$order->id, null, $order->email);
     }
 
     public static function getShopcartData()
@@ -423,7 +446,7 @@ class ShopcartController extends AbstractController
 
                 /** @var \robokassa\Merchant $merchant */
                 $merchant = Yii::$app->get('robokassa');
-                return $merchant->payment($online_payment->amount, $online_payment->id, 'Оплата заказа №'.$model->id, null, $model->email);
+                return $merchant->payment($online_payment->amount, $model->id, 'Оплата заказа №'.$model->id, null, $model->email);
             }
 
             Yii::$app->session->setFlash('success', '<i class="fa fa-check"></i> '.Yii::t('app', 'Заказ №'.$model->id.' оформлен!'));
