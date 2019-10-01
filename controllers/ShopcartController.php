@@ -95,7 +95,7 @@ class ShopcartController extends AbstractController
         $payment->order->sendEmails();
 
         Yii::$app->session->setFlash('success', '<i class="fa fa-check"></i> Заказ №'.$nInvId.' успешно оформлен и оплачен!');
-        return $this->redirect(['/shopcart/processes'], 301);
+        return $this->redirect(['/shopcart/processed'], 301);
     }
 
     public function resultCallback($merchant, $nInvId, $nOutSum, $shp)
