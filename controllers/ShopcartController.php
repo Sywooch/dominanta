@@ -103,7 +103,7 @@ class ShopcartController extends AbstractController
     protected function payment()
     {
         $request = Yii::$app->request;
-        $order_id = get('order_id', 0);
+        $order_id = $request->get('order_id', 0);
 
         $order =  ShopOrder::findOne(['id' => $order_id, 'status' => ShopOrder::STATUS_ACTIVE, 'payment_type' => 0]);
 
