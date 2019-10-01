@@ -112,7 +112,7 @@ class ShopcartController extends AbstractController
     {
         //$order = $this->getOrder($nInvId, $su)
 
-        Yii::$app->session->setFlash('danger', '<i class="fa fa-check"></i> '.Yii::t('app', 'Оплата по заказу №'.$nInvId.' отменена!'.print_r($shp, 1)));
+        Yii::$app->session->setFlash('danger', '<i class="fa fa-ban"></i> '.Yii::t('app', 'Оплата по заказу №'.$nInvId.' отменена!'.print_r($shp, 1)));
         return $this->redirect(['/shopcart/processed'], 301);
     }
 
@@ -295,7 +295,8 @@ class ShopcartController extends AbstractController
         $replace = [
             '{{{breadcrumbs}}}' => $this->breadcrumbs($this->page->title),
             '{{{page_title}}}' => $this->page->title,
-            '{{{message}}}' => Yii::$app->session->getFlash('success'),
+            '{{{messagetype}}}' => Yii::$app->session->hasFlash('success') ? 'success' : 'danger',
+            '{{{message}}}' => Yii::$app->session->hasFlash('success') ? Yii::$app->session->getFlash('success') : Yii::$app->session->getFlash('danger'),
         ];
 
         return str_replace(array_keys($replace), $replace, $rendered_page);
