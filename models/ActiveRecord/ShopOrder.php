@@ -197,7 +197,7 @@ class ShopOrder extends AbstractModel
                 'to_email'  => $notify_user->email,
                 'subject'   => 'Поступила оплата по заказу №'.$this->id.' на сайте '.ucfirst($_SERVER['SERVER_NAME']),
                 'body_text' => $this->id,
-                'body_html' => $this->id.$products_list,
+                'body_html' => $this->id,
             ], 'order_admin_payment');
         }
     }
