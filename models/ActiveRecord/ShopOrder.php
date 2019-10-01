@@ -189,6 +189,19 @@ class ShopOrder extends AbstractModel
         }
     }
 
+    public function sendPaymentNotify() {
+        $notify_users = $this->getUsersForNotify();
+
+        foreach ($notify_users AS $notify_user) {
+            Mail::createAndSave([
+                'to_email'  => $notify_user->email,
+                'subject'   => 'Поступила оплата по заказу №'.$this->id.' на сайте '.ucfirst($_SERVER['SERVER_NAME']),
+                'body_text' => $this->id,
+                'body_html' => $this->id.$products_list,
+            ], 'order_admin_payment');
+        }
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */

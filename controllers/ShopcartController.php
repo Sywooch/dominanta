@@ -80,7 +80,15 @@ class ShopcartController extends AbstractController
          */
     public function successCallback($merchant, $nInvId, $nOutSum, $shp)
     {
-        $payment = $this->getPayment($nInvId, $nOutSum);
+        $payment = ShopPayment::find()->where(['order_id' => $nInvId])
+                                      ->andWhere(['amount' => $nOutSum])
+                                      ->andWhere(['>=', 'status', ShopPayment::STATUS_INACTIVE])
+                                      ->one();
+
+        if (!$payment) {
+            throw new NotFoundHttpException('Заказ не найден');
+        }
+
         $payment->payed = $nOutSum;
         $payment->save();
 
@@ -95,6 +103,8 @@ class ShopcartController extends AbstractController
         $payment = $this->getPayment($nInvId, $nOutSum);
         $payment->status = ShopPayment::STATUS_ACTIVE;
         $payment->save();
+
+        $payment->order->sendPaymentNotify();
 
         return 'OK' . $nInvId;
     }
