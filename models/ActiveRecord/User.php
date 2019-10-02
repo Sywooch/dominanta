@@ -159,7 +159,7 @@ class User extends AbstractModel implements IdentityInterface
     public function eventAfterInsert()
     {
         if ($this->status == self::STATUS_INACTIVE) {
-            $link = Url::to(['/activate', 'token' => $this->access_token], true);
+            $link = Url::to(['/activate/'.$this->access_token], true);
 
 
             Mail::createAndSave([
