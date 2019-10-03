@@ -63,11 +63,15 @@ if (file_exists($current_photo)) {
             color: #fff !important;
         }
 
-        .page_title, .page_title h1 {
+        .page_title {
           color: #fff;
           margin-top: 370px;
           position: absolute;
           z-index: 20;
+        }
+
+        .page_title h1 {
+          color: #fff;
         }
 
         .container_content_block {
