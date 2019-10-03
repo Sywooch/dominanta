@@ -527,7 +527,7 @@ span.top_map_city {
     text-decoration: underline;
 }
 
-.page_title {
+.page_title, .page_title h1 {
     font-weight: bold;
     font-size: 40px;
     color: #444444;
