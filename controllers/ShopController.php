@@ -832,7 +832,7 @@ class ShopController extends AbstractController
         return $url;
     }
 
-    protected function search()
+    public function actionSearch()
     {
         $searchtext = Yii::$app->request->get('searchtext', false);
         $searchtag  = Yii::$app->request->get('tag', false);

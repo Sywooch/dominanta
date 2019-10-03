@@ -30,6 +30,7 @@ return [
 
    // ''          => 'site/index',
     'shop' => 'shop/index',
+    'shop/search' => 'shop/search',
     'shop/<url:.*>' => 'shop/index',
     'shopcart' => 'shopcart/index',
     'shopcart/result' => 'shopcart/result',
