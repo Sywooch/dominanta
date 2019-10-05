@@ -8,7 +8,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\widgets\Pjax;
-use himiklab\yii2\recaptcha\ReCaptcha3;
+use himiklab\yii2\recaptcha\ReCaptcha2;
 
 Pjax::begin();
 
@@ -29,7 +29,7 @@ if ($model) {
 
 <?= $form->field($model, 'phone') ?>
 
-<?= $form->field($model, 'reCaptcha', ['template' => '{input}{error}'])->widget(ReCaptcha3::className(), ['action' => 'homepage']) ?>
+<?= $form->field($model, 'reCaptcha', ['template' => '{input}{error}'])->widget(ReCaptcha2::className(), ['action' => 'homepage']) ?>
 
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
