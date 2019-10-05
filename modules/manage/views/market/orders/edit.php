@@ -53,7 +53,7 @@ if (!$model) {
                 $sum_total += $pos_amount;
             ?>
             <tr>
-                <td><?= Html::a(Html::encode($position->product->product_name), $position->product->productLink, ['target' => '_blank']) ?></td>
+                <td><?= Html::a(Html::encode($position->product->product_name), $position->product->productLink, ['target' => '_blank', 'data' => ['pjax' => false]]) ?></td>
                 <td class="text-right"><?= $position->quantity ?></td>
                 <td class="text-right"><?= Yii::$app->formatter->asDecimal($position->price, 2) ?> <?= new Icon('ruble') ?></td>
                 <td class="text-right"><?= Yii::$app->formatter->asDecimal($pos_amount, 2) ?> <?= new Icon('ruble') ?></td>
