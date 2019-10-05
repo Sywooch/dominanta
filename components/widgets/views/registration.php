@@ -8,7 +8,7 @@
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 use yii\widgets\Pjax;
-use himiklab\yii2\recaptcha\ReCaptcha3;
+use himiklab\yii2\recaptcha\ReCaptcha2;
 
 Pjax::begin();
 
@@ -35,7 +35,7 @@ if ($model) {
 
 <?= $form->field($model, 'repassword')->passwordInput()->label('Подтверждение пароля') ?>
 
-<?= $form->field($model, 'reCaptcha', ['template' => '{input}{error}'])->widget(ReCaptcha3::className(), ['action' => 'homepage']) ?>
+<?= $form->field($model, 'reCaptcha', ['template' => '{input}{error}'])->widget(ReCaptcha2::className()) ?>
 
 <?= $form->field($model, 'agree')->checkbox([
     'template' => "{input} {label}<div>{error}</div>",

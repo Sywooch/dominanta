@@ -5,7 +5,7 @@ namespace app\models\ActiveRecord;
 use Yii;
 use yii\helpers\Html;
 use app\models\ActiveRecord\AbstractModel;
-use himiklab\yii2\recaptcha\ReCaptchaValidator3;
+use himiklab\yii2\recaptcha\ReCaptchaValidator2;
 
 /**
  * This is the model class for table "product_review".
@@ -64,11 +64,8 @@ class ProductReview extends AbstractModel
             [['approver'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['approver' => 'id']],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['product_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
-            [['reCaptcha'], ReCaptchaValidator3::className(),
-              'threshold' => 0.5,
-              'action' => 'homepage',
-              'on' => [self::SCENARIO_ADD],
-              'message' => 'Ошибка проверки подлинности пользователя. Обновите страницу и попробуйте ещё раз.',
+            [['reCaptcha'], ReCaptchaValidator2::className(),
+              'uncheckedMessage' => 'Ошибка проверки подлинности пользователя. Обновите страницу и попробуйте ещё раз.',
             ],
         ];
     }

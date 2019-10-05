@@ -6,7 +6,7 @@ use Yii;
 use yii\web\IdentityInterface;
 use yii\helpers\Html;
 use yii\helpers\Url;
-use himiklab\yii2\recaptcha\ReCaptchaValidator3;
+use himiklab\yii2\recaptcha\ReCaptchaValidator2;
 use app\components\helpers\ModelsHelper;
 use app\models\ActiveRecord\AbstractModel;
 
@@ -105,11 +105,8 @@ class User extends AbstractModel implements IdentityInterface
             ['email_or_phone', 'filter', 'filter' => function ($value) {
                 return str_replace(['+', '(', ')', ' '], '', $value);
             }, 'on' => self::SCENARIO_RESTORE],
-            [['reCaptcha'], ReCaptchaValidator3::className(),
-              'threshold' => 0.5,
-              'action' => 'homepage',
-              'on' => [self::SCENARIO_RESTORE, self::SCENARIO_REG],
-              'message' => 'Ошибка проверки подлинности пользователя. Обновите страницу и попробуйте ещё раз.',
+            [['reCaptcha'], ReCaptchaValidator2::className(),
+              'uncheckedMessage' => 'Ошибка проверки подлинности пользователя. Обновите страницу и попробуйте ещё раз.',
             ],
         ];
     }
