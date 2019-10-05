@@ -37,7 +37,8 @@ class Feedback extends AbstractModel
             [['f_name', 'phone', 'email'], 'string', 'max' => 255],
             [['f_name', 'phone', 'email', 'message'], 'required'],
             [['reCaptcha'], ReCaptchaValidator2::className(),
-              'uncheckedMessage' => 'Ошибка проверки подлинности пользователя. Обновите страницу и попробуйте ещё раз.',
+              'uncheckedMessage' => 'Подтвердите, что вы не робот.',
+              'message' => 'Ошибка проверки подлинности пользователя. Обновите страницу и попробуйте ещё раз.',
             ],
         ];
     }

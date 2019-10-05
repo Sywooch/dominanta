@@ -106,7 +106,8 @@ class User extends AbstractModel implements IdentityInterface
                 return str_replace(['+', '(', ')', ' '], '', $value);
             }, 'on' => self::SCENARIO_RESTORE],
             [['reCaptcha'], ReCaptchaValidator2::className(),
-              'uncheckedMessage' => 'Ошибка проверки подлинности пользователя. Обновите страницу и попробуйте ещё раз.',
+              'uncheckedMessage' => 'Подтвердите, что вы не робот.',
+              'message' => 'Ошибка проверки подлинности пользователя. Обновите страницу и попробуйте ещё раз.',
             ],
         ];
     }

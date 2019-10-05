@@ -40,7 +40,8 @@ class Callback extends AbstractModel
             }],
             ['phone', 'match', 'pattern' => '/^\+7\d{10,10}$/i', 'enableClientValidation' => false],
             [['reCaptcha'], ReCaptchaValidator2::className(),
-              'uncheckedMessage' => 'Ошибка проверки подлинности пользователя. Обновите страницу и попробуйте ещё раз.',
+              'uncheckedMessage' => 'Подтвердите, что вы не робот.',
+              'message' => 'Ошибка проверки подлинности пользователя. Обновите страницу и попробуйте ещё раз.',
             ],
         ];
     }
