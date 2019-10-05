@@ -557,7 +557,7 @@ class ShopcartController extends AbstractController
                 $item->delete();
             }
 
-            $cnt++;
+            $cnt += $item->quantity;
             $sum += ($item->product->price - ($item->product->price * ($item->product->discount / 100))) * $item['quantity'];
         }
 
@@ -619,7 +619,7 @@ class ShopcartController extends AbstractController
                 $item->delete();
             }
 
-            $cnt++;
+            $cnt += $item->quantity;
             $sum += ($item->product->price - ($item->product->price * ($item->product->discount / 100))) * $item['quantity'];
         }
 
@@ -696,7 +696,7 @@ class ShopcartController extends AbstractController
                 $item->delete();
             }
 
-            $cnt++;
+            $cnt += $item->quantity;
             $sum += ($item->product->price - ($item->product->price * ($item->product->discount / 100))) * $item['quantity'];
         }
 
