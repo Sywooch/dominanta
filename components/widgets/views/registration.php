@@ -29,7 +29,7 @@ if ($model) {
 
 <?= $form->field($model, 'email')->textInput()->label('Ваша электронная почта') ?>
 
-<?= $form->field($model, 'phone', ['enableClientValidation' => false])->textInput()->label('Ваша телефон') ?>
+<?= $form->field($model, 'phone', ['enableClientValidation' => false])->textInput()->label('Ваш телефон') ?>
 
 <?= $form->field($model, 'password')->passwordInput() ?>
 
