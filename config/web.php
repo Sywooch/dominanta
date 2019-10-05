@@ -24,8 +24,10 @@ $config = [
         'reCaptcha' => [
             'name' => 'reCaptcha',
             'class' => 'himiklab\yii2\recaptcha\ReCaptchaConfig',
-            'siteKeyV3' => isset($params['reCaptcha']) && isset($params['reCaptcha']['siteKey']) ? $params['reCaptcha']['siteKey'] : '',
-            'secretV3'  => isset($params['reCaptcha']) && isset($params['reCaptcha']['secret']) ? $params['reCaptcha']['secret'] : '',
+            //'siteKeyV3' => isset($params['reCaptcha']) && isset($params['reCaptcha']['siteKey']) ? $params['reCaptcha']['siteKey'] : '',
+            //'secretV3'  => isset($params['reCaptcha']) && isset($params['reCaptcha']['secret']) ? $params['reCaptcha']['secret'] : '',
+            'siteKeyV2' => isset($params['reCaptcha']) && isset($params['reCaptcha']['siteKey']) ? $params['reCaptcha']['siteKey'] : '',
+            'secretV2'  => isset($params['reCaptcha']) && isset($params['reCaptcha']['secret']) ? $params['reCaptcha']['secret'] : '',
         ],
         'robokassa' => [
             'class' => '\robokassa\Merchant',
