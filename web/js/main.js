@@ -1,6 +1,9 @@
 var mainPage = {
     displayAccountMenu: false,
     displayDropdownMenu: false,
+    mouseOverIcon: false,
+    mouseOverMenu: false,
+    menuInit: false,
     loadEvent: function() {
         mainPage.loadTrigger(this);
     },
@@ -12,16 +15,32 @@ var mainPage = {
         $("#user-phone").mask("+7(999) 999-99-99");
         $("#callback-phone").mask("+7(999) 999-99-99");
 
-        $('.menu_icon').on('click', this.showDropdownMenuEvent);
+        $('.menu_icon, .dropdown_menu').on('mouseover', this.showDropdownMenuEvent);
+        $('.menu_icon, .dropdown_menu').on('mouseout', this.hideDropdownMenuEvent);
         $('.dropdown_left_col a').on('mouseover', this.showDropdownSubmenuEvent);
     },
     showDropdownMenuEvent: function() {
         mainPage.showDropdownMenuTrigger(this);
         return false;
     },
+    hideDropdownMenuEvent: function() {
+        mainPage.hideDropdownMenuTrigger(this);
+        return false;
+    },
     showDropdownMenuTrigger: function(obj) {
+        if (this.menuInit) {
+            clearTimeout(this.menuInit);
+            this.menuInit = false;
+        }
+
+        if ($(obj).hasClass('menu_icon')) {
+            this.mouseOverIcon = true;
+        } else {
+            this.mouseOverMenu = true;
+        }
+
         if (this.displayDropdownMenu) {
-            this.hideDropdownMenu();
+            //this.hideDropdownMenu();
             return;
         }
 
@@ -29,13 +48,25 @@ var mainPage = {
             mainPage.displayDropdownMenu = true;
         });
     },
-    hideDropdownMenu: function() {
-        if (!this.displayDropdownMenu) {
+    hideDropdownMenuTrigger: function(obj) {
+        if ($(obj).hasClass('menu_icon')) {
+            this.mouseOverIcon = false;
+        } else {
+            this.mouseOverMenu = false;
+        }
+
+        if (this.mouseOverIcon || this.mouseOverMenu) {
             return;
         }
 
-        $('.dropdown_menu').fadeOut(300, function() {
+        if (!this.menuInit) {
+            this.menuInit = setTimeout('mainPage.hideDropdownMenu()', 150);
+        }
+    },
+    hideDropdownMenu: function() {
+        $('.dropdown_menu').fadeOut(150, function() {
             mainPage.displayDropdownMenu = false;
+            mainPage.menuInit = false;
         });
     },
     showDropdownSubmenuEvent: function() {
@@ -55,11 +86,11 @@ var mainPage = {
         if (!$(e.target).closest("#account_menu").length && this.displayAccountMenu) {
             this.hideAccountMenu();
         }
-
+/*
         if (!$(e.target).closest(".dropdown_menu").length && this.displayDropdownMenu) {
             this.hideDropdownMenu();
         }
-
+*/
         //e.stopPropagation();
     },
     displayAccountMenuEvent: function() {
