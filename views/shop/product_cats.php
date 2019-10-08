@@ -26,7 +26,7 @@ if ($links) {
             </div>
             <div class="product_category_item_header">
                 <?= (!Yii::$app->user->isGuest && Yii::$app->user->identity->rules['ProductCategory']['is_edit']) ? Html::a(new Icon('pencil'), ['/manage/market/categories/edit', 'id' => $category['id']], ['target' => '_blank']) : '' ?>
-                <?= $category['items'] ? Html::encode($category['name']) : Html::a(Html::encode($category['name']), $category['link']) ?>
+                <?= Html::a(Html::encode($category['name']), $category['link']) ?>
             </div>
             <div class="product_category_item_subcats">
                 <?php for ($i = 0; $i < 5 && $i < count($category['items']); $i++) { ?>
