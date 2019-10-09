@@ -1098,14 +1098,8 @@ span.product_property_value {
     border: 1px solid #d7d7d7;
     border-bottom: none;
     border-radius: 0px;
-    padding: 0px;
-    min-height: 610px;
-}
-
-@media (max-width: 768px) {
-  .product_category_item {
-      min-height: 0px;
-  }
+    padding: 0px 0px 20px;
+/*    min-height: 610px;*/
 }
 
 .product_category_item_image {

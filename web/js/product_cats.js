@@ -12,15 +12,18 @@ var productCats = {
     {
         var id = $(obj).data('id');
 
-        if ($('#hidden_subcats_' + id).hasClass('show_category')) {
-            $('#hidden_subcats_' + id).slideUp();
-            $('#hidden_subcats_' + id).removeClass('show_category');
-        } else {
-            $('#hidden_subcats_' + id).slideDown();
-            $('#hidden_subcats_' + id).addClass('show_category');
-        }
+        $('.hidden_subcats_' + id).each(function(){
+            if ($(this).hasClass('show_category')) {
+                $(this).slideUp();
+                $(this).removeClass('show_category');
+            } else {
+                $(this).slideDown();
+                $(this).addClass('show_category');
+            }
 
-        $(obj).find('i').toggleClass('fa-angle-down fa-angle-up');
+        })
+
+        $('.product_category_item_show_all' + id).find('i').toggleClass('fa-angle-down fa-angle-up');
     }
 
 }
