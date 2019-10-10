@@ -59,8 +59,12 @@ foreach ($positions AS $position) {
             <?php } ?>
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 order_item_address">
+                    <?php if ($order->delivery_type) { ?>
                     <span class="order_item_address_label">Адрес доставки:</span>
                     <?= Html::encode($order->address) ?>
+                    <?php } else { ?>
+                    <span class="order_item_address_label">Самовывоз</span>
+                    <?php } ?>
                 </div>
             </div>
         </div>

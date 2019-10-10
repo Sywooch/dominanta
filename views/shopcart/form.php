@@ -35,7 +35,7 @@ $form = ActiveForm::begin(['id' => 'shopcart_form']);
     </div>
 </div>
 
-<div class="row">
+<div class="row<?= !$model->delivery_type ? ' hidden' : '' ?> delivery_row">
     <?php if ($addresses) { ?>
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <label class="control-label"><?= $model->getAttributeLabel('address') ?></label>
@@ -76,10 +76,10 @@ $form = ActiveForm::begin(['id' => 'shopcart_form']);
 </div>
 <div class="row custom_sel_row">
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-        <div class="custom_form_selector<?= $model->delivery_type == 0 ? ' custom_form_selector_active' : '' ?>" data-id="0">Самовывоз</div>
+        <div class="custom_form_selector<?= $model->delivery_type == 0 ? ' custom_form_selector_active' : '' ?> delivery_sel" data-id="0">Самовывоз</div>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-        <div class="custom_form_selector<?= $model->delivery_type == 1 ? ' custom_form_selector_active' : '' ?>" data-id="1">Доставка курьером</div>
+        <div class="custom_form_selector<?= $model->delivery_type == 1 ? ' custom_form_selector_active' : '' ?> delivery_sel" data-id="1">Доставка курьером</div>
     </div>
     <div class="hidden">
         <?= $form->field($model, 'delivery_type')->hiddenInput() ?>

@@ -160,6 +160,14 @@ var shopcart = {
         $(parent).find('.custom_form_selector').removeClass('custom_form_selector_active');
         $(parent).find('input').val($(obj).data('id'));
         $(obj).addClass('custom_form_selector_active');
+
+        if ($(obj).hasClass('delivery_sel')) {
+            if ($(obj).data('id')) {
+                $('.delivery_row').removeClass('hidden');
+            } else {
+                $('.delivery_row').addClass('hidden');
+            }
+        }
     },
     checkboxEvent: function() {
         shopcart.checkboxTrigger(this);

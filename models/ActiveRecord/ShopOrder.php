@@ -88,7 +88,12 @@ class ShopOrder extends AbstractModel
             [['status', 'user_id', 'payment_type', 'delivery_type'], 'integer'],
             [['add_time', 'delivery_date', 'issue_date'], 'safe'],
             ['email', 'email'],
-            [['fio', 'phone', 'email', 'address'], 'required', 'on' => [self::SCENARIO_ADD, self::SCENARIO_EDIT]],
+            [['fio', 'phone', 'email'], 'required', 'on' => [self::SCENARIO_ADD, self::SCENARIO_EDIT]],
+            [['address'], 'required', 'on' => [self::SCENARIO_ADD, self::SCENARIO_EDIT], 'when' => function($model) {
+                return $model->delivery_type;
+            }, 'whenClient' => "function (attribute, value) {
+                return $('#shoporder-delivery_type').val();
+            }"],
             [['address', 'order_comment'], 'string'],
             [['delivery_price', 'product_discount', 'delivery_discount'], 'number'],
             [['fio', 'phone', 'email'], 'string', 'max' => 255],
@@ -133,6 +138,7 @@ class ShopOrder extends AbstractModel
     {
         $this->add_time = $this->dbTime;
         $this->status = self::STATUS_ACTIVE;
+        $this->address = $this->delivery_type ? $this->address : '';
     }
 
     public function eventAfterInsert()
