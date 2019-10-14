@@ -13,6 +13,43 @@ var shopcart = {
         $('.custom_form_selector').on('click', this.customSelEvent);
         $('.custom_checkbox').on('click', this.checkboxEvent);
         $('#shoporder-phone').mask("+7(999) 999-99-99");
+        $('.product_widget .product_item_quantity_control_minus').on('click', this.minusWidgetEvent);
+        $('.product_widget .product_item_quantity_control_plus').on('click', this.plusWidgetEvent);
+    },
+    getCurrentCount: function(obj) {
+        var el = $('#product_item_quantity_control_' + $(obj).data('id') + $(obj).data('widget'));
+        return parseInt($(el).find('.product_item_quantity_control_count').html());
+    },
+    minusWidgetEvent: function() {
+        shopcart.minusWidgetTrigger(this);
+    },
+    minusWidgetTrigger: function(obj) {
+        var currentCount = this.getCurrentCount(obj);
+
+        if (currentCount == 1) {
+            return;
+        }
+
+        var newCount = currentCount - 1;
+        this.updateButtonCnt(obj, newCount);
+    },
+    plusWidgetEvent: function() {
+        shopcart.plusWidgetTrigger(this);
+    },
+    plusWidgetTrigger: function(obj) {
+        var currentCount = this.getCurrentCount(obj);
+
+        if (currentCount == 100) {
+            return;
+        }
+
+        var newCount = currentCount + 1;
+        this.updateButtonCnt(obj, newCount);
+    },
+    updateButtonCnt: function(obj, cnt) {
+        var el = $('#product_item_quantity_control_' + $(obj).data('id') + $(obj).data('widget'));
+        $(el).find('.product_item_quantity_control_count').html(cnt);
+        $('button.add_shopcart' + $(obj).data('id') + $(obj).data('widget')).data('cnt', cnt);
     },
     addEvent: function() {
         shopcart.addTrigger(this);

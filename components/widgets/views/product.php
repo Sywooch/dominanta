@@ -10,7 +10,9 @@ use Cocur\Slugify\Slugify;
 use rmrevin\yii\fontawesome\component\Icon;
 use app\models\ActiveRecord\ProductPhoto;
 
-$id = 'product_widget_carousel_'.(new Slugify())->slugify($header);
+$header_en = (new Slugify())->slugify($header);
+
+$id = 'product_widget_carousel_'.$header_en;
 $s = 0;
 $slides = [
     $s => []
@@ -79,7 +81,14 @@ foreach ($products AS $product) {
                         <i class="fa fa-ruble"></i>
                     </div>
                     <div class="product_item_button">
-                        <button class="add_shopcart" data-id="<?= $product->id ?>" data-cnt="1">В корзину</button>
+                        <div class="product_item_q">
+                            <div class="product_item_quantity_control" id="product_item_quantity_control_<?= $product->id ?><?= $header_en ?>">
+                                <span class="product_item_quantity_control_minus" data-id="<?= $product->id ?>" data-widget="<?= $header_en ?>">&ndash;</span>
+                                <span class="product_item_quantity_control_plus" data-id="<?= $product->id ?>" data-widget="<?= $header_en ?>">+</span>
+                                <span class="product_item_quantity_control_count">1</span>
+                            </div>
+                        </div>
+                        <button class="add_shopcart add_shopcart<?= $product->id ?><?= $header_en ?>" data-id="<?= $product->id ?>" data-cnt="1">В корзину</button>
                     </div>
                 </div>
 

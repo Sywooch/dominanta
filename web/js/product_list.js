@@ -11,6 +11,8 @@ var productList = {
         $('.product_filter_actions a').on('click', this.clearFilterEvent);
         $('.product_filter_header_text').on('click', this.filterCollapseEvent);
         $('.product_mobile_filters_button a').on('click', this.mobileFilterShowEvent);
+        $('.product_items .product_item_quantity_control_minus').on('click', this.minusEvent);
+        $('.product_items .product_item_quantity_control_plus').on('click', this.plusEvent);
     },
     mobileFilterShowEvent: function() {
         productList.mobileFilterShowTrigger(this);
@@ -110,7 +112,7 @@ var productList = {
         } else {
             $(obj).find('span').removeClass('product_filter_checkbox');
             $(obj).find('span').addClass('product_filter_checkbox_active');
-console.log($(obj).data('filter'));
+
             if ($(obj).data('filter') == 'vendor') {
                 $(obj).append('<input type="hidden" name="vendor[]" value="' + $(obj).data('value') + '" data-filter="vendor" />');
             } else {
@@ -167,6 +169,41 @@ console.log($(obj).data('filter'));
                 }
             }
         });
+    },
+    getCurrentCount: function(obj) {
+        var el = $('#product_item_quantity_control_' + $(obj).data('id') + $(obj).data('widget'));
+        return parseInt($(el).find('.product_item_quantity_control_count').html());
+    },
+    minusEvent: function() {
+        productList.minusTrigger(this);
+    },
+    minusTrigger: function(obj) {
+        var currentCount = this.getCurrentCount(obj);
+
+        if (currentCount == 1) {
+            return;
+        }
+
+        var newCount = currentCount - 1;
+        this.updateButtonCnt(obj, newCount);
+    },
+    plusEvent: function() {
+        productList.plusTrigger(this);
+    },
+    plusTrigger: function(obj) {
+        var currentCount = this.getCurrentCount(obj);
+
+        if (currentCount == 100) {
+            return;
+        }
+
+        var newCount = currentCount + 1;
+        this.updateButtonCnt(obj, newCount);
+    },
+    updateButtonCnt: function(obj, cnt) {
+        var el = $('#product_item_quantity_control_' + $(obj).data('id') + $(obj).data('widget'));
+        $(el).find('.product_item_quantity_control_count').html(cnt);
+        $('button.add_shopcart' + $(obj).data('id') + $(obj).data('widget')).data('cnt', cnt);
     }
 }
 
