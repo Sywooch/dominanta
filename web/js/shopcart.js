@@ -62,8 +62,48 @@ var shopcart = {
             url: '/shopcart/add',
             method: 'GET',
             data: {product_id: product_id, quantity: quantity},
-            success: shopcart.updateEvent,
+            success: shopcart.addItemEvent,
         });
+    },
+    addItemEvent: function(data) {
+        shopcart.addItemTrigger(data);
+    },
+    addItemTrigger: function(data) {
+        this.updateEvent(data);
+        $('#modal_shopcart').modal('show');
+
+        var product = data.message.product;
+
+        var html = '<div class="row shopcart_item" id="shopcart_item_' + product.item_id + '">';
+            html += '<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">'
+                html += '<a href="' + product.link + '" target="_blank"><img src="' + product.photo + '" />';
+                html += '<div class="shopcart_item_link"><a href="' + product.link +'">' + product.title + '</a></div>';
+            html += '</div>';
+
+            html += '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">';
+                html += '<div class="shopcart_item_qprice">';
+                    html += '<div class="shopcart_item_q">'
+                        html += '<div class="shopcart_info_label">Количество</div>';
+                        html += '<div class="quantity_control" id="quantity_control_' + product.item_id + '">';
+                            html += '<span class="quantity_control_minus" data-id="' + product.item_id + '">&ndash;</span>';
+                            html += '<span class="quantity_control_plus" data-id="' + product.item_id + '">+</span>';
+                            html += '<span class="quantity_control_count">' + product.cnt + '</span>';
+                        html += '</div>';
+                    html += '</div>';
+                html += '</div>';
+            html += '</div>';
+            html += '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 text-center">';
+                html += '<div class="shopcart_item_price"><div class="shopcart_info_label">Цена</div>' + product.price + ' <i class="fa fa-ruble"></i></div>';
+            html += '</div>';
+            html += '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 text-right">';
+                html += '<div class="shopcart_item_price"><div class="shopcart_info_label">Стоимость</div><span class="shopcart_item_calc_sum">' + product.sum + '</span> <i class="fa fa-ruble"></i></div>';
+            html += '</div>';
+        html += '</div>';
+
+        $('#shopcart_add_info').html(html);
+
+        $('.quantity_control_minus').on('click', this.minusEvent);
+        $('.quantity_control_plus').on('click', this.plusEvent);
     },
     delEvent: function() {
         shopcart.delTrigger(this);
@@ -151,6 +191,7 @@ var shopcart = {
     updateCntTrigger: function(data) {
         $('#quantity_control_' + data.message.id).css('opacity', '1.0');
         $('.order_total_amount').html(data.message.sum + ' <i class="fa fa-ruble"></i>');
+        $('.shopcart_item_calc_sum').html(data.message.product_sum);
         // FIXME update form
     },
     selAddressEvent: function() {

@@ -534,13 +534,15 @@ class ShopcartController extends AbstractController
         if ($product_exists) {
             $product_exists['quantity'] += $quantity;
             $product_exists->save();
+            $product_cnt = $product_exists['quantity'];
         } else {
-            Shopcart::createAndSave([
+            $product_exists = Shopcart::createAndSave([
                 'hash' => $hash,
                 'user_id' => $user_id,
                 'product_id' => $product_id,
                 'quantity' => $quantity,
             ]);
+            $product_cnt = $quantity;
         }
 
         if ($user_id) {
@@ -561,9 +563,30 @@ class ShopcartController extends AbstractController
             $sum += ($item->product->price - ($item->product->price * ($item->product->discount / 100))) * $item['quantity'];
         }
 
+        $img = ProductPhoto::find()->where(['product_id' => $product_id])
+                                  ->limit(1)
+                                  ->orderBy(['photo_order' => SORT_ASC])
+                                  ->one();
+
+        if ($img) {
+            $photo = str_replace(Yii::getAlias('@webroot'), '', $product->getPreview($img->photoPath, 142, 142));
+        } else {
+            $photo = "/images/product_item.png";
+        }
+
         return [
             'status' => 'ok',
             'message' => [
+                'product' => [
+                    'item_id' => $product_exists->id,
+                    'id' => $product_id,
+                    'cnt' => $product_cnt,
+                    'price' => Yii::$app->formatter->asDecimal(($product->price - ($product->price * ($product->discount / 100))), 2),
+                    'sum' => Yii::$app->formatter->asDecimal(($product->price - ($product->price * ($product->discount / 100))) * $product_cnt, 2),
+                    'title' => Html::encode($product->product_name),
+                    'photo' => $photo,
+                    'link' => $product->productLink,
+                ],
                 'cnt' => $cnt,
                 'sum' => Yii::$app->formatter->asDecimal($sum, 2),
             ]
@@ -675,6 +698,7 @@ class ShopcartController extends AbstractController
         if ($item_exists) {
             $item_exists->quantity = $cnt;
             $item_exists->save();
+            $product_sum = ($item_exists->product->price - ($item_exists->product->price * ($item_exists->product->discount / 100))) * $item_exists->quantity;
         } else {
             return [
                 'status'  => 'error',
@@ -703,6 +727,7 @@ class ShopcartController extends AbstractController
         return [
             'status' => 'ok',
             'message' => [
+                'product_sum' => Yii::$app->formatter->asDecimal($product_sum, 2),
                 'cnt' => $cnt,
                 'sum' => Yii::$app->formatter->asDecimal($sum, 2),
                 'id'  => $item_id,

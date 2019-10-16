@@ -1537,7 +1537,7 @@ span.product_property_value {
 .product_item_quantity_control_plus {
     float: right;
     margin-right: 10px;
-    margin-top: -2px;
+    margin-top: -1px;
 }
 
 @media all and (min-width:1200px) {
@@ -1910,12 +1910,56 @@ span.user_acc_delivery {
     color: #5B5B5B;
 }
 
+#shopcart_add_info .shopcart_item_price {
+    font-size: 16px;
+}
+
 .shopcart_info_label {
     font-weight: normal;
     font-size: 14px;
     line-height: 16px;
     color: #888888;
     margin-bottom: 15px;
+}
+
+#shopcart_add_info .shopcart_item_price .shopcart_info_label {
+    margin-bottom: 22px;
+}
+
+#shopcart_add_info .shopcart_item {
+   border: none;
+}
+
+#modal_shopcart .modal_shopcart_buttons {
+    margin: 35px 0px 15px;
+}
+
+#modal_shopcart .modal_shopcart_buttons a,
+#modal_shopcart .modal_shopcart_buttons a:visited,
+#modal_shopcart .modal_shopcart_buttons a:active {
+    background: #0E73BA;
+    border-radius: 5px;
+    border: 1px solid #0E73BA;
+    font-size: 16px;
+    color: #FFFFFF;
+    padding: 12px;
+    font-weight: normal;
+    text-decoration: none;
+    display: inline-block;
+}
+
+#modal_shopcart .modal_shopcart_buttons a:hover {
+    text-decoration: none;
+}
+
+#modal_shopcart .modal_shopcart_buttons button {
+    background: #fff;
+    border-radius: 5px;
+    border: 1px solid #888;
+    font-size: 16px;
+    color: #888;
+    padding: 12px;
+    font-weight: normal;
 }
 
 .shopcart_item_q {
@@ -1948,6 +1992,7 @@ span.user_acc_delivery {
 .quantity_control_minus {
     float: left;
     margin-left: 15px;
+    margin-top: -2px;
 }
 
 .quantity_control_plus {
