@@ -1979,6 +1979,7 @@ span.user_acc_delivery {
 
 #modal_shopcart .modal_shopcart_buttons a:hover {
     text-decoration: none;
+    opacity: 0.8;
 }
 
 #modal_shopcart .modal_shopcart_buttons button {
@@ -1989,6 +1990,10 @@ span.user_acc_delivery {
     color: #888;
     padding: 12px;
     font-weight: normal;
+}
+
+#modal_shopcart .modal_shopcart_buttons button:hover {
+    opacity: 0.8;
 }
 
 .shopcart_item_q {
