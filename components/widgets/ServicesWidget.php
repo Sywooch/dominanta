@@ -21,6 +21,7 @@ class ServicesWidget extends Widget
     {
         $services = Page::find()->where(['pid' => $this->call_model->id])
                                 ->andWhere(['status' => Page::STATUS_ACTIVE])
+                                ->orderBy(['page_order' => SORT_ASC])
                                 ->all();
 
         return $this->render('services', ['services' => $services]);
