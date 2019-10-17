@@ -1992,7 +1992,7 @@ span.user_acc_delivery {
 .quantity_control_minus {
     float: left;
     margin-left: 15px;
-    margin-top: -2px;
+/*     margin-top: -2px; */
 }
 
 .quantity_control_plus {
