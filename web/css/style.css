@@ -498,6 +498,10 @@ span.top_map_city {
     padding: 16px 0px;
 }
 
+.modal_tabpanels button:hover {
+    opacity: 0.8;
+}
+
 .restore_link {
     padding-top: 17px;
     text-align: right;
@@ -643,6 +647,10 @@ span.top_map_city {
     padding: 18px 0px;
     text-align: center;
     width: 100%;
+}
+
+.product_add_cart button:hover {
+    opacity: 0.8;
 }
 
 .product_photo_slides {
@@ -1025,6 +1033,10 @@ span.product_property_value {
     border: 1px solid #0E73BA;
     border-radius: 5px;
     padding: 15px 30px;
+}
+
+.add_review_button_block button:hover {
+    opacity: 0.8;
 }
 
 @media all and (max-width:768px) {
@@ -1502,6 +1514,10 @@ span.product_property_value {
     font-weight: normal;
 }
 
+.product_item_button button:hover {
+    opacity: 0.8;
+}
+
 .product_item_q {
     width: 80px;
     float: left;
@@ -1765,6 +1781,15 @@ span.user_acc_delivery {
     margin-top: 40px;
 }
 
+#account_form button:hover,
+#password_form button:hover,
+#shopcart_form button:hover,
+#review_form button:hover,
+#callback-form button:hover,
+#feedback-form button:hover {
+    opacity: 0.8;
+}
+
 #feedback-form {
     margin-top: 30px;
     background: #F3F7FA;
@@ -1870,6 +1895,10 @@ span.user_acc_delivery {
     font-weight: normal;
     margin-top: 48px;
     width: 100%;
+}
+
+.delivery_form button:hover {
+    opacity: 0.8;
 }
 
 /* Shopcart */
@@ -2159,6 +2188,10 @@ span.user_acc_delivery {
     font-size: 16px;
     color: #FFFFFF;
     padding: 14px 15px 14px 15px;
+}
+
+.footer_subsribe_button:hover {
+    opacity: 0.8;
 }
 
 .contacts_bottom_menu_row {
