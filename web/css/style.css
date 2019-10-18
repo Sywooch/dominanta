@@ -2430,7 +2430,8 @@ span.product_label, a.product_label, a.product_label:visited, a.product_label:ac
 
 .main_block_decription_header {
     font-weight: bold;
-    font-size: 40px;
+    font-size: 28px;
+    white-space: nowrap;
 }
 
 .main_block_decription_header a, .main_block_decription_header a:visited, .main_block_decription_header a:active {
@@ -2438,11 +2439,17 @@ span.product_label, a.product_label, a.product_label:visited, a.product_label:ac
     font-weight: normal;
     font-size: 18px;
     text-decoration: none;
-    margin-top: 20px;
+    margin-top: 8px;
 }
 
 .main_block_decription_header a:hover {
     text-decoration: underline;
+}
+
+@media all and (max-width:768px) {
+  .main_block_decription_header a, .main_block_decription_header a:visited, .main_block_decription_header a:active, .main_block_decription_header a:hover {
+      margin-top: 35px;
+  }
 }
 
 .about_feature_block {
@@ -2552,7 +2559,7 @@ span.product_label, a.product_label, a.product_label:visited, a.product_label:ac
 
 .main_market_header {
     font-weight: bold;
-    font-size: 30px;
+    font-size: 24px;
     color: #444444;
     margin: 60px 0px 30px;
 }
