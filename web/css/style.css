@@ -535,7 +535,7 @@ span.top_map_city {
 
 .page_title, .page_title h1 {
     font-weight: bold;
-    font-size: 40px;
+    font-size: 30px;
     color: #444444;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -555,13 +555,13 @@ span.top_map_city {
     }
 
     .page_title {
-        font-size: 24px;
+        font-size: 20px;
         margin-top: 10px;
         margin-bottom: 10px;
     }
 
     .page_title .page_title_market {
-        font-size: 18px;
+        font-size: 20px;
     }
 }
 
@@ -1133,7 +1133,7 @@ span.product_property_value {
 
 .product_category_item_header {
     font-weight: bold;
-    font-size: 30px;
+    font-size: 24px;
     color: #5B5B5B;
     margin: 20px 20px 10px;
 }
@@ -1159,6 +1159,21 @@ span.product_property_value {
     padding: 20px 0px;
     margin-top: -20px;
     margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .product_category_item_header {
+    font-size: 18px;
+  }
+
+  .product_category_item_subcats a {
+    font-size: 16px;
+  }
+
+  .product_category_item_show_all, .product_category_item_bottom_all {
+    font-size: 16px;
+    padding: 12px 0px;
+  }
 }
 
 .product_category_item_show_all {
