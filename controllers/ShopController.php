@@ -154,7 +154,7 @@ class ShopController extends AbstractController
 
                 $replace = [
                     '{{{breadcrumbs}}}' => $this->getBreadcrumbs($this->page),
-                    '{{{page_title}}}' => $this->page->page_name,
+                    '{{{page_title}}}' => '<span class="page_title_market">'.$this->page->page_name.'</span>',
                 ];
 
                 return str_replace(array_keys($replace), $replace, $page_content);
@@ -232,7 +232,7 @@ class ShopController extends AbstractController
 
         $replace = [
             '{{{breadcrumbs}}}' => $this->shopBreadcrumbs($models),
-            '{{{page_title}}}' => $model ? $model->category_name.((!Yii::$app->user->isGuest && Yii::$app->user->identity->rules['ProductCategory']['is_edit']) ? ' '.Html::a(new Icon('pencil'), ['/manage/market/categories/edit', 'id' => $model->id], ['target' => '_blank']) : '') : 'Каталог товаров',
+            '{{{page_title}}}' => '<span class="page_title_market">'.($model ? $model->category_name.((!Yii::$app->user->isGuest && Yii::$app->user->identity->rules['ProductCategory']['is_edit']) ? ' '.Html::a(new Icon('pencil'), ['/manage/market/categories/edit', 'id' => $model->id], ['target' => '_blank']) : '') : 'Каталог товаров').'</span>',
             '{{{cats_list}}}' => $this->renderPartial('product_cats', ['links' => $links, 'cat_model' => $model]),
         ];
 
@@ -451,7 +451,7 @@ class ShopController extends AbstractController
 
         $replace = [
             '{{{breadcrumbs}}}' => $this->shopBreadcrumbs($models),
-            '{{{page_title}}}' => $model->category_name,
+            '{{{page_title}}}' => '<span class="page_title_market">'.$model->category_name.'</span>',
             '{{{products_list}}}' => $product_list,
             '{{{products_sort}}}' => $this->getProductSort($models, $product_sort),
             '{{{filter_categories}}}' => $this->getCatsList($model, $models),
@@ -528,7 +528,7 @@ class ShopController extends AbstractController
 
         $replace = [
             '{{{breadcrumbs}}}' => $this->shopBreadcrumbs($models),
-            '{{{page_title}}}' => $model->product_name.((!Yii::$app->user->isGuest && Yii::$app->user->identity->rules['Product']['is_edit']) ? ' '.Html::a(new Icon('pencil'), ['/manage/market/products/edit', 'id' => $model->id], ['target' => '_blank']) : ''),
+            '{{{page_title}}}' => '<span class="page_title_market">'.$model->product_name.((!Yii::$app->user->isGuest && Yii::$app->user->identity->rules['Product']['is_edit']) ? ' '.Html::a(new Icon('pencil'), ['/manage/market/products/edit', 'id' => $model->id], ['target' => '_blank']) : '').'</span>',
             '{{{product_price}}}' => Yii::$app->formatter->asDecimal(floatval($model->realPrice), 2),
             '{{{product_old_price}}}' => $model->old_price > 0 || $model->discount > 0 ? '<br>'.Yii::$app->formatter->asDecimal(floatval($model->discount > 0 ? $model->price : $model->old_price), 2).' <i class="fa fa-ruble"></i>' : '',
             '{{{product_discount}}}' => $model->discount > 0 ? '- '.intval($model->discount).'%' : '',

@@ -541,6 +541,10 @@ span.top_map_city {
     margin-bottom: 20px;
 }
 
+.page_title .page_title_market {
+    font-size: 30px;
+}
+
 @media all and (max-width:992px) {
     .breadcrumbs-line a, .breadcrumbs-line a:visited, .breadcrumbs-line a:active, .breadcrumbs-line span {
          font-size: 12px;
@@ -554,6 +558,10 @@ span.top_map_city {
         font-size: 24px;
         margin-top: 10px;
         margin-bottom: 10px;
+    }
+
+    .page_title .page_title_market {
+        font-size: 18px;
     }
 }
 
