@@ -86,6 +86,17 @@ var mainPage = {
         if (!$(e.target).closest("#account_menu").length && this.displayAccountMenu) {
             this.hideAccountMenu();
         }
+
+        if (window.productList) {
+            if (!$(e.target).closest(".mobile_action_button").length) {
+                productList.hideActions();
+            }
+
+            if (!$(e.target).closest(".product_filter_column").length && productList.mobileFilterShow) {
+                $('.product_filter_column').fadeOut(300);
+                productList.mobileFilterShow = false;
+            }
+        }
 /*
         if (!$(e.target).closest(".dropdown_menu").length && this.displayDropdownMenu) {
             this.hideDropdownMenu();

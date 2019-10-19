@@ -1,5 +1,9 @@
 var productList = {
     mobileFilterShow: false,
+    mobileActionShow: {
+       sort: false,
+       show: false
+    },
     loadEvent: function() {
         productList.loadTrigger(this);
     },
@@ -10,7 +14,8 @@ var productList = {
         $('.product_filter_value').on('click', this.productFilterEvent);
         $('.product_filter_actions a').on('click', this.clearFilterEvent);
         $('.product_filter_header_text').on('click', this.filterCollapseEvent);
-        $('.product_mobile_filters_button a').on('click', this.mobileFilterShowEvent);
+        $('.product_mobile_filters_button a.mobile_filters_button').on('click', this.mobileFilterShowEvent);
+        $('.product_mobile_filters_button a.mobile_action_button').on('click', this.mobileActionEvent);
         $('.product_items .product_item_quantity_control_minus').on('click', this.minusEvent);
         $('.product_items .product_item_quantity_control_plus').on('click', this.plusEvent);
     },
@@ -25,6 +30,30 @@ var productList = {
         } else {
             $('.product_filter_column').fadeIn(300);
             this.mobileFilterShow = true;
+        }
+    },
+    mobileActionEvent: function(obj) {
+        productList.mobileActionTrigger(this);
+        return false;
+    },
+    mobileActionTrigger: function(obj) {
+        var action = $(obj).data('action');
+
+        if (this.mobileActionShow[action]) {
+            $('#product_list_action_items_mobile_' + action).addClass('hidden');
+            this.mobileActionShow[action] = false;
+        } else {
+            this.hideActions();
+            $('#product_list_action_items_mobile_' + action).removeClass('hidden');
+            this.mobileActionShow[action] = true;
+        }
+    },
+    hideActions: function() {
+        for (action in this.mobileActionShow) {
+            if (this.mobileActionShow[action]) {
+                $('#product_list_action_items_mobile_' + action).addClass('hidden');
+                this.mobileActionShow[action] = false;
+            }
         }
     },
     filterCollapseEvent: function() {
