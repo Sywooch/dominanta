@@ -281,6 +281,7 @@ span.top_map_city {
     padding: 12px 0px;
     color: #fff;
     font-size: 18px;
+    min-height: 60px;
 }
 
 #menu_top_line a, #menu_top_line a:visited, #menu_top_line a:active {
@@ -335,7 +336,7 @@ span.top_map_city {
 }
 
 .mobile_searchform {
-    margin-top: -30px;
+    margin-top: -6px;
     margin-left: 40px;
     width: 100%;
     float: left;
