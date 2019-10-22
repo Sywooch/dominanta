@@ -31,9 +31,9 @@ $active_dropdown_right = false;
                     </div>
 
                     <?php foreach ($sub_links AS $id => $sub_link_block) { ?>
-                    <div id="dropdown_subcat_menu_<?= $id ?>" class="dropdown_subcat_menu <?= $active_dropdown_right ? ' hidden' : '' ?>">
+                    <div id="dropdown_subcat_menu_<?= $id ?>" class="dropdown_subcat_menu hidden-xs<?= $active_dropdown_right ? ' hidden' : '' ?>">
 
-                        <div class="col-lg-4 col-md-4 col-sm-6 hidden-xs">
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                             <div class="dropdown_right_col">
                             <?php for ($i = 0; $i <= count($sub_link_block); $i += 2) { ?>
                                 <?= isset($sub_link_block[$i]) ? Html::a(Html::encode($sub_link_block[$i]['name']), $sub_link_block[$i]['link']) : '' ?>
@@ -41,11 +41,11 @@ $active_dropdown_right = false;
                             </div>
                         </div>
 
-                        <div class="hidden-lg hidden-md col-sm-6 hidden-xs">
+<!--                        <div class="hidden-lg hidden-md col-sm-6 hidden-xs">
 
-                        </div>
+                        </div>-->
 
-                        <div class="col-lg-4 col-md-4 col-sm-6 hidden-xs">
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
                             <div class="dropdown_right_col">
                             <?php for ($i = 1; $i <= count($sub_link_block); $i += 2) { ?>
                                 <?= isset($sub_link_block[$i]) ? Html::a(Html::encode($sub_link_block[$i]['name']), $sub_link_block[$i]['link']) : '' ?>

@@ -15,9 +15,43 @@ var mainPage = {
         $("#user-phone").mask("+7(999) 999-99-99");
         $("#callback-phone").mask("+7(999) 999-99-99");
 
-        $('.menu_icon, .dropdown_menu').on('mouseover', this.showDropdownMenuEvent);
-        $('.menu_icon, .dropdown_menu').on('mouseout', this.hideDropdownMenuEvent);
-        $('.dropdown_left_col a').on('mouseover', this.showDropdownSubmenuEvent);
+        if ($.browser.mobile) {
+            $('.menu_icon').on('click', this.showDropdownMenuEvent);
+            $('.dropdown_left_col a').on('click', this.showDropdownSubmenuEvent);
+            this.setMobileMenu();
+        } else {
+            $('.menu_icon, .dropdown_menu').on('mouseover', this.showDropdownMenuEvent);
+            $('.menu_icon, .dropdown_menu').on('mouseout', this.hideDropdownMenuEvent);
+            $('.dropdown_left_col a').on('mouseover', this.showDropdownSubmenuEvent);
+        }
+    },
+    setMobileMenu: function() {
+        var html = '<div style="border-top: 1px solid #d7d7d7"></div>';
+
+        $('.menu_item').each(function(){
+            html += '<a href="' + $(this).attr('href') + '" class="mobile_menu_item">' + $(this).html() + '</a>';
+        });
+
+        $('.dropdown_left_col').append(html);
+
+        var html = '<div class="hidden-lg hidden-md hidden-sm col-xs-12"><div class="dropdown_right_col">';
+        html += '<a href="#" class="back_in_catalog"><i class="fa fa-angle-left"></i> В каталог</a></div></div>';
+
+        $('.dropdown_subcat_menu').each(function(){
+            $(this).prepend(html);
+        });
+
+        $('a.active_dropdown_left').removeClass('active_dropdown_left');
+
+        $('.back_in_catalog').on('click', this.backInCatalogEvent)
+    },
+    backInCatalogEvent: function() {
+        mainPage.backInCatalogTrigger(this);
+        return false;
+    },
+    backInCatalogTrigger: function() {
+        $('.dropdown_left_col').removeClass('hidden-xs');
+        $('.dropdown_subcat_menu').addClass('hidden');
     },
     showDropdownMenuEvent: function() {
         mainPage.showDropdownMenuTrigger(this);
@@ -40,7 +74,9 @@ var mainPage = {
         }
 
         if (this.displayDropdownMenu) {
-            //this.hideDropdownMenu();
+            if ($.browser.mobile) {
+                this.hideDropdownMenu();
+            }
             return;
         }
 
@@ -70,14 +106,25 @@ var mainPage = {
         });
     },
     showDropdownSubmenuEvent: function() {
-        mainPage.showDropdownSubmenuTrigger(this);
+        return mainPage.showDropdownSubmenuTrigger(this);
     },
     showDropdownSubmenuTrigger: function(obj) {
+        if ($(obj).hasClass('mobile_menu_item')) {
+            return true;
+        }
+
+        if ($.browser.mobile) {
+            $('.dropdown_left_col').addClass('hidden-xs');
+        }
+
         $('.dropdown_left_col a').removeClass('active_dropdown_left');
         $(obj).addClass('active_dropdown_left');
 
         $('.dropdown_subcat_menu').addClass('hidden');
         $('#dropdown_subcat_menu_' + $(obj).data('category')).removeClass('hidden');
+        $('#dropdown_subcat_menu_' + $(obj).data('category')).removeClass('hidden-xs');
+
+        return false;
     },
     documentClickEvent: function(e) {
         mainPage.documentClickTrigger(this, e);
@@ -97,11 +144,13 @@ var mainPage = {
                 productList.mobileFilterShow = false;
             }
         }
-/*
-        if (!$(e.target).closest(".dropdown_menu").length && this.displayDropdownMenu) {
-            this.hideDropdownMenu();
+
+        if ($.browser.mobile) {
+            if (!$(e.target).closest(".dropdown_menu").length  && this.displayDropdownMenu) {
+                this.hideDropdownMenu();
+            }
         }
-*/
+
         //e.stopPropagation();
     },
     displayAccountMenuEvent: function() {
