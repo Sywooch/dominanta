@@ -62,6 +62,7 @@ var mainPage = {
         return false;
     },
     showDropdownMenuTrigger: function(obj) {
+    console.log(this.menuInit)
         if (this.menuInit) {
             clearTimeout(this.menuInit);
             this.menuInit = false;
@@ -124,7 +125,11 @@ var mainPage = {
         $('#dropdown_subcat_menu_' + $(obj).data('category')).removeClass('hidden');
         $('#dropdown_subcat_menu_' + $(obj).data('category')).removeClass('hidden-xs');
 
-        return false;
+        if ($.browser.mobile) {
+            return false;
+        } else {
+            return true;
+        }
     },
     documentClickEvent: function(e) {
         mainPage.documentClickTrigger(this, e);
