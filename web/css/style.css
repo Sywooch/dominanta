@@ -2618,3 +2618,18 @@ span.product_label, a.product_label, a.product_label:visited, a.product_label:ac
     margin-top: -1px;
     display: none;
 }
+
+.category_description_row {
+    font-size: 16px;
+}
+
+.category_description {
+    overflow: hidden;
+/*     min-height: 50px; */
+}
+
+.category_description_shadow {
+    margin-top: -15px;
+    height: 20px;
+    background: linear-gradient(to top, #ffffff, transparent);
+}

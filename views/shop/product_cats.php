@@ -153,10 +153,12 @@ $cnt = 0;
 
   <?php } ?>
 
-  <div class="row">
+  <div class="row category_description_row">
       <div class="category_description col-lg-12 col-md-12 col-sm-12 col-xs-12">
           <?= $cat_model ? $cat_model->category_description : '' ?>
       </div>
+      <div class="category_description_shadow col-lg-12 col-md-12 col-sm-12 col-xs-12"></div>
+      <div class="category_description_link col-lg-12 col-md-12 col-sm-12 col-xs-12"></div>
   </div>
 
 
