@@ -80,7 +80,7 @@ var shopcart = {
                 html += '<div class="shopcart_item_link"><a href="' + product.link +'">' + product.title + '</a></div>';
             html += '</div>';
 
-            html += '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">';
+            html += '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-6">';
                 html += '<div class="shopcart_item_qprice">';
                     html += '<div class="shopcart_item_q">'
                         html += '<div class="shopcart_info_label">Количество</div>';
@@ -92,11 +92,14 @@ var shopcart = {
                     html += '</div>';
                 html += '</div>';
             html += '</div>';
-            html += '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 text-center">';
+            html += '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-6 text-center">';
                 html += '<div class="shopcart_item_price"><div class="shopcart_info_label">Цена</div>' + product.price + ' <i class="fa fa-ruble"></i></div>';
             html += '</div>';
-            html += '<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 text-right">';
+            html += '<div class="col-lg-4 col-md-4 col-sm-4 hidden-xs text-right">';
                 html += '<div class="shopcart_item_price"><div class="shopcart_info_label">Стоимость</div><span class="shopcart_item_calc_sum">' + product.sum + '</span> <i class="fa fa-ruble"></i></div>';
+            html += '</div>';
+            html += '<div class="hidden-lg hidden-md hidden-sm col-xs-12 text-center">';
+                html += '<div class="shopcart_item_price" style="margin-top: 10px;"><div class="shopcart_info_label">Стоимость</div><span class="shopcart_item_calc_sum">' + product.sum + '</span> <i class="fa fa-ruble"></i></div>';
             html += '</div>';
         html += '</div>';
 

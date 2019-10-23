@@ -438,6 +438,25 @@ span.top_map_city {
     opacity: 1;
 }
 
+@media all and (max-width:768px) {
+  .modal-dialog {
+    width: 300px;
+  }
+
+  .modal-header {
+    padding: 20px;
+    border-bottom: none;
+  }
+
+  .modal-title {
+    font-size: 20px;
+  }
+
+  .modal-header button {
+    margin-top: 4px !important;
+  }
+}
+
 .modal-body {
     padding: 0px;
 }
@@ -1105,14 +1124,22 @@ span.product_property_value {
     width: 680px;
 }
 
-@media (max-width: 768px) {
-  #modal_review .modal-dialog {
-      width: auto;
-  }
-}
-
 #review_form, #callback-form {
     margin: 0px 40px 25px;
+}
+
+@media (max-width: 768px) {
+  #modal_review .modal-dialog {
+    width: 300px;
+  }
+
+  #review_form, #callback-form {
+      margin: 0px 20px 25px;
+  }
+
+  .field-callback-recaptcha, .field-productreview-recaptcha {
+      margin-left: -20px;
+  }
 }
 
 .product_review_text {
@@ -1798,6 +1825,19 @@ span.user_acc_delivery {
     margin-top: 20px;
 }
 
+@media all and (max-width:992px) {
+  #account_form label,
+  #password_form label,
+  .delivery_form label,
+  #shopcart_form label,
+  #review_form label,
+  #callback-form label,
+  #feedback-form label {
+    font-size: 14px;
+    margin-top: 10px;
+  }
+}
+
 #account_form input,
 #password_form input,
 .delivery_form input,
@@ -1826,6 +1866,42 @@ span.user_acc_delivery {
     padding: 20px 50px;
     font-weight: normal;
     margin-top: 40px;
+}
+
+@media all and (max-width:768px) {
+  #account_form label,
+  #password_form label,
+  .delivery_form label,
+  #shopcart_form label,
+  #review_form label,
+  #callback-form label,
+  #feedback-form label {
+    font-size: 14px;
+    margin-top: 10px;
+  }
+
+  #account_form input,
+  #password_form input,
+  .delivery_form input,
+  #shopcart_form input,
+  #review_form input,
+  #review_form textarea,
+  #callback-form input,
+  #feedback-form input{
+    font-size: 14px;
+    padding: 20px 10px;
+  }
+
+  #account_form button,
+  #password_form button,
+  #shopcart_form button,
+  #review_form button,
+  #callback-form button,
+  #feedback-form button {
+    font-size: 14px;
+    padding: 15px 30px;
+    margin-top: 20px;
+  }
 }
 
 #account_form button:hover,
@@ -2016,12 +2092,13 @@ span.user_acc_delivery {
     background: #0E73BA;
     border-radius: 5px;
     border: 1px solid #0E73BA;
-    font-size: 16px;
+    font-size: 14px;
     color: #FFFFFF;
     padding: 12px;
     font-weight: normal;
     text-decoration: none;
     display: inline-block;
+    text-align: center;
 }
 
 #modal_shopcart .modal_shopcart_buttons a:hover {
@@ -2033,14 +2110,25 @@ span.user_acc_delivery {
     background: #fff;
     border-radius: 5px;
     border: 1px solid #888;
-    font-size: 16px;
+    font-size: 14px;
     color: #888;
-    padding: 12px;
+    padding: 14px;
     font-weight: normal;
 }
 
 #modal_shopcart .modal_shopcart_buttons button:hover {
     opacity: 0.8;
+}
+
+@media all and (max-width:768px) {
+  #modal_shopcart .modal_shopcart_buttons a,
+  #modal_shopcart .modal_shopcart_buttons a:visited,
+  #modal_shopcart .modal_shopcart_buttons a:active,
+  #modal_shopcart .modal_shopcart_buttons a:hover,
+  #modal_shopcart .modal_shopcart_buttons button,
+  #modal_shopcart .modal_shopcart_buttons button:hover {
+    padding: 6px;
+  }
 }
 
 .shopcart_item_q {
