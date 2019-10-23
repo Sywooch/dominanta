@@ -2671,6 +2671,12 @@ span.product_label, a.product_label, a.product_label:visited, a.product_label:ac
     margin-top: 1px;
 }
 
+@media all and (max-width:768px) {
+  .s_more {
+    font-size: 16px;
+  }
+}
+
 .main_block_advices .s_image_block {
     min-height: 160px;
     height: auto;
