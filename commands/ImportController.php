@@ -10,6 +10,7 @@ namespace app\commands;
 use Yii;
 use yii\console\Controller;
 use yii\helpers\Html;
+use yii\helpers\FileHelper;
 use GuzzleHttp\Client;
 use Cocur\Slugify\Slugify;
 use app\models\ActiveRecord\Product;
@@ -111,14 +112,13 @@ class ImportController extends Controller
                 if (isset($category->href)) {
                     $category_name = trim(Html::decode($category->title));
                     $category_slug = $this->slugify->slugify($category_name);
-                    $category_link = $this->site.$category->href;
+                    $category_href = $category->href;
+                    $category_link = $this->site.$category_href;
+echo $category_href.' : '.$category_name.' ::: '.$category_slug.PHP_EOL;
 
-                    if ($level >= 3) {
-                        echo print_r($category->innertext);
-                    }
+unset($category);
+//echo $category_href.' : '.$category_name.' ::: '.$category_slug;
 
-echo $category->href.' : '.$category_name.' ::: '.$category_slug;
-/*
                     if (!isset($current_catalog[$category_link])) {
 echo " - ADD".PHP_EOL;
 
@@ -135,9 +135,31 @@ echo " - ADD".PHP_EOL;
                         $this->filter[$current_catalog[$category_link]->id] = ProductCategoryFilter::find()->where(['category_id' => $current_catalog[$category_link]->id])->indexBy('property_id')->all();
 echo " - EXISTS".PHP_EOL;
                     }
-*/
+
+                    if ($level >= 3) {
+                        preg_match("|<a href=\"". $category_href ."\".*<img.*src=\"(.*)\"|Umsi", $page, $cat_img);
+
+                        if ($cat_img) {
+                            $catObj = $current_catalog[$category_link];
+                            $directory = $catObj->uploadFolder;
+
+                            if (!is_dir($directory)) {
+                                FileHelper::createDirectory($directory);
+                            }
+
+                            $photoId  = $catObj->id;
+                            $fileName = $photoId.'.jpg';
+                            $filePath = $directory .DIRECTORY_SEPARATOR.$fileName;
+
+                            if (!file_exists($filePath)) {
+                                $catPhoto = file_get_contents($this->site.$cat_img[1]);
+                                file_put_contents($filePath, $catPhoto);
+                            }
+                        }
+                    }
+
                     sleep(rand(1, 2));
-                    $this->getCategories($category->href, $current_catalog[$category_link]->id, false, $level + 1);
+                    $this->getCategories($category_href, $current_catalog[$category_link]->id, false, $level + 1);
                 }
 
                 unset($html);
