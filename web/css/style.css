@@ -438,6 +438,14 @@ span.top_map_city {
     opacity: 1;
 }
 
+.modal-body {
+    padding: 0px;
+}
+
+.modal_tabs {
+    padding: 0px 40px;
+}
+
 @media all and (max-width:768px) {
   .modal-dialog {
     width: 300px;
@@ -455,14 +463,10 @@ span.top_map_city {
   .modal-header button {
     margin-top: 4px !important;
   }
-}
 
-.modal-body {
-    padding: 0px;
-}
-
-.modal_tabs {
-    padding: 0px 40px;
+  .modal_tabs {
+    padding: 0px 20px;
+  }
 }
 
 .modal_tabs a, .modal_tabs a:visited, .modal_tabs a:active {
@@ -532,6 +536,36 @@ span.top_map_city {
 .restore_link {
     padding-top: 17px;
     text-align: right;
+}
+
+@media all and (max-width:768px) {
+  .modal_tabpanels {
+    padding: 20px 20px;
+  }
+
+  .modal_tabpanels .control-label {
+    font-size: 14px;
+  }
+
+  .modal_tabpanels input.form-control {
+    font-size: 14px;
+    padding: 20px 10px;
+  }
+
+  .modal_tabpanels button {
+      border-radius: 4px;
+      font-size: 14px;
+      width: 100px;
+      padding: 10px 0px;
+  }
+
+  .restore_link {
+      padding-top: 10px;
+  }
+
+  .field-user-restore-recaptcha, .field-user-recaptcha {
+      margin-left: -20px;
+  }
 }
 
 /* Center */
