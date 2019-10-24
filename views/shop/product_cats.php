@@ -23,7 +23,7 @@ $cnt = 0;
     <div class="col-lg-4 col-md-4">
         <div class="product_category_item thumbnail">
             <div class="product_category_item_image" <?= file_exists($model->uploadFolder.DIRECTORY_SEPARATOR.$category['id'].'.jpg') ?
-            'style="background: url(\''.str_replace(Yii::getAlias('@webroot'), '', $model->getPreview($model->uploadFolder.DIRECTORY_SEPARATOR.$category['id'].'.jpg', 410, 230)).'\') 50% 50%"'
+            'style="background: url(\''.str_replace(Yii::getAlias('@webroot'), '', $model->getPreview($model->uploadFolder.DIRECTORY_SEPARATOR.$category['id'].'.jpg', 410, 230)).'\') 50% 50% no-repeat"'
             : '' ?>>
                 <?= Html::a('', $category['link']) ?>
             </div>
