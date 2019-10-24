@@ -99,7 +99,7 @@ class ImportController extends Controller
         return $result->getBody();
     }
 
-    private function getCategories($url, $pid = NULL, $pagination = false)
+    private function getCategories($url, $pid = NULL, $pagination = false, $level = 1)
     {
         $current_catalog = ProductCategory::find()->where(['pid' => $pid])->indexBy('link')->all();
         $page = $this->get($url);
@@ -113,8 +113,12 @@ class ImportController extends Controller
                     $category_slug = $this->slugify->slugify($category_name);
                     $category_link = $this->site.$category->href;
 
-echo $category->href.' : '.$category_name.' ::: '.$category_slug;
+                    if ($level >= 3) {
+                        echo print_r($category->innertext);
+                    }
 
+echo $category->href.' : '.$category_name.' ::: '.$category_slug;
+/*
                     if (!isset($current_catalog[$category_link])) {
 echo " - ADD".PHP_EOL;
 
@@ -131,15 +135,15 @@ echo " - ADD".PHP_EOL;
                         $this->filter[$current_catalog[$category_link]->id] = ProductCategoryFilter::find()->where(['category_id' => $current_catalog[$category_link]->id])->indexBy('property_id')->all();
 echo " - EXISTS".PHP_EOL;
                     }
-
+*/
                     sleep(rand(1, 2));
-                    $this->getCategories($category->href, $current_catalog[$category_link]->id);
+                    $this->getCategories($category->href, $current_catalog[$category_link]->id, false, $level + 1);
                 }
 
                 unset($html);
             }
         } else {
-            $this->getProducts($html, $url, $pid, $pagination);
+           // $this->getProducts($html, $url, $pid, $pagination);
         }
     }
 
