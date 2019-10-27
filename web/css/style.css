@@ -2718,14 +2718,14 @@ span.product_label, a.product_label, a.product_label:visited, a.product_label:ac
   }
 }
 
-.main_block_advices .s_image_block, .main_block_advices .s_image_block:active, .main_block_advices .s_image_block:hover {
+.main_block_advices .s_image_block, .main_block_advices .s_image_block:active, .main_block_advices .s_image_block:visited {
     min-height: 160px;
     height: auto;
-    border: none;
+    border: 1px solid transparent !important;
 }
 
 .main_block_advices .s_image_block:hover {
-    border: none;
+    border: 1px solid transparent !important;
 }
 
 .main_block_advices .s_more {
