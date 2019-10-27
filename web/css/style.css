@@ -2682,10 +2682,17 @@ span.product_label, a.product_label, a.product_label:visited, a.product_label:ac
     background: url('/images/s_payment_img.png') no-repeat;
 }
 
-.s_image_block {
+.s_image_block, .s_image_block:active, .s_image_block:visited {
+    display: block;
     height: 360px;
     border-radius: 0px;
     max-width: 360px;
+}
+
+.s_image_block:hover {
+    text-decoration: none;
+    border: 1px solid #ddd !important;
+    opacity: 0.9;
 }
 
 .s_overlay {
