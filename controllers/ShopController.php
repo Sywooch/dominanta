@@ -845,8 +845,16 @@ class ShopController extends AbstractController
         $label = false;
 
         if ($searchtext) {
-            $productsQuery = Product::find()->where(['status' => Product::STATUS_ACTIVE])
-                                            ->andWhere(['like', 'product_name', $searchtext]);
+            $productsQuery = Product::find()->where(
+                'status=:status AND (product_name=:product_name OR product_name LIKE :pn1 OR product_name LIKE :pn2)',
+                [
+                    ':status' => Product::STATUS_ACTIVE,
+                    ':product_name' => $searchtext,
+                    ':pn1' => $searchtext.'%',
+                    ':pn2' => '% '.$searchtext.'%',
+                ]
+            );
+
             $product_count = $productsQuery->count();
         } elseif ($searchtag) {
             $label = ProductLabel::findOne(['widget' => $searchtag]);
