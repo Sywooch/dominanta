@@ -93,7 +93,7 @@ class ShopOrder extends AbstractModel
                 return $model->delivery_type;
             }, 'whenClient' => "function (attribute, value) {
                 console.log($('#shoporder-delivery_type').val())
-                return $('#shoporder-delivery_type').val();
+                return $('#shoporder-delivery_type').val() == '1';
             }"],
             [['address', 'order_comment'], 'string'],
             [['delivery_price', 'product_discount', 'delivery_discount'], 'number'],
