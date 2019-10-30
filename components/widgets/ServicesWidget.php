@@ -12,6 +12,8 @@ class ServicesWidget extends Widget
 
     public $call_model, $controller;
 
+    public $full_link_text = 'Подробнее об услуге';
+
     public static function getName()
     {
         return self::$name;
@@ -24,6 +26,6 @@ class ServicesWidget extends Widget
                                 ->orderBy(['page_order' => SORT_ASC])
                                 ->all();
 
-        return $this->render('services', ['services' => $services]);
+        return $this->render('services', ['services' => $services, 'full_link_text' => $this->full_link_text]);
     }
 }

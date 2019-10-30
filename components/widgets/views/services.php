@@ -20,7 +20,7 @@ if ($services) {
                         <div class="s_icon"></div>
                         <div class="s_overlay"><?= Html::encode($service->page_name) ?></div>
                         <div class="s_more">
-                            Подробнее об услуге &nbsp;&nbsp;<i class="fa fa-angle-right"></i>
+                            <?= $full_link_text ?> &nbsp;&nbsp;<i class="fa fa-angle-right"></i>
                         </div>
                     </a>
                 </div>
