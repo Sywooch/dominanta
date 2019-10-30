@@ -92,6 +92,7 @@ class ShopOrder extends AbstractModel
             [['address'], 'required', 'on' => [self::SCENARIO_ADD, self::SCENARIO_EDIT], 'when' => function($model) {
                 return $model->delivery_type;
             }, 'whenClient' => "function (attribute, value) {
+                console.log($('#shoporder-delivery_type').val())
                 return $('#shoporder-delivery_type').val();
             }"],
             [['address', 'order_comment'], 'string'],
