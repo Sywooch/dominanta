@@ -681,6 +681,9 @@ span.top_map_city {
 }
 
 .product_stars {
+    display: block;
+    border: none;
+    background: transparent;
     margin: 40px 40px 0px;
 }
 
