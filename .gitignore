@@ -33,3 +33,5 @@ tests/_support/_generated
 /config/params.php
 /web/sitemap.xml
 /web/yandex-market.xml
+
+.htaccess
