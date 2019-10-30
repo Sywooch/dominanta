@@ -33,7 +33,7 @@ $active_dropdown_right = false;
                     <?php foreach ($sub_links AS $id => $sub_link_block) { ?>
                     <div id="dropdown_subcat_menu_<?= $id ?>" class="dropdown_subcat_menu hidden-xs<?= $active_dropdown_right ? ' hidden' : '' ?>">
 
-                        <div class="hidden-lg-hidden-md hidden-sm col-xs-12">
+                        <div class="hidden-lg hidden-md hidden-sm col-xs-12">
                             <div class="dropdown_right_col">
                                 <b><?= Html::a(Html::encode($main_links[$id]['name']), $main_links[$id]['link']) ?></b>
                             </div>
