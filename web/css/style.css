@@ -2691,7 +2691,7 @@ span.product_label, a.product_label, a.product_label:visited, a.product_label:ac
 
 .s_image_block, .s_image_block:active, .s_image_block:visited {
     display: block;
-    height: 360px;
+    min-height: 360px;
     border-radius: 0px;
     max-width: 360px;
 }
