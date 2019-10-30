@@ -846,12 +846,13 @@ class ShopController extends AbstractController
 
         if ($searchtext) {
             $productsQuery = Product::find()->where(
-                'status=:status AND (product_name=:product_name OR product_name LIKE :pn1 OR product_name LIKE :pn2)',
+                'status=:status AND (product_name=:pn OR product_name LIKE :pn1 OR product_name LIKE :pn2 OR product_name LIKE :pn3)',
                 [
                     ':status' => Product::STATUS_ACTIVE,
-                    ':product_name' => $searchtext,
-                    ':pn1' => $searchtext.'%',
-                    ':pn2' => '% '.$searchtext.'%',
+                    ':pn' => $searchtext,
+                    ':pn1' => $searchtext.' %',
+                    ':pn2' => '% '.$searchtext.' %',
+                    ':pn3' => '% '.$searchtext,
                 ]
             );
 
