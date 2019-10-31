@@ -172,7 +172,7 @@ class User extends AbstractModel implements IdentityInterface
     public function setActivity()
     {
         $this->last_activity = $this->dbTime;
-        $this->save();
+        $this->save(false);
     }
 
     public function refreshAuthkey()
@@ -345,7 +345,7 @@ class User extends AbstractModel implements IdentityInterface
     {
         $this->refreshAuthkey();
         $this->status = self::STATUS_ACTIVE;
-        $this->save();
+        $this->save(false);
     }
 
     /**

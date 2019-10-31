@@ -123,7 +123,7 @@ class SiteController extends AbstractController
             $newPass = Yii::$app->security->generateRandomString(8);
             $user->setPassword($newPass);
             $user->refreshAuthkey();
-            $user->save();
+            $user->save(false);
 
             Mail::createAndSave([
                 'to_email'  => $user->email,
