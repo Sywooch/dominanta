@@ -78,7 +78,7 @@ class ProductLabel extends AbstractModel
         }
 
         return $this->link || $this->widget ?
-               Html::a(Html::encode($this->label), ($this->link ? $this->link : '/shop/search?tag='.$this->widget), ['style' => implode(';', $styles), 'class' => 'product_label'])
+               Html::a(Html::encode($this->label), ($this->link ? $this->link : '/shop/'.$this->widget), ['style' => implode(';', $styles), 'class' => 'product_label'])
                :
                '<span class="product_label"'.($styles ? ' style="'.implode(';', $styles).'"' : '').'>'.
                Html::encode($this->label).

@@ -13,8 +13,8 @@ var shopcart = {
         $('.custom_form_selector').on('click', this.customSelEvent);
         $('.custom_checkbox').on('click', this.checkboxEvent);
         $('#shoporder-phone').mask("+7(999) 999-99-99");
-        $('.product_widget .product_item_quantity_control_minus').on('click', this.minusWidgetEvent);
-        $('.product_widget .product_item_quantity_control_plus').on('click', this.plusWidgetEvent);
+        $('.product_widget .product_item_quantity_control_minus, .find_products .product_item_quantity_control_minus').on('click', this.minusWidgetEvent);
+        $('.product_widget .product_item_quantity_control_plus, .find_products .product_item_quantity_control_plus').on('click', this.plusWidgetEvent);
     },
     getCurrentCount: function(obj) {
         var el = $('#product_item_quantity_control_' + $(obj).data('id') + $(obj).data('widget'));

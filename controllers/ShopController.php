@@ -71,6 +71,12 @@ class ShopController extends AbstractController
             return $this->addReview();
         }
 
+        $label = ProductLabel::findOne(['widget' => $url]);
+
+        if ($label) {
+            return $this->actionSearch($label);
+        }
+
         $url_parts = explode('/', $url);
 
         $models = [];
@@ -832,7 +838,7 @@ class ShopController extends AbstractController
         return $url;
     }
 
-    public function actionSearch()
+    public function actionSearch($label = false)
     {
         $searchtext = Yii::$app->request->get('searchtext', false);
         $searchtag  = Yii::$app->request->get('tag', false);
@@ -842,7 +848,6 @@ class ShopController extends AbstractController
         $offset = ($product_page - 1) * $limit;
         $product_count = 0;
         $products = [];
-        $label = false;
 
         if ($searchtext) {
             $productsQuery = Product::find()->where(
@@ -857,15 +862,12 @@ class ShopController extends AbstractController
             );
 
             $product_count = $productsQuery->count();
-        } elseif ($searchtag) {
-            $label = ProductLabel::findOne(['widget' => $searchtag]);
+        } elseif ($label) {
 
-            if ($label) {
-                $productsQuery = Product::find()->innerJoin(ProductLabels::tableName(), ProductLabels::tableName().'.product_id='.Product::tableName().'.id')
-                                                ->where([Product::tableName().'.status' => Product::STATUS_ACTIVE])
-                                                ->andWhere(['label_id' => $label->id]);
-                $product_count = $productsQuery->count();
-            }
+            $productsQuery = Product::find()->innerJoin(ProductLabels::tableName(), ProductLabels::tableName().'.product_id='.Product::tableName().'.id')
+                                            ->where([Product::tableName().'.status' => Product::STATUS_ACTIVE])
+                                            ->andWhere(['label_id' => $label->id]);
+            $product_count = $productsQuery->count();
         }
 
         if ($product_count) {
