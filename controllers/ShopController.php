@@ -617,7 +617,7 @@ class ShopController extends AbstractController
             return $html;
         }
 
-        $base_link = $models ? $this->getParentLink($models) : '/shop/search';
+        $base_link = $models ? (is_array($models) ? $this->getParentLink($models) : '/shop/'.$models) : '/shop/search';
         $filter = $this->getFilterLink();
         $base_link .= $filter ? '?'.$filter.'&page=' : '?page=';
         $prev_page = $product_page - 1;
@@ -902,7 +902,7 @@ class ShopController extends AbstractController
             '{{{page_title}}}' => $this->page->page_name,
             '{{{products}}}' => $this->renderPartial('search', ['products' => $products, 'product_count' => $product_count]),
             '{{{product_count}}}' => $product_count,
-            '{{{pager}}}' => $this->getPager(false, $product_page, $limit, $product_count),
+            '{{{pager}}}' => $this->getPager($label ? $label->widget : false, $product_page, $limit, $product_count),
         ];
 
         return str_replace(array_keys($replace), $replace, $rendered_page);
