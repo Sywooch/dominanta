@@ -67,7 +67,7 @@ $this->params['top_panel'] = $add_button;
                 'attribute' => 'label',
                 'content' => function($data) {
                     return '<span style="display: inline-block; padding: 2px 15px; color: '.$data->font_color.'; background: '.$data->bg_color.'">'
-                           .($data->status == $data::STATUS_ACTIVE && ($data->link || $data->widget) ? Html::a(Html::encode($data->label), $data->link ? $data->link : '/shop/search?tag='.$data->widget, ['target' => '_blank']) : Html::encode($data->label))
+                           .($data->status == $data::STATUS_ACTIVE && ($data->link || $data->widget) ? Html::a(Html::encode($data->label), $data->link ? $data->link : '/shop/'.$data->widget, ['target' => '_blank']) : Html::encode($data->label))
                            .'</span>';
                 }
             ],
