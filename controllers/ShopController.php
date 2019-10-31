@@ -843,6 +843,10 @@ class ShopController extends AbstractController
         $searchtext = Yii::$app->request->get('searchtext', false);
         $searchtag  = Yii::$app->request->get('tag', false);
 
+        if ($searchtag) {
+            return $this->redirect('/shop/'.$searchtag, 301);
+        }
+
         $limit = 20;
         $product_page = Yii::$app->request->get('page', 1);
         $offset = ($product_page - 1) * $limit;
