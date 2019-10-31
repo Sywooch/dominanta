@@ -80,7 +80,7 @@ $this->params['top_panel'] = $add_button;
             [
                 'attribute' => 'widget',
                 'content' => function($data) {
-                    return $data->widget ? Html::a($data->widget, '/shop/search?tag='.$data->widget, ['target' => '_blank']) : '';
+                    return $data->widget ? Html::a($data->widget, '/shop/'.$data->widget, ['target' => '_blank']) : '';
                 }
             ]
         ],
