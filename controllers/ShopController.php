@@ -844,6 +844,10 @@ class ShopController extends AbstractController
         $searchtag  = Yii::$app->request->get('tag', false);
 
         if ($searchtag) {
+            if ($searchtag == 'bestseller') {
+                return $this->redirect('/shop/xit-prodazh', 301);
+            }
+
             return $this->redirect('/shop/'.$searchtag, 301);
         }
 
