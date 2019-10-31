@@ -843,7 +843,7 @@ class ShopController extends AbstractController
         $searchtext = Yii::$app->request->get('searchtext', false);
         $searchtag  = Yii::$app->request->get('tag', false);
 
-        $limit = 5;
+        $limit = 20;
         $product_page = Yii::$app->request->get('page', 1);
         $offset = ($product_page - 1) * $limit;
         $product_count = 0;
