@@ -35,7 +35,7 @@ use rmrevin\yii\fontawesome\component\Icon;
         <i class="fa fa-ruble"></i>
     </div>
     <div class="product_item_button">
-        <div class="product_item_q">
+        <div class="product_item_q<?= isset($shopcart[$product['prod_id']]) ? ' hidden' : '' ?> product_item_q<?= $product['prod_id'] ?>">
             <div class="product_item_quantity_control" id="product_item_quantity_control_<?= $product['prod_id'] ?>">
                 <span class="product_item_quantity_control_minus" data-id="<?= $product['prod_id'] ?>" data-widget="">&ndash;</span>
                 <span class="product_item_quantity_control_plus" data-id="<?= $product['prod_id'] ?>" data-widget="">+</span>
@@ -43,6 +43,8 @@ use rmrevin\yii\fontawesome\component\Icon;
             </div>
         </div>
 
-        <button class="add_shopcart add_shopcart<?= $product['prod_id'] ?>" data-id="<?= $product['prod_id'] ?>" data-cnt="1">В корзину</button>
+        <button class="add_shopcart <?= isset($shopcart[$product['prod_id']]) ? 'added_shopcart' : '' ?> add_shopcart<?= $product['prod_id'] ?>" data-id="<?= $product['prod_id'] ?>" data-cnt="<?= isset($shopcart[$product['prod_id']]) ? '0' : '1' ?>">
+            <?= isset($shopcart[$product['prod_id']]) ? '<i class="fa fa-check"></i> Добавлено!' : 'В корзину' ?>
+        </button>
     </div>
 </div>

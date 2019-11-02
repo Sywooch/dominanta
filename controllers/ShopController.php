@@ -475,7 +475,7 @@ class ShopController extends AbstractController
 
     function getProduct($model, $models)
     {
-        $shopcart = ShopcartController::getShopcartData();
+        $shopcart = Yii::$app->shopcart->getShopcartData();
 
         $rQuery = ProductResently::find()->where(['product_id' => $model->id]);
 
@@ -531,6 +531,7 @@ class ShopController extends AbstractController
 
         $properties = $this->productProperties($model);
         $property_weight_calc = trim(str_replace([',', ' '], ['.', ''], $properties['weight']));
+        $shopcart = Yii::$app->shopcart->getItems();
 
         $replace = [
             '{{{breadcrumbs}}}' => $this->shopBreadcrumbs($models),
@@ -547,6 +548,10 @@ class ShopController extends AbstractController
             '{{{product_photo_preview}}}' => $photos['previews'],
             '{{{product_photo_slides}}}' => $photos['slides'],
             '{{{product_reviews}}}' => $this->getReviews($model),
+            '{{{class_cnt}}}' => isset($shopcart[$model->id]) ? ' hidden' : '',
+            '{{{add_cnt}}}' => isset($shopcart[$model->id]) ? 0 : 1,
+            '{{{added_cnt}}}' => isset($shopcart[$model->id]) ? ' added_shopcart' : '',
+            '{{{add_text}}}' => isset($shopcart[$model->id]) ? '<i class="fa fa-check"></i> Добавлено!' : 'Добавить в корзину',
             '{{{review_form}}}' => $review_form,
             '{{{product_stars}}}' => $this->getProductStars($model),
             '{{{labels}}}' => $this->getProductLabels($model),
@@ -576,6 +581,7 @@ class ShopController extends AbstractController
     protected function getProductList($products, $models)
     {
         $html = '';
+        $shopcart = Yii::$app->shopcart->getItems();
 
         foreach ($products AS $product) {
             $product_obj = new Product();
@@ -597,6 +603,7 @@ class ShopController extends AbstractController
             $html .= $this->renderPartial('product_item', [
                 'product' => $product,
                 'photo'   => $photo,
+                'shopcart' => $shopcart,
                 'link'    => $this->getParentLink($models).'/'.$product['product_slug'],
             ]);
         }

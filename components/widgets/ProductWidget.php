@@ -28,7 +28,7 @@ class ProductWidget extends Widget
         $products = [];
 
         if ($this->filter == 'resently') {
-            $shopcart = ShopcartController::getShopcartData();
+            $shopcart = Yii::$app->shopcart->getShopcartData();
 
             $rQuery = Product::find()->innerJoin(ProductResently::tableName(), ProductResently::tableName().'.product_id='.Product::tableName().'.id')
                                      ->where([Product::tableName().'.status' => Product::STATUS_ACTIVE])

@@ -6,7 +6,6 @@ use Yii;
 use yii\base\Widget;
 use app\controllers\ShopcartController;
 use app\models\ActiveRecord\Product;
-use app\models\ActiveRecord\Shopcart;
 
 class ShopcartWidget extends Widget
 {
@@ -21,15 +20,8 @@ class ShopcartWidget extends Widget
 
     public function run()
     {
-        $shopcart_data = ShopcartController::getShopcartData();
-        $user_id = $shopcart_data['user_id'];
-        $hash    = $shopcart_data['hash'];
 
-        if ($user_id) {
-            $shopcart = Shopcart::find()->where(['user_id' => $user_id])->all();
-        } else {
-            $shopcart = Shopcart::find()->where(['hash' => $hash])->all();
-        }
+        $shopcart = Yii::$app->shopcart->getItems();
 
         $cnt = 0;
         $sum = 0;

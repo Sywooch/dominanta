@@ -82,6 +82,9 @@ $config = [
         'site_options' => [
             'class' => 'app\components\bootstrap\SiteOptions',
         ],
+        'shopcart' => [
+            'class' => 'app\components\bootstrap\Shopcart',
+        ],
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,

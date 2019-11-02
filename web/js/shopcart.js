@@ -105,6 +105,15 @@ var shopcart = {
 
         $('#shopcart_add_info').html(html);
 
+        $('.add_shopcart' + product.id).addClass('added_shopcart');
+
+        $('.add_shopcart' + product.id).data('cnt', '0');
+
+        $('.add_shopcart' + product.id).html('<i class="fa fa-check"></i> Добавлено!');
+
+        $('.product_item_q' + product.id).addClass('hidden');
+        $('.product_counter_add').addClass('hidden');
+
         $('.quantity_control_minus').on('click', this.minusEvent);
         $('.quantity_control_plus').on('click', this.plusEvent);
     },

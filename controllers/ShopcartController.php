@@ -7,7 +7,6 @@ use yii\db\Query;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\helpers\Html;
-use yii\web\Cookie;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use app\models\ActiveRecord\DeliveryAddress;
@@ -158,64 +157,6 @@ class ShopcartController extends AbstractController
         return $merchant->payment($amount, $order->id, 'Оплата заказа №'.$order->id, null, $order->email);
     }
 
-    public static function getShopcartData()
-    {
-        $response = Yii::$app->response;
-        $request = Yii::$app->request;
-
-        $cookies_req  = $request->cookies;
-        $cookies_resp = $response->cookies;
-
-        $user_id = NULL;
-        $hash = false;
-
-        if (!Yii::$app->user->isGuest) {
-            $user_id = Yii::$app->user->identity->id;
-
-            $record_with_hash = Shopcart::find()->where(['user_id' => $user_id])
-                                                ->limit(1)
-                                                ->one();
-
-            if ($record_with_hash) {
-                $hash = $record_with_hash['hash'];
-            }
-        }
-
-        if (!$hash) {
-            if ($cookies_req->has(Shopcart::$cookiename)) {
-                $hash = $cookies_req->get(Shopcart::$cookiename)->value;
-            } else {
-                $hash = Yii::$app->security->generateRandomString();
-            }
-        }
-
-        $cookies_resp->add(new Cookie([
-            'name' => Shopcart::$cookiename,
-            'value' => $hash,
-            'expire' => time() + (60 * 60 * 24 * 30),
-        ]));
-
-        if (!$user_id) {
-            $record_with_user = Shopcart::find()->where(['hash' => $hash])
-                                                ->andWhere(['!=', 'user_id', NULL])
-                                                ->limit(1)
-                                                ->one();
-
-            if ($record_with_user) {
-                $user_id = $record_with_user['user_id'];
-            }
-        }
-
-        if ($user_id) {
-            Shopcart::updateAll(['user_id' => $user_id], ['hash' => $hash]);
-        }
-
-        return [
-            'user_id' => $user_id,
-            'hash'    => $hash,
-        ];
-    }
-
     public function actionIndex($url = '')
     {
         $url = trim($url, '/');
@@ -256,15 +197,7 @@ class ShopcartController extends AbstractController
 
     protected function view()
     {
-        $shopcart_data = self::getShopcartData();
-        $user_id = $shopcart_data['user_id'];
-        $hash    = $shopcart_data['hash'];
-
-        if ($user_id) {
-            $shopcart = Shopcart::find()->where(['user_id' => $user_id])->all();
-        } else {
-            $shopcart = Shopcart::find()->where(['hash' => $hash])->all();
-        }
+        $shopcart = Yii::$app->shopcart->getItems();
 
         $cnt = 0;
         $sum = 0;
@@ -515,27 +448,24 @@ class ShopcartController extends AbstractController
             ];
         }
 
-        $shopcart_data = self::getShopcartData();
+        $shopcart_data = Yii::$app->shopcart->getShopcartData();
         $user_id = $shopcart_data['user_id'];
         $hash    = $shopcart_data['hash'];
+        $shopcart_items = Yii::$app->shopcart->getItems();
 
-        if ($user_id) {
-            $product_exists = Shopcart::find()->where(['product_id' => $product_id])
-                                              ->andWhere(['user_id' => $user_id])
-                                              ->limit(1)
-                                              ->one();
-        } else {
-            $product_exists = Shopcart::find()->where(['product_id' => $product_id])
-                                              ->andWhere(['hash' => $hash])
-                                              ->limit(1)
-                                              ->one();
-        }
-
-        if ($product_exists) {
+        if (isset($shopcart_items[$product_id])) {
+            $product_exists = $shopcart_items[$product_id];
             $product_exists['quantity'] += $quantity;
             $product_exists->save();
             $product_cnt = $product_exists['quantity'];
         } else {
+            if (!$quantity) {
+                return [
+                    'status'  => 'error',
+                    'message' => 'Product not found',
+                ];
+            }
+
             $product_exists = Shopcart::createAndSave([
                 'hash' => $hash,
                 'user_id' => $user_id,
@@ -545,11 +475,7 @@ class ShopcartController extends AbstractController
             $product_cnt = $quantity;
         }
 
-        if ($user_id) {
-            $shopcart = Shopcart::find()->where(['user_id' => $user_id])->all();
-        } else {
-            $shopcart = Shopcart::find()->where(['hash' => $hash])->all();
-        }
+        $shopcart = Yii::$app->shopcart->getItems(true);
 
         $cnt = 0;
         $sum = 0;
@@ -608,7 +534,7 @@ class ShopcartController extends AbstractController
             ];
         }
 
-        $shopcart_data = self::getShopcartData();
+        $shopcart_data = Yii::$app->shopcart->getShopcartData();
         $user_id = $shopcart_data['user_id'];
         $hash    = $shopcart_data['hash'];
 
@@ -628,11 +554,7 @@ class ShopcartController extends AbstractController
             $item_exists->delete();
         }
 
-        if ($user_id) {
-            $shopcart = Shopcart::find()->where(['user_id' => $user_id])->all();
-        } else {
-            $shopcart = Shopcart::find()->where(['hash' => $hash])->all();
-        }
+        $shopcart = Yii::$app->shopcart->getItems(true);
 
         $cnt = 0;
         $sum = 0;
@@ -679,7 +601,7 @@ class ShopcartController extends AbstractController
             ];
         }
 
-        $shopcart_data = self::getShopcartData();
+        $shopcart_data = Yii::$app->shopcart->getShopcartData();
         $user_id = $shopcart_data['user_id'];
         $hash    = $shopcart_data['hash'];
 
@@ -706,11 +628,7 @@ class ShopcartController extends AbstractController
             ];
         }
 
-        if ($user_id) {
-            $shopcart = Shopcart::find()->where(['user_id' => $user_id])->all();
-        } else {
-            $shopcart = Shopcart::find()->where(['hash' => $hash])->all();
-        }
+        $shopcart = Yii::$app->shopcart->getItems(true);
 
         $cnt = 0;
         $sum = 0;
