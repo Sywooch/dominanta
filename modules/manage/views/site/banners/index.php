@@ -74,6 +74,12 @@ $this->params['top_panel'] = $add_button;
                 },
             ],
             [
+                'attribute' => 'link',
+                'content' => function($data) {
+                    return $data->link ? Html::a($data->link, $data->link, ['_target' => 'blank']) : '';
+                },
+            ],
+            [
                 'content' => function($data) {
                     return file_exists($data->uploadFolder.'/'.$data->id.'.jpg') ? Html::img($data->getPreview($data->uploadFolder.'/'.$data->id.'.jpg', 360, 125)) : '';
                 },

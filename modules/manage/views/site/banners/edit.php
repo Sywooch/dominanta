@@ -64,6 +64,8 @@ if (!$model) {
 
         <?= Yii::$app->request->isAjax ? $form->field($model, 'banner_text')->textarea() : $form->field($model, 'banner_text')->widget(SummernoteWidget::classname()) ?>
 
+        <?= $form->field($model, 'link') ?>
+
         <?php if (!Yii::$app->request->isAjax) { ?>
         <div class="form-group text-center">
             <?= Html::a((new Icon('remove')).' '.Yii::t('app', 'Cancel'), ['/manage/site/banners'], ['class' => 'btn btn-round btn-default cancel-button']) ?>

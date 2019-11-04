@@ -22,13 +22,13 @@ use yii\helpers\Html;
     <!-- Wrapper for slides -->
     <div class="carousel-inner" role="listbox">
         <?php for ($s = 0; $s < count($banners); $s++) { ?>
-        <div class="item<?= !$s ? ' active' : '' ?>">
+        <<?= $banners[$s]->link ? 'a href="'.$banners[$s]->link.'"' : 'div' ?> class="item<?= !$s ? ' active' : '' ?>">
             <div class="banner_caption">
                 <?= $banners[$s]->banner_text ?>
             </div>
             <?= file_exists($banners[$s]->uploadFolder.'/'.$banners[$s]->id.'.jpg') ? Html::img($banners[$s]->getPreview($banners[$s]->uploadFolder.'/'.$banners[$s]->id.'.jpg', 1440, 500, true)) : '' ?>
             <div class="carousel-caption"></div>
-        </div>
+        </<?= $banners[$s]->link ? 'a' : 'div' ?>>
         <?php } ?>
     </div>
 

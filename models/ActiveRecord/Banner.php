@@ -11,6 +11,7 @@ use app\models\ActiveRecord\AbstractModel;
  * @property int $id
  * @property int $status
  * @property string $banner_text
+ * @property string $link
  */
 class Banner extends AbstractModel
 {
@@ -28,7 +29,7 @@ class Banner extends AbstractModel
         return [
             [['status'], 'integer'],
             [['status'], 'required', 'on' => self::SCENARIO_FORM],
-            [['banner_text', 'photo'], 'string'],
+            [['banner_text', 'photo', 'link'], 'string'],
         ];
     }
 
@@ -52,6 +53,7 @@ class Banner extends AbstractModel
             'id' => Yii::t('app', 'ID'),
             'status' => Yii::t('app', 'Status'),
             'banner_text' => Yii::t('app', 'Banner text'),
+            'link' => Yii::t('app', 'Link'),
         ];
     }
 }
