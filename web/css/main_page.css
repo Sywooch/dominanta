@@ -41,15 +41,15 @@ div.banner_caption {
 
 @media all and (max-width:768px) {
   .main_banners {
-      margin: -30px 0px 0px;
+      margin: -30px -30px 0px;
   }
 
   div.banner_caption {
-    background-size: 44%;
-    font-size: 19px;
-    line-height: 30px;
-    padding-left: 40px;
-    padding-top: 50px;
+    font-size: 24px;
+    background-size: 50%;
+    line-height: 40px;
+    padding-left: 57px;
+    padding-top: 66px;
   }
 }
 
