@@ -12,7 +12,7 @@ use yii\helpers\Html;
 <div id="main-banners-carousel" class="carousel slide main_banners" data-ride="carousel">
      <?php if (count($banners) > 1) { ?>
     <!-- Indicators -->
-    <ol class="carousel-indicators">
+    <ol class="carousel-indicators hidden-xs">
         <?php for ($s = 0; $s < count($banners); $s++) { ?>
         <li data-target="#main-banners-carousel" data-slide-to="<?= $s ?>"<?= !$s ? ' class="active"' : '' ?>></li>
         <?php } ?>
@@ -34,8 +34,8 @@ use yii\helpers\Html;
 
     <?php if (count($banners) > 1) { ?>
     <!-- Controls -->
-    <a class="left carousel-control" href="#main-banners-carousel" role="button" data-slide="prev"></a>
-    <a class="right carousel-control" href="#main-banners-carousel" role="button" data-slide="next"></a>
+    <a class="left carousel-control hidden-sm hidden-xs" href="#main-banners-carousel" role="button" data-slide="prev"></a>
+    <a class="right carousel-control hidden-sm hidden-xs" href="#main-banners-carousel" role="button" data-slide="next"></a>
     <?php } ?>
 </div>
 
