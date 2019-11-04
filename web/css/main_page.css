@@ -1,0 +1,120 @@
+.content_block {
+  margin-top: -1px;
+}
+
+.breadcrumbs-line, .page_title {
+  display: none;
+}
+
+div.banner_caption {
+  position: absolute;
+  z-index: 100;
+  width: 691px;
+  height: 500px;
+  background: url('/images/banner_caption.png') no-repeat;
+  font-size: 40px;
+  line-height: 70px;
+  color: #FFFFFF;
+  padding-left: 100px;
+  padding-top: 100px;
+}
+
+@media all and (max-width:1200px) {
+  div.banner_caption {
+    background-size: 70%;
+    font-size: 26px;
+    line-height: 46px;
+    padding-left: 80px;
+    padding-top: 80px;
+  }
+}
+
+@media all and (max-width:992px) {
+  div.banner_caption {
+    background-size: 50%;
+    font-size: 21px;
+    line-height: 35px;
+    padding-left: 65px;
+    padding-top: 65px;
+  }
+}
+
+@media all and (max-width:768px) {
+  div.banner_caption {
+    background-size: 44%;
+    font-size: 19px;
+    line-height: 30px;
+    padding-left: 40px;
+    padding-top: 50px;
+  }
+}
+
+@media all and (max-width:600px) {
+  div.banner_caption {
+    background-size: 40%;
+    font-size: 18px;
+    line-height: 28px;
+    padding-left: 35px;
+    padding-top: 40px;
+  }
+}
+
+@media all and (max-width:500px) {
+  div.banner_caption {
+    padding-top: 30px;
+  }
+}
+
+@media all and (max-width:470px) {
+  div.banner_caption {
+    background-size: 40%;
+    font-size: 16px;
+    line-height: 24px;
+    padding-left: 40px;
+    padding-top: 35px;
+  }
+}
+
+@media all and (max-width:425px) {
+  div.banner_caption {
+    background-size: 37%;
+    font-size: 14px;
+    line-height: 24px;
+    padding-left: 40px;
+    padding-top: 27px;
+  }
+}
+
+@media all and (max-width:375px) {
+  div.banner_caption {
+    background-size: 37%;
+    font-size: 14px;
+    line-height: 22px;
+    padding-left: 35px;
+    padding-top: 20px;
+  }
+}
+
+@media all and (max-width:320px) {
+  div.banner_caption {
+    padding-top: 12px;
+  }
+}
+
+div.banner_caption a, div.banner_caption a:active, div.banner_caption a:visited {
+  color: #fff;
+  text-decoration: none;
+}
+
+div.banner_caption a:hover {
+  text-decoration: none;
+  opacity: 0.8;
+}
+
+.carousel-control {
+  width: 50px;
+}
+
+#menu_top_line {
+margin-bottom: -1px;
+}

@@ -2554,8 +2554,12 @@ span.user_acc_delivery {
 }
 
 @media all and (max-width:1050px) {
-  .product_widget, .main_banners {
+  .product_widget {
     margin: 40px;
+  }
+
+  .main_banners {
+      margin: 0px 40px;
   }
 }
 
@@ -2573,11 +2577,19 @@ span.user_acc_delivery {
   .product_widget, .main_banners {
     margin: 40px;
   }
+
+  .main_banners {
+      margin: 0px 40px;
+  }
 }
 
 @media all and (max-width:767px) {
-  .product_widget, .main_banners {
-    margin: 40px 10px;
+  .product_widget {
+      margin: 40px 10px;
+  }
+
+  .main_banners {
+    margin: 0px;
   }
 
   .product_widget .product_item {
@@ -2590,8 +2602,12 @@ span.user_acc_delivery {
 }
 
 @media all and (max-width:630px) {
-  .product_widget, .main_banners {
+  .product_widget {
       margin: 40px 20px;
+  }
+
+  .main_banners {
+      margin: 1px 0px 0px;
   }
 
   .product_widget .product_item {
