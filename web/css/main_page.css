@@ -39,11 +39,10 @@ div.banner_caption {
   }
 }
 
-@media all and (max-width:767px) {
+@media all and (max-width:768px) {
   .main_banners {
       margin: -30px 0px 0px;
   }
-
 
   div.banner_caption {
     background-size: 44%;

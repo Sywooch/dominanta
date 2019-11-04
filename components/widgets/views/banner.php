@@ -39,26 +39,5 @@ use yii\helpers\Html;
     <?php } ?>
 </div>
 
-</div>
-</div>
-
-<div id="main-banners-carousel_mobile" class="carousel slide main_banners hidden-lg hidden-md" data-ride="carousel">
-    <!-- Wrapper for slides -->
-    <div class="carousel-inner" role="listbox">
-        <?php for ($s = 0; $s < count($banners); $s++) { ?>
-        <<?= $banners[$s]->link ? 'a href="'.$banners[$s]->link.'"' : 'div' ?> class="item<?= !$s ? ' active' : '' ?>">
-            <div class="banner_caption">
-                <?= $banners[$s]->banner_text ?>
-            </div>
-            <?= file_exists($banners[$s]->uploadFolder.'/'.$banners[$s]->id.'.jpg') ? Html::img($banners[$s]->getPreview($banners[$s]->uploadFolder.'/'.$banners[$s]->id.'.jpg', 1440, 500, true)) : '' ?>
-            <div class="carousel-caption"></div>
-        </<?= $banners[$s]->link ? 'a' : 'div' ?>>
-        <?php } ?>
-    </div>
-</div>
-
-<div class="container content_block">
-    <div class="container_content_block">
-
 
 
