@@ -9,7 +9,7 @@ use yii\helpers\Html;
 
 ?>
 
-<div id="main-banners-carousel" class="carousel slide main_banners hidden-xs hidden-sm" data-ride="carousel">
+<div id="main-banners-carousel" class="carousel slide main_banners" data-ride="carousel">
      <?php if (count($banners) > 1) { ?>
     <!-- Indicators -->
     <ol class="carousel-indicators">
