@@ -2575,9 +2575,9 @@ span.user_acc_delivery {
   }
 }
 
-@media all and (max-width:768px) {
+@media all and (max-width:767px) {
   .product_widget, .main_banners {
-    margin: 40px;
+    margin: 40px 10px;
   }
 
   .product_widget .product_item {
