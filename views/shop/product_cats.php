@@ -31,27 +31,22 @@ $cnt = 0;
                 <?= (!Yii::$app->user->isGuest && Yii::$app->user->identity->rules['ProductCategory']['is_edit']) ? Html::a(new Icon('pencil'), ['/manage/market/categories/edit', 'id' => $category['id']], ['target' => '_blank']) : '' ?>
                 <?= Html::a(Html::encode($category['name']), $category['link']) ?>
             </div>
-            <div class="product_category_item_subcats">
-                <?php for ($i = 0; $i < 5 && $i < count($category['items']); $i++) { ?>
-                    <?= Html::a(Html::encode($category['items'][$i]['name']), $category['items'][$i]['link']) ?>
-                <?php } ?>
+        </div>
+        <?php if ($category['items']) { ?>
+            <div class="product_category_item_show_all product_category_item_show_all<?= $category['id'] ?>" data-id="<?= $category['id'] ?>">
+                Смотреть все подкатегории &nbsp;&nbsp;<i class="fa fa-angle-down"></i>
 
-                <?php if (count($category['items']) > 5) { ?>
-                <div class="product_category_item_subcats_hidden hidden_subcats_<?= $category['id'] ?>">
-                    <?php for ($i = 5; $i < count($category['items']); $i++) { ?>
+                <div class="product_category_item_subcats product_category_item_subcats<?= $category['id'] ?>">
+                    <div>
+                    <?php for ($i = 0; $i < count($category['items']) && $i < count($category['items']); $i++) { ?>
                         <?= Html::a(Html::encode($category['items'][$i]['name']), $category['items'][$i]['link']) ?>
                     <?php } ?>
+                    </div>
                 </div>
-                <?php } ?>
-            </div>
-        </div>
-        <?php if (count($category['items']) > 5) { ?>
-        <div class="product_category_item_show_all product_category_item_show_all<?= $category['id'] ?>" data-id="<?= $category['id'] ?>">
-             Смотреть все подкатегории &nbsp;&nbsp;<i class="fa fa-angle-down"></i>
-        <?php } else { ?>
-        <div class="product_category_item_bottom_all">
-             &nbsp;
-        <?php } ?>
+            <?php } else { ?>
+            <div class="product_category_item_bottom_all">
+                &nbsp;
+            <?php } ?>
         </div>
     </div>
 
@@ -78,23 +73,18 @@ $cnt = 0;
                 <?= (!Yii::$app->user->isGuest && Yii::$app->user->identity->rules['ProductCategory']['is_edit']) ? Html::a(new Icon('pencil'), ['/manage/market/categories/edit', 'id' => $category['id']], ['target' => '_blank']) : '' ?>
                 <?= Html::a(Html::encode($category['name']), $category['link']) ?>
             </div>
-            <div class="product_category_item_subcats">
-                <?php for ($i = 0; $i < 5 && $i < count($category['items']); $i++) { ?>
-                    <?= Html::a(Html::encode($category['items'][$i]['name']), $category['items'][$i]['link']) ?>
-                <?php } ?>
-
-                <?php if (count($category['items']) > 5) { ?>
-                <div class="product_category_item_subcats_hidden hidden_subcats_<?= $category['id'] ?>">
-                    <?php for ($i = 5; $i < count($category['items']); $i++) { ?>
-                        <?= Html::a(Html::encode($category['items'][$i]['name']), $category['items'][$i]['link']) ?>
-                    <?php } ?>
-                </div>
-                <?php } ?>
-            </div>
         </div>
-        <?php if (count($category['items']) > 5) { ?>
+        <?php if ($category['items']) { ?>
         <div class="product_category_item_show_all product_category_item_show_all<?= $category['id'] ?>" data-id="<?= $category['id'] ?>">
              Смотреть все подкатегории &nbsp;&nbsp;<i class="fa fa-angle-down"></i>
+
+            <div class="product_category_item_subcats product_category_item_subcats<?= $category['id'] ?>">
+                <div>
+                <?php for ($i = 0; $i < count($category['items']) && $i < count($category['items']); $i++) { ?>
+                    <?= Html::a(Html::encode($category['items'][$i]['name']), $category['items'][$i]['link']) ?>
+                <?php } ?>
+                </div>
+            </div>
         <?php } else { ?>
         <div class="product_category_item_bottom_all">
              &nbsp;
@@ -125,23 +115,18 @@ $cnt = 0;
                 <?= (!Yii::$app->user->isGuest && Yii::$app->user->identity->rules['ProductCategory']['is_edit']) ? Html::a(new Icon('pencil'), ['/manage/market/categories/edit', 'id' => $category['id']], ['target' => '_blank']) : '' ?>
                 <?= Html::a(Html::encode($category['name']), $category['link']) ?>
             </div>
-            <div class="product_category_item_subcats">
-                <?php for ($i = 0; $i < 5 && $i < count($category['items']); $i++) { ?>
-                    <?= Html::a(Html::encode($category['items'][$i]['name']), $category['items'][$i]['link']) ?>
-                <?php } ?>
-
-                <?php if (count($category['items']) > 5) { ?>
-                <div class="product_category_item_subcats_hidden hidden_subcats_<?= $category['id'] ?>">
-                    <?php for ($i = 5; $i < count($category['items']); $i++) { ?>
-                        <?= Html::a(Html::encode($category['items'][$i]['name']), $category['items'][$i]['link']) ?>
-                    <?php } ?>
-                </div>
-                <?php } ?>
-            </div>
         </div>
-        <?php if (count($category['items']) > 5) { ?>
+        <?php if ($category['items']) { ?>
         <div class="product_category_item_show_all product_category_item_show_all<?= $category['id'] ?>" data-id="<?= $category['id'] ?>">
              Смотреть все подкатегории &nbsp;&nbsp;<i class="fa fa-angle-down"></i>
+
+            <div class="product_category_item_subcats product_category_item_subcats<?= $category['id'] ?>">
+                <div>
+                <?php for ($i = 0; $i < count($category['items']) && $i < count($category['items']); $i++) { ?>
+                    <?= Html::a(Html::encode($category['items'][$i]['name']), $category['items'][$i]['link']) ?>
+                <?php } ?>
+                </div>
+            </div>
         <?php } else { ?>
         <div class="product_category_item_bottom_all">
              &nbsp;

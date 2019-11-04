@@ -62,7 +62,6 @@ var mainPage = {
         return false;
     },
     showDropdownMenuTrigger: function(obj) {
-    console.log(this.menuInit)
         if (this.menuInit) {
             clearTimeout(this.menuInit);
             this.menuInit = false;
