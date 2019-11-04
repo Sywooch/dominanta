@@ -2591,11 +2591,11 @@ span.user_acc_delivery {
 
 @media all and (max-width:630px) {
   .product_widget, .main_banners {
-    margin: 40px 0px 40px 10px;
+      margin: 40px 20px;
   }
 
   .product_widget .product_item {
-    width: 100%;
+      width: 100%;
   }
 }
 
