@@ -61,11 +61,11 @@ div.banner_caption {
 
 @media all and (max-width:600px) {
   div.banner_caption {
-    background-size: 40%;
-    font-size: 18px;
-    line-height: 28px;
-    padding-left: 35px;
-    padding-top: 40px;
+    background-size: 45%;
+    font-size: 22px;
+    line-height: 35px;
+    padding-left: 44px;
+    padding-top: 42px;
   }
 }
 
