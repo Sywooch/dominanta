@@ -77,9 +77,9 @@ div.banner_caption {
 
 @media all and (max-width:470px) {
   div.banner_caption {
-    background-size: 40%;
-    font-size: 16px;
-    line-height: 24px;
+    background-size: 36%;
+    font-size: 18px;
+    line-height: 26px;
     padding-left: 40px;
     padding-top: 35px;
   }
@@ -87,9 +87,9 @@ div.banner_caption {
 
 @media all and (max-width:425px) {
   div.banner_caption {
-    background-size: 37%;
-    font-size: 14px;
-    line-height: 24px;
+    background-size: 33%;
+    font-size: 16px;
+    line-height: 26px;
     padding-left: 40px;
     padding-top: 27px;
   }
@@ -97,17 +97,21 @@ div.banner_caption {
 
 @media all and (max-width:375px) {
   div.banner_caption {
-    background-size: 37%;
-    font-size: 14px;
-    line-height: 22px;
+    background-size: 31%;
+    font-size: 16px;
+    line-height: 23px;
     padding-left: 35px;
-    padding-top: 20px;
+    padding-top: 23px;
   }
 }
 
-@media all and (max-width:320px) {
+@media all and (max-width:335px) {
   div.banner_caption {
-    padding-top: 12px;
+    background-size: 28%;
+    font-size: 15px;
+    line-height: 22px;
+    padding-left: 35px;
+    padding-top: 23px;
   }
 }
 
