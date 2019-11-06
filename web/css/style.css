@@ -2073,7 +2073,7 @@ span.user_acc_delivery {
 
 
 
-@media all and (max-width:768px) {
+@media all and (max-width:767px) {
   .order_item_label {
     font-size: 12px;
   }
@@ -2084,6 +2084,11 @@ span.user_acc_delivery {
 
   .order_item_address {
     font-size: 12px;
+  }
+
+  .order_item_collapse_button {
+    margin-top: -10px;
+    margin-right: -5px;
   }
 }
 
