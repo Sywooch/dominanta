@@ -2070,6 +2070,23 @@ span.user_acc_delivery {
     cursor: pointer;
 }
 
+
+
+
+@media all and (max-width:768px) {
+  .order_item_label {
+    font-size: 12px;
+  }
+
+  .order_item_data {
+    font-size: 12px;
+  }
+
+  .order_item_address {
+    font-size: 12px;
+  }
+}
+
 /* Delivery */
 .delivery_form {
     border-bottom: 1px solid #d7d7d7;
