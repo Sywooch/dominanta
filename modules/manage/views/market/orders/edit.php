@@ -67,6 +67,38 @@ if (!$model) {
             </tr>
         </table>
 
+        <?= $form->field($model, 'payment_type')->dropdownList($model->payment_types, ['options' => ['disabled' => true]]); ?>
+
+        <?php if (!$model->payment_type) { ?>
+
+            <?php if (!$model->shopPayments) { ?>
+            <div class="well text-center">
+                <b>Платежей не обнаружено</b>
+            </div>
+            <?php } else { ?>
+            <table class="table table-condensed">
+                <tr>
+                    <th colspan="3" class="text-center">Платежи</th>
+                </tr>
+                <tr>
+                    <th>Статус</th>
+                    <th>Сумма</th>
+                    <th>Оплачено</th>
+                </tr>
+                <?php foreach ($model->shopPayments AS $payment) { ?>
+                <tr>
+                    <td>
+                        <?= $payment->status == $payment::STATUS_DELETED ? new Icon('remove').' Отменён' : '' ?>
+                        <?= $payment->status == $payment::STATUS_INACTIVE ? new Icon('clock-o').' Ожидает '.($payment->payed > 0 ? 'подтверждения' : 'оплаты') : '' ?>
+                        <?= $payment->status == $payment::STATUS_ACTIVE ? new Icon('check').' Оплачен' : '' ?>
+                    </td>
+                    <td class="text-right"><?= Yii::$app->formatter->asDecimal($payment->amount, 2) ?> <?= new Icon('ruble') ?></td>
+                    <td class="text-right"><?= Yii::$app->formatter->asDecimal($payment->payed, 2) ?> <?= new Icon('ruble') ?></td>
+                </tr>
+                <?php } ?>
+            <?php } ?>
+        <?php } ?>
+
         <?= $form->field($model, 'fio') ?>
 
         <?= $form->field($model, 'phone')->label(Yii::t('app', 'Phone')) ?>
@@ -74,8 +106,6 @@ if (!$model) {
         <?= $form->field($model, 'address')->textarea() ?>
 
         <?= $form->field($model, 'email')->label('Email') ?>
-
-        <?= $form->field($model, 'payment_type')->dropdownList($model->payment_types); ?>
 
         <?= $form->field($model, 'delivery_type')->dropdownList($model->delivery_types); ?>
 

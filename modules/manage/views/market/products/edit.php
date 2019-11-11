@@ -209,6 +209,25 @@ if (!$model) {
             </div>
         </div>
 
+        <?php if (isset($model->id)) { ?>
+        <div class="well text-center">
+            <b>
+                <?php if ($model->status != $model::STATUS_ACTIVE) { ?>
+                    <?= Html::a(new Icon('eye').' '.($model->status == $model::STATUS_INACTIVE ? Yii::t('app', 'Hidden') : Yii::t('app', 'Deleted')).'. '.Yii::t('app', 'Show'), ['show', 'id' => $model->id]) ?>
+                <?php } ?>
+                <?php if ($model->status != $model::STATUS_INACTIVE) { ?>
+                    <?= Html::a(new Icon('eye-slash').' '.($model->status == $model::STATUS_ACTIVE ? Yii::t('app', 'Published') : Yii::t('app', 'Deleted')).'. '.Yii::t('app', 'Hide'), ['hide', 'id' => $model->id]) ?>
+                <?php } ?>
+
+
+                &nbsp;&nbsp;
+                <?= Html::a(new Icon('tag').' '.Yii::t('app', 'Labels'), ['labels', 'id' => $model->id]) ?>
+                &nbsp;&nbsp;
+                <?= Html::a(new Icon('image').' '.Yii::t('app', 'Photo'), ['photos', 'id' => $model->id]) ?>
+            </b>
+        </div>
+        <?php } ?>
+
         <?php if (!Yii::$app->request->isAjax) { ?>
         <div class="form-group text-center">
             <?= Html::a((new Icon('remove')).' '.Yii::t('app', 'Cancel'), ['/manage/market/products', 'cat_id' => $model->cat_id], ['class' => 'btn btn-round btn-default cancel-button']) ?>

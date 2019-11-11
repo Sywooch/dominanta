@@ -91,7 +91,7 @@ class ShopcartController extends AbstractController
         $payment->payed = $nOutSum;
         $payment->save();
 
-        $payment->order->sendEmails();
+        //$payment->order->sendEmails();
 
         Yii::$app->session->setFlash('success', '<i class="fa fa-check"></i> Заказ №'.$nInvId.' успешно оформлен и оплачен!');
         return $this->redirect(['/shopcart/processed'], 301);
@@ -385,6 +385,8 @@ class ShopcartController extends AbstractController
                 $amount += $item->quantity * $item_end_price;
             }
 
+            $model->sendEmails();
+
             if (!$model->payment_type) {
                 $online_payment = ShopPayment::createAndSave([
                     'order_id' => $model->id,
@@ -397,8 +399,6 @@ class ShopcartController extends AbstractController
                 /** @var \robokassa\Merchant $merchant */
                 $merchant = Yii::$app->get('robokassa');
                 return $merchant->payment($online_payment->amount, $model->id, 'Оплата заказа №'.$model->id, null, $model->email);
-            } else {
-                $model->sendEmails();
             }
 
             Yii::$app->session->setFlash('success', '<i class="fa fa-check"></i> '.Yii::t('app', 'Заказ №'.$model->id.' оформлен!'));

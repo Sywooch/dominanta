@@ -70,6 +70,7 @@ if (!$model) {
                     <?= $form->field($model, 'slug') ?>
 
                     <?= Yii::$app->request->isAjax ? $form->field($model, 'category_description')->textarea() : $form->field($model, 'category_description')->widget(SummernoteWidget::classname()) ?>
+
                 </div>
                 <?php if ($category_filter) { ?>
                 <div role="tabpanel" class="tab-pane fade" id="tab_content_filter" aria-labelledby="tab_content_filter">
@@ -100,6 +101,14 @@ if (!$model) {
                 </div>
             </div>
         </div>
+
+        <?php if (isset($model->id)) { ?>
+        <div class="well text-center">
+            <b>
+                <?= Html::a(new Icon('image').' '.Yii::t('app', 'Photo'), ['photo', 'id' => $model->id]) ?>
+            </b>
+        </div>
+        <?php } ?>
 
         <?php if (!Yii::$app->request->isAjax) { ?>
         <div class="form-group text-center">

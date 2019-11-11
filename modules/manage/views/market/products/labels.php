@@ -58,6 +58,16 @@ if (!$model) {
         <?php } ?>
         </div>
 
+        <?php if (isset($model->id)) { ?>
+        <div class="well text-center">
+            <b>
+                <?= Html::a(new Icon('pencil').' '.Yii::t('app', 'Edit'), ['edit', 'id' => $model->id]) ?>
+                &nbsp;&nbsp;
+                <?= Html::a(new Icon('image').' '.Yii::t('app', 'Photo'), ['photos', 'id' => $model->id]) ?>
+            </b>
+        </div>
+        <?php } ?>
+
         <?php if (!Yii::$app->request->isAjax) { ?>
         <div class="form-group text-center">
             <?= Html::a((new Icon('remove')).' '.Yii::t('app', 'Cancel'), ['/manage/market/products', 'cat_id' => $model->cat_id], ['class' => 'btn btn-round btn-default cancel-button']) ?>

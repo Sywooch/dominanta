@@ -66,6 +66,15 @@ if (!$model) {
             ],
         ]); ?>
 
+        <?php if (isset($model->id)) { ?>
+        <div class="well text-center">
+            <b>
+                <?= Html::a(new Icon('pencil').' '.Yii::t('app', 'Edit'), ['edit', 'id' => $model->id]) ?>
+                &nbsp;&nbsp;
+                <?= Html::a(new Icon('tag').' '.Yii::t('app', 'Labels'), ['labels', 'id' => $model->id]) ?>
+            </b>
+        </div>
+        <?php } ?>
 
         <?php if (!Yii::$app->request->isAjax) { ?>
         <div class="form-group text-center">
