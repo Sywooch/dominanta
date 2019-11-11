@@ -104,11 +104,13 @@ if (!$model) {
 
         <?= $form->field($model, 'phone')->label(Yii::t('app', 'Phone')) ?>
 
-        <?= $form->field($model, 'address')->textarea() ?>
-
         <?= $form->field($model, 'email')->label('Email') ?>
 
         <?= $form->field($model, 'delivery_type')->dropdownList($model->delivery_types); ?>
+
+        <div<?= !$model->delivery_type ? ' class="hidden"' : '' ?>>
+        <?= $form->field($model, 'address')->textarea() ?>
+        </div>
 
         <?= $form->field($model, 'order_comment')->textarea() ?>
 
