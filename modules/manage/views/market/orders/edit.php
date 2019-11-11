@@ -42,9 +42,9 @@ if (!$model) {
         <table class="table table-condensed">
             <tr>
                 <th>Товар</th>
-                <th>Кол-во</th>
-                <th>Стоимость</th>
-                <th>Сумма</th>
+                <th class="text-right">Кол-во</th>
+                <th class="text-right">Стоимость</th>
+                <th class="text-right">Сумма</th>
             </tr>
             <?php foreach ($model->shopOrderPosition AS $position) {
                 $pos_amount = $position->price * $position->quantity;
@@ -82,8 +82,8 @@ if (!$model) {
                 </tr>
                 <tr>
                     <th>Статус</th>
-                    <th>Сумма</th>
-                    <th>Оплачено</th>
+                    <th class="text-right">Сумма</th>
+                    <th class="text-right">Оплачено</th>
                 </tr>
                 <?php foreach ($model->shopPayments AS $payment) { ?>
                 <tr>
@@ -92,8 +92,8 @@ if (!$model) {
                         <?= $payment->status == $payment::STATUS_INACTIVE ? new Icon('clock-o').' Ожидает '.($payment->payed > 0 ? 'подтверждения' : 'оплаты') : '' ?>
                         <?= $payment->status == $payment::STATUS_ACTIVE ? new Icon('check').' Оплачен' : '' ?>
                     </td>
-                    <td><?= Yii::$app->formatter->asDecimal($payment->amount, 2) ?> <?= new Icon('ruble') ?></td>
-                    <td><?= Yii::$app->formatter->asDecimal($payment->payed, 2) ?> <?= new Icon('ruble') ?></td>
+                    <td class="text-right"><?= Yii::$app->formatter->asDecimal($payment->amount, 2) ?> <?= new Icon('ruble') ?></td>
+                    <td class="text-right"><?= Yii::$app->formatter->asDecimal($payment->payed, 2) ?> <?= new Icon('ruble') ?></td>
                 </tr>
                 <?php } ?>
             </table>
