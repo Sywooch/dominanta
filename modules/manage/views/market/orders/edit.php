@@ -89,8 +89,8 @@ if (!$model) {
                 <tr>
                     <td>
                         <?= $payment->status == $payment::STATUS_DELETED ? new Icon('remove').' Отменён' : '' ?>
-                        <?= $payment->status == $payment::STATUS_INACTIVE ? new Icon('clock-o').' Ожидает '.($payment->payed > 0 ? 'подтверждения' : 'оплаты') : '' ?>
-                        <?= $payment->status == $payment::STATUS_ACTIVE ? new Icon('check').' Оплачен' : '' ?>
+                        <?= $payment->status == $payment::STATUS_INACTIVE ? new Icon('money'). ' Ожидает оплаты' : '' ?>
+                        <?= $payment->status == $payment::STATUS_ACTIVE ? ($payment->payed > 0 ? new Icon('check').' Оплачен' : new Icon('clock-o').' Ожидает подтверждения') : '' ?>
                     </td>
                     <td class="text-right"><?= Yii::$app->formatter->asDecimal($payment->amount, 2) ?> <?= new Icon('ruble') ?></td>
                     <td class="text-right"><?= Yii::$app->formatter->asDecimal($payment->payed, 2) ?> <?= new Icon('ruble') ?></td>
