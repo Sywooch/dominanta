@@ -96,6 +96,7 @@ if (!$model) {
                     <td class="text-right"><?= Yii::$app->formatter->asDecimal($payment->payed, 2) ?> <?= new Icon('ruble') ?></td>
                 </tr>
                 <?php } ?>
+            </table>
             <?php } ?>
         <?php } ?>
 
