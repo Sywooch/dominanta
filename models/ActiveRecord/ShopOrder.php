@@ -234,7 +234,7 @@ class ShopOrder extends AbstractModel
             'subject'   => 'Заказ №'.$this->id.' готов к выдаче',
             'body_text' => $this->id,
             'body_html' => $this->id,
-        ], 'wait_payment');
+        ], 'ready_order');
     }
 
     /**
