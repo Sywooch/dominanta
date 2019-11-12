@@ -142,9 +142,19 @@ class ShopOrder extends AbstractModel
         $this->address = $this->delivery_type ? $this->address : '';
     }
 
-    public function eventAfterInsert()
+    public function eventAfterUpdate()
     {
+       // print_r($this->old_values); var_dump($this->status); die();
 
+        if (isset($this->old_values['status'])) {
+            if (!$this->payment_type && $this->status == self::STATUS_READY) {
+                $this->sendReadyNotify();
+            }
+
+            if ($this->payment_type && $this->status == self::STATUS_WAIT_PAYMENT) {
+                $this->sendWaitPaymentNotify();
+            }
+        }
     }
 
     public function sendEmails()
@@ -207,6 +217,24 @@ class ShopOrder extends AbstractModel
                 'body_html' => $this->id,
             ], 'order_admin_payment');
         }
+    }
+
+    public function sendWaitPaymentNotify() {
+        Mail::createAndSave([
+            'to_email'  => $this->email,
+            'subject'   => 'Заказ №'.$this->id.' ожидает оплату',
+            'body_text' => $this->id,
+            'body_html' => $this->id,
+        ], 'wait_payment');
+    }
+
+    public function sendReadyNotify() {
+        Mail::createAndSave([
+            'to_email'  => $this->email,
+            'subject'   => 'Заказ №'.$this->id.' готов к выдаче',
+            'body_text' => $this->id,
+            'body_html' => $this->id,
+        ], 'wait_payment');
     }
 
     /**

@@ -78,22 +78,10 @@ class AbstractModel extends ActiveRecord implements InterfaceModel
                 if (method_exists($classname, 'eventBeforeInsert')) {
                     $ret = $this->eventBeforeInsert();
                 }
-/*
-                if ($classname::$notify && method_exists($classname, 'sendMailNew')) {
-                    $users_list = $this->getUsersForNotify();
-                    $this->sendMailNew($users_list);
-                }
-*/
             } else {
                 if (method_exists($classname, 'eventBeforeUpdate')) {
                     $ret = $this->eventBeforeUpdate();
                 }
-/*
-                if ($classname::$notify && method_exists($this, 'sendMailEdit')) {
-                    $users_list = $this->getUsersForNotify();
-                    $this->sendMailEdit($users_list);
-                }
-*/
             }
 
             return $ret === false ? false : true;
