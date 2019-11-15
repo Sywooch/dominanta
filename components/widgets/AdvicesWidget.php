@@ -12,6 +12,10 @@ class AdvicesWidget extends Widget
 
     public $call_model, $controller;
 
+    public $limit = false;
+
+    public $parent_page = false;
+
     public static function getName()
     {
         return self::$name;
@@ -19,10 +23,19 @@ class AdvicesWidget extends Widget
 
     public function run()
     {
-        $advices = Page::find()->where(['pid' => $this->call_model->id])
-                                ->andWhere(['status' => Page::STATUS_ACTIVE])
-                                ->orderBy(['create_time' => SORT_DESC])
-                                ->all();
+        if (!$this->parent_page) {
+            $this->parent_page = $this->call_model->id;
+        }
+
+        $advices_query = Page::find()->where(['pid' => $this->parent_page])
+                                     ->andWhere(['status' => Page::STATUS_ACTIVE])
+                                     ->orderBy(['create_time' => SORT_DESC]);
+
+        if ($this->limit) {
+            $advices_query->limit($this->limit);
+        }
+
+        $advices = $advices_query->all();
 
         return $this->render('advices', ['advices' => $advices]);
     }
