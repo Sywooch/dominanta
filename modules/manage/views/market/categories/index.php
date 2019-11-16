@@ -94,7 +94,7 @@ $this->params['select_menu'] = Url::to(['/manage/market/categories']);
                         $title = ($model->status == $model::STATUS_INACTIVE ? Yii::t('app', 'Hidden') : Yii::t('app', 'Deleted')).
                                  '. '.Yii::t('app', 'Show');
 
-                        return Html::a(new Icon('eye', ['class' => 'fa-lg']),
+                        return Html::a(new Icon('eye-slash', ['class' => 'fa-lg']),
                                       ['show', 'id' => $model->id],
                                       ['title' => $title,
                                        'aria-label' => $title,
@@ -111,7 +111,7 @@ $this->params['select_menu'] = Url::to(['/manage/market/categories']);
                         $title = ($model->status == $model::STATUS_ACTIVE ? Yii::t('app', 'Published') : Yii::t('app', 'Deleted')).
                                  '. '.Yii::t('app', 'Hide');
 
-                        return Html::a(new Icon('eye-slash', ['class' => 'fa-lg']),
+                        return Html::a(new Icon('eye', ['class' => 'fa-lg']),
                                       ['hide', 'id' => $model->id],
                                       ['title' => $title,
                                        'aria-label' => $title,
