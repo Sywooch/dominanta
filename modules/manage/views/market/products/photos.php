@@ -39,7 +39,7 @@ if (!$model) {
                     ['data' => ['id' => $photo->id]]
                 ) ?>
                 <input type="hidden" name="photo[<?= $photo->id ?>]" id="sort_photo<?= $photo->id ?>" value="<?= $photo->photo_order ?>" />
-                <button type="button" class="close" aria-label="Close" style="position: absolute; margin-top: -150px; margin-left: 135px;" data-id="<?= $photo->id ?>"><span aria-hidden="true">&times;</span></button>
+                <button type="button" class="close" aria-label="Close" style="position: absolute; margin-top: 0px; margin-left: -15px;" data-id="<?= $photo->id ?>"><span aria-hidden="true">&times;</span></button>
             </span>
          <?php } ?>
          </div>

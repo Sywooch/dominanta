@@ -24,7 +24,7 @@ var productPhoto = {
             var html = '<span class="img-thumbnail" id="thumb_photo' + result.files[f].photo_id + '">';
             html += '<img src="' + result.files[f].thumbnail + '" alt="" data-id="' + result.files[f].photo_id + '" />';
             html += '<input type="hidden" name="photo[' + result.files[f].photo_id + ']" id="sort_photo' + result.files[f].photo_id + '" />';
-            html += '<button type="button" class="close" aria-label="Close" style="position: absolute;  margin-left: -15px;" data-id="' + result.files[f].photo_id + '"><span aria-hidden="true">&times;</span></button></span>';
+            html += '<button type="button" class="close" aria-label="Close" style="position: absolute;  margin-left: -15px; margin-top: 0px;" data-id="' + result.files[f].photo_id + '"><span aria-hidden="true">&times;</span></button></span>';
             $('.uploaded_photo_list').append(html);
             $('#thumb_photo' + result.files[f].photo_id + ' button.close').on('click', this.delPhotoEvent);
         }
