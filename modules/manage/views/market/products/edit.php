@@ -94,13 +94,13 @@ if (!$model) {
 
                     <?= $form->field($model, 'price') ?>
 
-                    <?= $form->field($model, 'old_price') ?>
-
                     <?= Yii::$app->request->isAjax ? $form->field($model, 'product_desc')->textarea() : $form->field($model, 'product_desc')->widget(SummernoteWidget::classname()) ?>
                 </div>
                 <div role="tabpanel" class="tab-pane fade" id="tab_content_promo" aria-labelledby="form-tab-promo">
 
                     <?= $form->field($model, 'discount') ?>
+
+                    <?= $form->field($model, 'old_price') ?>
 
                 </div>
                 <div role="tabpanel" class="tab-pane fade" id="tab_content_specifications" aria-labelledby="form-tab-specifications">
