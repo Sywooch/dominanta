@@ -122,6 +122,7 @@ class StockImportController extends AbstractManageController
                                 $product->price    = str_replace([' ', ',', 'руб', 'руб.'], ['', '.', '', ''], $price);
                             }
 
+                            $product->update_sitemap = false;
                             $product->save();
 
                             $this->publishCat($product->cat_id);
@@ -154,6 +155,7 @@ class StockImportController extends AbstractManageController
 
         if ($category->status != $category::STATUS_ACTIVE) {
             $category->status = $category::STATUS_ACTIVE;
+            $category->update_sitemap = false;
             $category->save();
 
             $this->cat_cache[$category_id] = 1;

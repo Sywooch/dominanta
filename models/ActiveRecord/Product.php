@@ -47,6 +47,8 @@ class Product extends AbstractModel
 
     public $upload;
 
+    public $update_sitemap = true;
+
     /**
      * {@inheritdoc}
      */
@@ -129,6 +131,7 @@ class Product extends AbstractModel
     {
         $this->last_update = self::getDbTime();
         $this->cat->last_update = self::getDbTime();
+        $this->cat->update_sitemap = $this->update_sitemap;
         $this->cat->save();
     }
 
@@ -139,11 +142,13 @@ class Product extends AbstractModel
 
     public function eventAfterUpdate()
     {
-        $sitemap = new Sitemap;
-        $sitemap->generate();
+        if ($this->update_sitemap) {
+            $sitemap = new Sitemap;
+            $sitemap->generate();
 
-        $yml = new Yml;
-        $yml->generate();
+            $yml = new Yml;
+            $yml->generate();
+        }
     }
 
     /**

@@ -41,6 +41,8 @@ class ProductCategory extends AbstractModel
 
     public $cats_with_products = [];
 
+    public $update_sitemap = true;
+
     /**
      * {@inheritdoc}
      */
@@ -112,6 +114,7 @@ class ProductCategory extends AbstractModel
 
         if ($this->pid) {
             $this->parentCat->last_update = self::getDbTime();
+            $this->parentCat->update_sitemap = $this->update_sitemap;
             $this->parentCat->save();
         }
     }
@@ -123,11 +126,13 @@ class ProductCategory extends AbstractModel
 
     public function eventAfterUpdate()
     {
-        $sitemap = new Sitemap;
-        $sitemap->generate();
+        if ($this->update_sitemap) {
+            $sitemap = new Sitemap;
+            $sitemap->generate();
 
-        $yml = new Yml;
-        $yml->generate();
+            $yml = new Yml;
+            $yml->generate();
+        }
     }
 
     /**
