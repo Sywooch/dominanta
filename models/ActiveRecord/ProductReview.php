@@ -79,9 +79,9 @@ class ProductReview extends AbstractModel
         return [
             'id' => Yii::t('app', 'ID'),
             'status' => Yii::t('app', 'Status'),
-            'product_id' => Yii::t('app', 'Product ID'),
-            'add_time' => Yii::t('app', 'Add Time'),
-            'user_id' => Yii::t('app', 'User ID'),
+            'product_id' => Yii::t('app', 'Product'),
+            'add_time' => Yii::t('app', 'Add time'),
+            'user_id' => Yii::t('app', 'User'),
             'reviewer' => Yii::t('app', 'Reviewer'),
             'review_text' => Yii::t('app', 'Review text'),
             'approver' => Yii::t('app', 'Approver'),

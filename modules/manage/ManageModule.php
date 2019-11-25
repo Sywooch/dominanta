@@ -13,6 +13,7 @@ use app\models\ActiveRecord\Option;
 use app\models\ActiveRecord\Page;
 use app\models\ActiveRecord\ProductCategory;
 use app\models\ActiveRecord\Product;
+use app\models\ActiveRecord\ProductReview;
 use app\models\ActiveRecord\Role;
 use app\models\ActiveRecord\ShopOrder;
 use app\models\ActiveRecord\Subscribe;
@@ -54,6 +55,11 @@ class ManageModule extends Module
                 'icon' => 'briefcase',
                 'url'   => '/manage/market/vendors',
                 'badge' => [],
+            ],
+            'ProductReview' => [
+                'icon' => 'comment',
+                'url'   => '/manage/market/reviews',
+                'badge' => [['status' => ProductReview::STATUS_ACTIVE], ['status' => ProductReview::STATUS_INACTIVE]],
             ],
         ],
         'Site' => [
