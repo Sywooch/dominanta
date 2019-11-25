@@ -113,7 +113,7 @@ $form = ActiveForm::begin(['id' => 'shopcart_form']);
 
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-        <span class="order_total_label">Итого с учетом доставки</span>
+        <span class="order_total_label">Итого</span>
         <div class="order_total_amount">
             <?= Yii::$app->formatter->asDecimal($total, 2) ?> <i class="fa fa-ruble"></i>
         </div>
