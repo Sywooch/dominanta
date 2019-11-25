@@ -129,7 +129,7 @@ class UsersController extends AbstractManageController
             Yii::$app->session->setFlash('error', Yii::t('app', 'You can not delete the current user'));
         } else {
             $model->status = $model::STATUS_DELETED;
-            $model->save();
+            $model->save(false);
             Yii::$app->session->setFlash('success', Yii::t('app', 'User has been deleted'));
         }
 

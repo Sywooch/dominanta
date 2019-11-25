@@ -25,6 +25,7 @@ class RolesController extends AbstractManageController
         'ProductDoc',
         'ProductResently',
         'SendedSubscribe',
+        'ProductCross',
     ];
 
     private function getTree($status = 0, $pid = NULL)
