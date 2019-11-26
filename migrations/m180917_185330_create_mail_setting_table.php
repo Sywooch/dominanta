@@ -14,7 +14,7 @@ class m180917_185330_create_mail_setting_table extends Migration
     {
         $this->createTable('mail_setting', [
             'id' => $this->primaryKey(),
-            'status' => $this->integer(1)->notNull()->defaultValue(1),
+            'status' => $this->integer(1)->notNull()->defaultValue(0),
             'service_name' => $this->string()->notNull()->defaultValue(''),
             'smtp_host' => $this->string()->notNull()->defaultValue(''),
             'smtp_port' => $this->integer(5)->notNull()->defaultValue(25),

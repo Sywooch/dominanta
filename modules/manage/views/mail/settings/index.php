@@ -62,7 +62,7 @@ $this->params['top_panel'] = $add_button;
                                );
                     },
                     'activate' => function ($url, $model) {
-                        return $model->status == $model::STATUS_ACTIVE ? new Icon('check', ['class' => 'fa-lg']) :
+                        return $model->status == $model::STATUS_ACTIVE ? new Icon('check', ['class' => 'fa-lg', 'style' => 'color: #26B99A']) :
                                Html::a(new Icon('check', ['class' => 'fa-lg']), ['activate', 'id' => $model->id],
                                       ['title' => Yii::t('app', 'Activate'),
                                        'aria-label' => Yii::t('app', 'Activate'),
