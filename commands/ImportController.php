@@ -128,6 +128,7 @@ echo " - ADD".PHP_EOL;
                             'slug' => $category_slug,
                             'title' => $category_name,
                             'link' => $category_link,
+                            'update_sitemap' => false,
                         ]);
 
                         $current_catalog[$category_link] = $newProductCat;
@@ -165,7 +166,7 @@ echo " - EXISTS".PHP_EOL;
                 unset($html);
             }
         } else {
-           // $this->getProducts($html, $url, $pid, $pagination);
+            $this->getProducts($html, $url, $pid, $pagination);
         }
     }
 
@@ -195,10 +196,10 @@ echo " - EXISTS".PHP_EOL;
 
         if (count($products)) {
             foreach ($products AS $idx => $product) {
-                if (isset($this->cat_products[$ext_codes_list[$idx]])) {
+                /*if (isset($this->cat_products[$ext_codes_list[$idx]])) {
                     echo "Has ext code: ".$ext_codes_list[$idx].PHP_EOL;
                     continue;
-                }
+                }*/
 
                 if ($product->href) {
                     $this->getProduct($product->href, $cat_id);
@@ -232,6 +233,22 @@ echo "Pages: ".count($pages).PHP_EOL;
 
         if (isset($this->cat_products[$ext_code])) {
             echo "HAS PRODUCT: ".$ext_code.PHP_EOL;
+
+            $price_block = count($html->find('div.price-base')) ? 'price-base' : 'block-price-special';
+            $price_value = $html->find('div.'.$price_block.' span.block-price-value');
+
+            if (count($price_value)) {
+                $price = trim($price_value[0]->attr['data-price']);
+                $unit  = trim(str_replace('Спеццена', '', $html->find('div.'.$price_block.' span.price-title')[0]->innertext));
+            } else {
+                $unit = 'шт.';
+                $price = 0;
+            }
+
+            $this->cat_products[$ext_code]->price = $price;
+            $this->cat_products[$ext_code]->update_sitemap = false;
+            $this->cat_products[$ext_code]->save();
+
             return;
         }
 
@@ -278,6 +295,7 @@ echo "Pages: ".count($pages).PHP_EOL;
             'vendor_id' => $vendor_id,
             'last_update' => date('Y-m-d H:i:s'),
             'title' => trim($title),
+            'update_sitemap' => false,
         ];
 
         $product_model = Product::createAndSave($new_product);

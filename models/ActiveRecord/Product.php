@@ -130,9 +130,11 @@ class Product extends AbstractModel
     public function eventBeforeUpdate()
     {
         $this->last_update = self::getDbTime();
-        $this->cat->last_update = self::getDbTime();
-        $this->cat->update_sitemap = $this->update_sitemap;
-        $this->cat->save();
+        if ($this->update_sitemap) {
+            $this->cat->last_update = self::getDbTime();
+            $this->cat->update_sitemap = $this->update_sitemap;
+            $this->cat->save();
+        }
     }
 
     public function eventAfterInsert()
