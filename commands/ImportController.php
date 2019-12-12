@@ -175,6 +175,11 @@ echo " - EXISTS".PHP_EOL;
 
         if (!$pagination) {
             $this->cat_products = Product::find()->where(['cat_id' => $cat_id])->select(['id', 'ext_code'])->indexBy('ext_code')->all();
+
+            $pages = $html->find('ul.pagination li a');
+            $pages_cnt = count($pages);
+            unset($pages);
+            echo "Pages: ".$pages_cnt.PHP_EOL;
         }
 
         $ext_codes = $html->find('div.goods-card div.goods-code');
@@ -209,12 +214,10 @@ echo " - EXISTS".PHP_EOL;
         }
 
         if (!$pagination) {
-            $pages = $html->find('ul.pagination li a');
-//var_dump($pages);
             unset($html);
-echo "Pages: ".count($pages).PHP_EOL;
-            if (count($pages)) {
-                for ($i = 2; $i <= count($pages); $i++) {
+
+            if ($pages_cnt) {
+                for ($i = 2; $i <= $pages_cnt; $i++) {
                     echo "PAGE ".$i.PHP_EOL;
                     $this->getCategories($url.'?sort_type=desc&sort=popular&page='.$i, $cat_id, true);
                 }
