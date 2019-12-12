@@ -197,8 +197,8 @@ echo " - EXISTS".PHP_EOL;
         if (count($products)) {
             foreach ($products AS $idx => $product) {
                 if (isset($this->cat_products[$ext_codes_list[$idx]])) {
-                    echo "Has ext code: ".$ext_codes_list[$idx].PHP_EOL;
-                    continue;
+                    //echo "Has ext code: ".$ext_codes_list[$idx].PHP_EOL;
+                    //continue;
                 }
 
                 if ($product->href) {
