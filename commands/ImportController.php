@@ -203,7 +203,7 @@ echo " - EXISTS".PHP_EOL;
 
                 if ($product->href) {
                     $this->getProduct($product->href, $cat_id);
-                    sleep(rand(1, 5));
+                    sleep(rand(1, 3));
                 }
             }
         }
@@ -248,7 +248,7 @@ echo "Pages: ".count($pages).PHP_EOL;
             $this->cat_products[$ext_code]->price = $price;
             $this->cat_products[$ext_code]->update_sitemap = false;
             $this->cat_products[$ext_code]->save();
-
+unset($html);
             return;
         }
 
