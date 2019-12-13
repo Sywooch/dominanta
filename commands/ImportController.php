@@ -202,8 +202,8 @@ echo " - EXISTS".PHP_EOL;
         if (count($products)) {
             foreach ($products AS $idx => $product) {
                 if (isset($this->cat_products[$ext_codes_list[$idx]])) {
-                    //echo "Has ext code: ".$ext_codes_list[$idx].PHP_EOL;
-                    //continue;
+                    echo "Has ext code: ".$ext_codes_list[$idx].PHP_EOL;
+                    continue;
                 }
 
                 if ($product->href) {
@@ -236,7 +236,7 @@ echo " - EXISTS".PHP_EOL;
 
         if (isset($this->cat_products[$ext_code])) {
             echo "HAS PRODUCT: ".$ext_code.PHP_EOL;
-
+/*
             $price_block = count($html->find('div.price-base')) ? 'price-base' : 'block-price-special';
             $price_value = $html->find('div.'.$price_block.' span.block-price-value');
 
@@ -251,11 +251,11 @@ echo " - EXISTS".PHP_EOL;
             $this->cat_products[$ext_code]->price = $price;
             $this->cat_products[$ext_code]->update_sitemap = false;
             $this->cat_products[$ext_code]->save();
-unset($html);
+unset($html);*/
             return;
         }
 
-        return;
+        //return;
 
         echo "ADD PRODUCT: ".$ext_code.PHP_EOL;
 
