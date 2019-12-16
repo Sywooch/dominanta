@@ -86,10 +86,10 @@ class Yml extends Model
         $shop = $this->yml->createElement('shop');
         $yml_catalog->appendChild($shop);
 
-        $name = $this->yml->createElement('name', 'Доминанта');
+        $name = $this->yml->createElement('name', 'Торговый дом &quot;Доминанта&quot;');
         $shop->appendChild($name);
 
-        $company = $this->yml->createElement('company', 'ООО Доминанта');
+        $company = $this->yml->createElement('company', 'ООО &quot;ТД Доминанта&quot;');
         $shop->appendChild($company);
 
         $url = $this->yml->createElement('url', $this->scheme.'://'.$this->site_address);
@@ -198,8 +198,8 @@ class Yml extends Model
                 $product_properties = ProductProperty::find()->where(['product_id' => $product->id])->all();
 
                 foreach ($product_properties AS $prop) {
-                    $param = $this->yml->createElement('param', Html::encode($properties[$prop->property_id]->title));
-                    $param->setAttribute('name', Html::encode($prop->property_value));
+                    $param = $this->yml->createElement('param', Html::encode($prop->property_value));
+                    $param->setAttribute('name', Html::encode($properties[$prop->property_id]->title));
                     $offer->appendChild($param);
                 }
             }
