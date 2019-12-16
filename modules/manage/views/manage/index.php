@@ -9,5 +9,5 @@ $this->title = Yii::t('app', 'Panel');
 ?>
 
 <script type="text/javascript">
-  location.href = '/manage/site/pages';
+  location.href = '/manage/market/orders';
 </script>
