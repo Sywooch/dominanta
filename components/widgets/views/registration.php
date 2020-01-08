@@ -39,7 +39,7 @@ if ($model) {
 
 <?= $form->field($model, 'agree')->checkbox([
     'template' => "{input} {label}<div>{error}</div>",
-])->label('Я согласен на <b>обработку персональных данных</b>') ?>
+])->label('Я согласен на <a href="/agreement.pdf" target="_blank">обработку персональных данных</a>') ?>
 
 <div class="form-group">
     <div>

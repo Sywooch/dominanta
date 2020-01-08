@@ -131,7 +131,7 @@ class ShopOrder extends AbstractModel
             'product_discount' => Yii::t('app', 'Product discount'),
             'delivery_discount' => Yii::t('app', 'Delivery discount'),
             'order_comment' => Yii::t('app', 'Order comment'),
-            'agreement' => Yii::t('app', 'Agreement')
+            'agreement' => Yii::t('app', 'Agreement'),
         ];
     }
 

@@ -25,6 +25,8 @@ class Callback extends AbstractModel
 
     public static $notify = 'Уведомление о заказе обратного звонка';
 
+    public $agreement;
+
     /**
      * {@inheritdoc}
      */
@@ -43,6 +45,9 @@ class Callback extends AbstractModel
               'uncheckedMessage' => 'Подтвердите, что вы не робот.',
               'message' => 'Ошибка проверки подлинности пользователя. Обновите страницу и попробуйте ещё раз.',
             ],
+            [['agreement'], 'required', 'message' => 'Необходимо принять соглашение'],
+            ['agreement', 'integer'],
+            ['agreement', 'compare', 'compareValue' => 1, 'message' => 'Необходимо принять соглашение'],
         ];
     }
 
@@ -57,6 +62,7 @@ class Callback extends AbstractModel
             'add_time' => Yii::t('app', 'Add Time'),
             'fio' => Yii::t('app', 'Fio'),
             'phone' => Yii::t('app', 'Phone'),
+            'agreement' => Yii::t('app', 'Agreement'),
         ];
     }
 

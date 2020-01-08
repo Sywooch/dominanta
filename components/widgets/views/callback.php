@@ -31,6 +31,11 @@ if ($model) {
 
 <?= $form->field($model, 'reCaptcha', ['template' => '{input}{error}'])->widget(ReCaptcha2::className()) ?>
 
+<?= $form->field($model, 'agreement')->checkbox([
+    'template' => "{input} {label}<div>{error}</div>",
+])->label('Я согласен на <a href="/agreement.pdf" target="_blank" data-pjax="0">обработку персональных данных</a>',
+          ['style' => 'display: inline-block; font-size: 12px; margin-bottom: -20px;']) ?>
+
 <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
         <div class="form-group">

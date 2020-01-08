@@ -26,6 +26,8 @@ class Feedback extends AbstractModel
 
     public $reCaptcha;
 
+    public $agreement;
+
     /**
      * {@inheritdoc}
      */
@@ -40,6 +42,9 @@ class Feedback extends AbstractModel
               'uncheckedMessage' => 'Подтвердите, что вы не робот.',
               'message' => 'Ошибка проверки подлинности пользователя. Обновите страницу и попробуйте ещё раз.',
             ],
+            [['agreement'], 'required', 'message' => 'Необходимо принять соглашение'],
+            ['agreement', 'integer'],
+            ['agreement', 'compare', 'compareValue' => 1, 'message' => 'Необходимо принять соглашение'],
         ];
     }
 
@@ -55,6 +60,7 @@ class Feedback extends AbstractModel
             'phone' => Yii::t('app', 'Your phone'),
             'email' => Yii::t('app', 'Your email'),
             'message' => Yii::t('app', 'Message'),
+            'agreement' => Yii::t('app', 'Agreement'),
         ];
     }
 

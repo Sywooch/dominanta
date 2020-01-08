@@ -38,13 +38,15 @@ class ProductReview extends AbstractModel
 
     public static $notify = 'Уведомление о новых отзывах';
 
+    public $agreement;
+
     /**
      * @inheritdoc
      */
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-        $scenarios[self::SCENARIO_ADD] = ['product_id', 'reviewer', 'review_text', 'rate', 'reCaptcha'];
+        $scenarios[self::SCENARIO_ADD] = ['product_id', 'reviewer', 'review_text', 'rate', 'reCaptcha', 'agreement'];
         $scenarios[self::SCENARIO_EDIT] = ['reviewer', 'review_text', 'rate'];
 
         return $scenarios;
@@ -68,6 +70,9 @@ class ProductReview extends AbstractModel
               'uncheckedMessage' => 'Подтвердите, что вы не робот.',
               'message' => 'Ошибка проверки подлинности пользователя. Обновите страницу и попробуйте ещё раз.',
             ],
+            [['agreement'], 'required', 'message' => 'Необходимо принять соглашение', 'on' => [self::SCENARIO_ADD]],
+            ['agreement', 'integer'],
+            ['agreement', 'compare', 'compareValue' => 1, 'message' => 'Необходимо принять соглашение', 'on' => [self::SCENARIO_ADD]],
         ];
     }
 
@@ -87,6 +92,7 @@ class ProductReview extends AbstractModel
             'approver' => Yii::t('app', 'Approver'),
             'approved' => Yii::t('app', 'Approved'),
             'rate' => Yii::t('app', 'Rate'),
+            'agreement' => Yii::t('app', 'Agreement'),
         ];
     }
 

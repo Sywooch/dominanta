@@ -48,6 +48,17 @@ if ($model) {
 
 <?= $form->field($model, 'reCaptcha', ['template' => '{input}{error}'])->widget(ReCaptcha2::className()) ?>
 
+<?php if (!Yii::$app->user->isGuest) { $model->agreement = 1; ?>
+<div class="hidden">
+<?php } ?>
+<?= $form->field($model, 'agreement')->checkbox([
+    'template' => "{input} {label}<div>{error}</div>",
+])->label('Я согласен на <a href="/agreement.pdf" target="_blank" data-pjax="0">обработку персональных данных</a>',
+          ['style' => 'display: inline-block; font-size: 12px; margin-bottom: -20px;']) ?>
+<?php if (!Yii::$app->user->isGuest) { ?>
+</div>
+<?php } ?>
+
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="form-group">
